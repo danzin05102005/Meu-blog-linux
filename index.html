@@ -57,6 +57,19 @@
         .caixa-sugestao { border: 1px dashed var(--neon-blue); padding: 25px; border-radius: 8px; margin-top: 30px; background: #0a0a0a; }
         textarea { background: #000 !important; border-color: #333 !important; color: #fff !important; }
         
+        /* ESTILO DO RELÓGIO */
+        #relogio-bloqueio {
+            display: none;
+            color: #ffdd57;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+            border: 1px solid #ffdd57;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 221, 87, 0.1);
+        }
+
         /* ESTILO DO ARTIGO ABERTO */
         .artigo-container img { max-width: 100%; border-radius: 5px; border: 1px solid #333; }
         .artigo-container h2, .artigo-container h3 { color: var(--neon-green); margin-top: 25px; }
@@ -97,10 +110,16 @@
         
         <div class="caixa-sugestao">
             <h4 style="color: var(--neon-blue)">💡 CENTRAL DE IDEIAS</h4>
-            <p style="color: #ccc; font-size: 0.9em;">Tem uma dica ou quer pedir um artigo? Envie aqui.<br><small>(Anti-Flood ativado: 1 ideia a cada 72h)</small></p>
+            <p style="color: #ccc; font-size: 0.9em;">Tem uma dica ou quer pedir um artigo? Envie aqui.<br><small>(Anti-Flood: 1 ideia a cada 72h)</small></p>
             
             <textarea id="texto-sugestao" rows="4" placeholder="Ex: Faz um tutorial sobre ZRam..."></textarea>
+            
             <button onclick="enviarSugestao()" class="contrast" id="btn-sugestao" style="width: 100%;">ENVIAR IDEIA 🚀</button>
+            
+            <div id="relogio-bloqueio">
+                ⏳ Aguarde <span id="tempo-restante">00h 00m 00s</span> para enviar novamente.
+            </div>
+
             <p id="msg-sugestao" style="margin-top:15px; font-weight:bold; text-align: center;"></p>
         </div>
     </div>
@@ -138,39 +157,33 @@
             appId: "1:262696388382:web:d2784dc5dbba922cc8eb0f"
         };
         
-        // Inicializa o Firebase (se ainda não foi)
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
 
-        // Variáveis de Estado
         let TODOS_POSTS = {}; 
         let ID_POST_ATUAL = null;
+        let INTERVALO_RELOGIO = null; // Para controlar o timer
 
         // --- 2. CARREGAR POSTS (TEMPO REAL) ---
         db.collection("posts").orderBy("data", "desc").onSnapshot((snapshot) => {
             const listaDiv = document.getElementById('lista-posts');
             
-            // Se estiver vazio
             if(snapshot.empty) { 
                 listaDiv.innerHTML = "<p style='text-align:center; padding: 50px;'>Nenhum artigo publicado ainda.</p>"; 
                 TODOS_POSTS = {};
                 return; 
             }
 
-            // Limpa e recria a lista
             listaDiv.innerHTML = "";
             TODOS_POSTS = {};
 
             snapshot.forEach((doc) => {
                 const post = doc.data();
                 TODOS_POSTS[doc.id] = post;
-                
-                // Tratamento de likes (se não existir, é 0)
                 const likes = post.likes ? post.likes : 0;
 
-                // Cria o Card
                 listaDiv.innerHTML += `
                     <div class="card-post" onclick="abrirArtigo('${doc.id}')" style="cursor: pointer;">
                         <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
@@ -183,69 +196,58 @@
                     </div>
                 `;
             });
-            
-            // Verifica se a URL pede algum artigo específico
             checarRota();
         });
 
         // --- 3. NAVEGAÇÃO E ROTAS ---
         function navegar(destino) {
-            // Esconde todas as telas
             document.querySelectorAll('.tela').forEach(t => t.style.display = 'none');
             
             if (destino === 'home') {
                 document.getElementById('tela-home').style.display = 'block';
-                location.hash = ''; // Limpa a URL
+                location.hash = '';
                 window.scrollTo(0,0);
             } else if (destino === 'sobre') {
                 document.getElementById('tela-sobre').style.display = 'block';
                 location.hash = 'sobre';
                 window.scrollTo(0,0);
+                iniciarRelogioBloqueio(); // Inicia a verificação do relógio ao entrar na tela
             }
         }
 
         function abrirArtigo(id) {
-            // Isso muda a URL e ativa a função checarRota()
             location.hash = id;
         }
 
-        // Essa função roda sempre que o link muda (botão voltar ou clique)
         function checarRota() {
             const hash = location.hash.replace('#', '');
             
             if (hash === 'sobre') {
                 navegar('sobre');
             } else if (hash && TODOS_POSTS[hash]) {
-                // --- MODO LEITURA ---
                 ID_POST_ATUAL = hash;
                 const post = TODOS_POSTS[hash];
                 const likes = post.likes ? post.likes : 0;
 
-                // Injeta o conteúdo
                 document.getElementById('conteudo-artigo').innerHTML = `
                     <h1 style="color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 15px;">${post.titulo}</h1>
                     ${post.conteudo}
                 `;
                 
-                // Configura o Botão de Like
                 configurarBotaoLike(likes);
 
-                // Mostra a tela de leitura
                 document.querySelectorAll('.tela').forEach(t => t.style.display = 'none');
                 document.getElementById('tela-leitura').style.display = 'block';
                 window.scrollTo(0,0);
             } else {
-                // Se não tiver hash válido, vai pra home
                 if(location.hash !== '#sobre') navegar('home');
             }
         }
         window.addEventListener('hashchange', checarRota);
 
-        // --- 4. SISTEMA DE LIKES (COM CORREÇÃO DE ERRO) ---
+        // --- 4. SISTEMA DE LIKES ---
         function configurarBotaoLike(likes) {
             const btnLike = document.getElementById('btn-curtir');
-            
-            // Verifica na memória do navegador se já curtiu
             if (localStorage.getItem('like_' + ID_POST_ATUAL)) {
                 btnLike.classList.add('curtido');
                 btnLike.innerHTML = `❤️ ${likes} (Você curtiu)`;
@@ -261,7 +263,6 @@
         function curtirAtual() {
             if (!ID_POST_ATUAL) return;
 
-            // Bloqueio Anti-Flood
             if (localStorage.getItem('like_' + ID_POST_ATUAL)) {
                 alert("Você já curtiu este artigo! Obrigado.");
                 return;
@@ -270,24 +271,65 @@
             const btn = document.getElementById('btn-curtir');
             btn.innerHTML = "Processando...";
             
-            // Incremento no Banco de Dados (Cria o campo se não existir)
             const incremento = firebase.firestore.FieldValue.increment(1);
 
             db.collection("posts").doc(ID_POST_ATUAL).set({ likes: incremento }, { merge: true })
             .then(() => {
-                // Sucesso: Salva no navegador
                 localStorage.setItem('like_' + ID_POST_ATUAL, 'true');
                 btn.classList.add('curtido');
-                // O número vai atualizar sozinho via onSnapshot
             })
             .catch((error) => {
                 console.error("Erro:", error);
                 alert("Erro ao curtir. Tente novamente.");
-                btn.innerHTML = "Erro (Tentar de novo)";
             });
         }
 
-        // --- 5. SISTEMA DE SUGESTÕES (72 HORAS) ---
+        // --- 5. SISTEMA DE SUGESTÕES COM RELÓGIO ---
+        
+        function iniciarRelogioBloqueio() {
+            const ultimaVez = localStorage.getItem('ultima_sugestao');
+            const btn = document.getElementById('btn-sugestao');
+            const caixaRelogio = document.getElementById('relogio-bloqueio');
+            const textoRelogio = document.getElementById('tempo-restante');
+            
+            // Se não tem timer, garante que está tudo limpo
+            if (INTERVALO_RELOGIO) clearInterval(INTERVALO_RELOGIO);
+
+            if (!ultimaVez) return; // Nunca enviou, deixa liberado
+
+            INTERVALO_RELOGIO = setInterval(() => {
+                const agora = Date.now();
+                const limite = 259200000; // 72 horas em milissegundos
+                const tempoPassado = agora - ultimaVez;
+                
+                if (tempoPassado < limite) {
+                    // ESTÁ BLOQUEADO: Calcula o tempo que falta
+                    const tempoRestante = limite - tempoPassado;
+                    
+                    const horas = Math.floor((tempoRestante / (1000 * 60 * 60)));
+                    const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                    const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+
+                    // Atualiza a tela
+                    btn.disabled = true;
+                    btn.innerText = "BLOQUEADO TEMPORARIAMENTE";
+                    btn.style.opacity = "0.5";
+                    btn.style.cursor = "not-allowed";
+                    
+                    caixaRelogio.style.display = "block";
+                    textoRelogio.innerText = `${horas}h ${minutos}m ${segundos}s`;
+                } else {
+                    // JÁ LIBEROU
+                    btn.disabled = false;
+                    btn.innerText = "ENVIAR IDEIA 🚀";
+                    btn.style.opacity = "1";
+                    btn.style.cursor = "pointer";
+                    caixaRelogio.style.display = "none";
+                    clearInterval(INTERVALO_RELOGIO);
+                }
+            }, 1000); // Roda a cada 1 segundo
+        }
+
         function enviarSugestao() {
             const texto = document.getElementById('texto-sugestao').value;
             const msg = document.getElementById('msg-sugestao');
@@ -295,19 +337,16 @@
 
             if (!texto) { alert("A caixa está vazia!"); return; }
 
-            // Verificação de Tempo
+            // Verificação Rápida antes de enviar
             const ultimaVez = localStorage.getItem('ultima_sugestao');
             const agora = Date.now();
-            const limite = 259200000; // 72 horas em milissegundos
+            const limite = 259200000;
 
             if (ultimaVez && (agora - ultimaVez) < limite) {
-                const horasRestantes = Math.ceil((limite - (agora - ultimaVez)) / 3600000);
-                msg.innerText = `⏳ Calma lá! Aguarde ${horasRestantes} horas para enviar outra.`;
-                msg.style.color = "#ffdd57"; // Amarelo
+                alert("Aguarde o tempo acabar!");
                 return;
             }
 
-            // Envia para o Firebase
             btn.setAttribute('aria-busy', 'true');
             btn.innerText = "ENVIANDO...";
             
@@ -316,13 +355,12 @@
                 data: agora,
                 status: "nova"
             }).then(() => {
-                // Sucesso
                 localStorage.setItem('ultima_sugestao', agora);
                 document.getElementById('texto-sugestao').value = "";
-                msg.innerText = "✅ Ideia enviada com sucesso! Obrigado.";
+                msg.innerText = "✅ Ideia enviada! O relógio começou a contar.";
                 msg.style.color = "#00ff41";
                 btn.setAttribute('aria-busy', 'false');
-                btn.innerText = "ENVIAR IDEIA 🚀";
+                iniciarRelogioBloqueio(); // Inicia o timer imediatamente
             })
             .catch(err => {
                 msg.innerText = "Erro ao enviar: " + err.message;
