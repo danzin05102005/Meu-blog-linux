@@ -10,12 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILO CYBERPUNK / NEON --- */
+        /* --- ESTILO CYBERPUNK --- */
         :root { --background-body: #050505; --neon-green: #00ff41; --neon-blue: #00f3ff; --card-bg: #111; --font-main: 'Fira Code', monospace; }
         
         body { background-color: var(--background-body); font-family: var(--font-main); color: #ddd; }
 
-        /* BANNER */
+        /* Banner */
         .cyber-banner {
             background: linear-gradient(180deg, #000 0%, #111 100%);
             padding: 30px 20px; text-align: center;
@@ -23,48 +23,75 @@
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); margin-bottom: 30px;
         }
 
-        /* CARDS DOS POSTS */
-        article {
+        /* Cards da Lista */
+        .card-post {
             background-color: var(--card-bg);
             border: 1px solid #333;
-            border-left: 3px solid var(--neon-green); /* Detalhe verde na esquerda */
-            border-radius: 8px; margin-bottom: 25px;
-            animation: entrar 0.5s ease-out;
+            border-left: 3px solid var(--neon-green);
+            border-radius: 8px; margin-bottom: 25px; padding: 20px;
+            transition: 0.2s;
         }
+        .card-post:hover { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0,255,65,0.1); }
 
-        h2, h3 { color: var(--neon-green); margin-bottom: 10px; }
-        .data-post { font-size: 0.75em; color: #666; margin-bottom: 15px; display: block; }
+        /* Botões */
+        button { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); font-weight: bold; text-transform: uppercase; }
+        button:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
         
-        /* Ajustes para tabelas e códigos dentro dos posts */
-        table { border: 1px solid #333; margin: 15px 0; }
-        pre { background: #080808; border: 1px solid var(--neon-blue); }
+        button.contrast { border-color: var(--neon-blue); color: var(--neon-blue); }
+        button.contrast:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
 
-        @keyframes entrar { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Estilos do Artigo Aberto */
+        .conteudo-leitura h2, .conteudo-leitura h3 { color: var(--neon-green); margin-top: 20px; }
+        .conteudo-leitura table { border: 1px solid #333; }
+        .conteudo-leitura pre { background: #080808; border: 1px solid var(--neon-blue); }
+        
+        /* Sistema de Telas (SPA) */
+        .tela { display: none; } /* Tudo começa escondido */
+        .fade-in { animation: entrar 0.3s ease-out; }
+        @keyframes entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div class="cyber-banner">
-        <h1 style="color: #fff; margin:0">LINUX LAB_</h1>
-        <p style="color: var(--neon-blue); margin:0;">> Otimização Extrema (Dev: Danilo)</p>
+    <div id="tela-home" class="tela fade-in">
+        <div class="cyber-banner">
+            <h1 style="color: #fff; margin:0">LINUX LAB_</h1>
+            <p style="color: var(--neon-blue); margin:0;">> Otimização Extrema (Dev: Danilo)</p>
+        </div>
+
+        <main class="container" id="lista-posts">
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="color: var(--neon-green)">CARREGANDO DADOS...</p>
+                <progress></progress>
+            </div>
+        </main>
+
+        <footer style="text-align: center; opacity: 0.5; padding: 40px;">
+            SYSTEM STATUS: ONLINE
+        </footer>
     </div>
 
-    <main class="container" id="lista-posts">
-        <div style="text-align: center; margin-top: 50px;">
-            <p style="color: var(--neon-green)">CONECTANDO AO SERVIDOR...</p>
-            <progress></progress>
-        </div>
-    </main>
+    <div id="tela-leitura" class="tela fade-in container" style="margin-top: 20px;">
+        <nav>
+            <ul>
+                <li><a href="#" onclick="fecharArtigo()" style="color: var(--neon-green)">[ Voltar para Base ]</a></li>
+            </ul>
+        </nav>
 
-    <footer style="text-align: center; opacity: 0.5; font-size: 0.8em; padding: 40px;">
-        SYSTEM STATUS: ONLINE • HOST: GITHUB & FIREBASE
-    </footer>
+        <article id="conteudo-artigo" style="border: 1px solid var(--neon-green); padding: 20px; border-radius: 8px; background: #111;">
+            </article>
+
+        <footer style="margin-top: 30px;">
+            <hr style="border-color: #333">
+            <button onclick="fecharArtigo()">Voltar para Lista</button>
+        </footer>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // SUAS CHAVES DO FIREBASE
+        // --- 1. CONFIGURAÇÃO ---
         const firebaseConfig = {
             apiKey: "AIzaSyDnkmZ7BMasKQQGnAQSTi3jxiuCbxyLU7M",
             authDomain: "meubloglinux.firebaseapp.com",
@@ -73,44 +100,91 @@
             messagingSenderId: "262696388382",
             appId: "1:262696388382:web:d2784dc5dbba922cc8eb0f"
         };
-
-        // INICIALIZA O SISTEMA
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const lista = document.getElementById('lista-posts');
 
-        // BUSCA OS POSTS AUTOMATICAMENTE
-        db.collection("posts").orderBy("data", "desc").onSnapshot((querySnapshot) => {
-            lista.innerHTML = ""; // Limpa o carregamento
-            
-            if (querySnapshot.empty) {
-                lista.innerHTML = "<p style='text-align:center'>Nenhum artigo encontrado no banco de dados.</p>";
+        // Variável global para guardar os posts na memória
+        let TODOS_POSTS = {}; 
+
+        // --- 2. BUSCAR DADOS DO FIREBASE ---
+        const listaDiv = document.getElementById('lista-posts');
+
+        db.collection("posts").orderBy("data", "desc").onSnapshot((snapshot) => {
+            listaDiv.innerHTML = ""; // Limpa a lista
+            TODOS_POSTS = {}; // Reseta a memória
+
+            if (snapshot.empty) {
+                listaDiv.innerHTML = "<p style='text-align:center'>Nenhum artigo encontrado.</p>";
                 return;
             }
 
-            querySnapshot.forEach((doc) => {
+            snapshot.forEach((doc) => {
                 const post = doc.data();
-                
-                // Formata a data (converte de timestamp para dia/mês)
-                const dataFormatada = new Date(post.data).toLocaleDateString('pt-BR');
+                TODOS_POSTS[doc.id] = post; // Salva na memória com o ID
 
-                // Cria o HTML do post
-                lista.innerHTML += `
-                    <article>
-                        <header>
-                            <span class="data-post">DATA: ${dataFormatada} • ID: ${doc.id}</span>
-                            <h3>${post.titulo}</h3>
-                        </header>
-                        <div class="conteudo-post">
-                            ${post.conteudo} 
-                        </div>
-                    </article>
+                // Renderiza o Card na Home
+                // Nota: O botão chama abrirArtigo('ID_DO_POST')
+                listaDiv.innerHTML += `
+                    <div class="card-post">
+                        <small style="color:#666">${new Date(post.data).toLocaleDateString('pt-BR')}</small>
+                        <h3>${post.titulo}</h3>
+                        <p style="opacity: 0.8; font-size: 0.9em;">Clique para ler a análise completa...</p>
+                        <button onclick="abrirArtigo('${doc.id}')" class="${post.titulo.includes('Minecraft') ? 'contrast' : ''}">ACESSAR ARQUIVO</button>
+                    </div>
                 `;
             });
-        }, (error) => {
-            console.error(error);
-            lista.innerHTML = `<article style="border-color: red"><h3 style="color:red">ERRO DE CONEXÃO</h3><p>Verifique se o Firestore foi criado no modo TESTE.<br>Erro: ${error.message}</p></article>`;
+
+            // Se o usuário recarregar a página já com um link de artigo (#id), abre ele
+            checarNavegacao();
         });
+
+        // --- 3. SISTEMA DE NAVEGAÇÃO (BOTÃO VOLTAR) ---
+        
+        function abrirArtigo(id) {
+            // Muda o hash da URL (Ex: site.com/#ID_DO_POST)
+            // Isso cria um ponto no histórico do navegador
+            location.hash = id;
+        }
+
+        function fecharArtigo() {
+            // Limpa o hash. Isso dispara o evento 'hashchange'
+            location.hash = "";
+            // Alternativa: history.back() faria o mesmo se o usuário tiver vindo da home
+        }
+
+        // Essa função roda sempre que o link muda (Hash) ou aperta Voltar
+        function checarNavegacao() {
+            const hash = location.hash.replace('#', '');
+            const telaHome = document.getElementById('tela-home');
+            const telaLeitura = document.getElementById('tela-leitura');
+            const conteudoDiv = document.getElementById('conteudo-artigo');
+
+            if (hash && TODOS_POSTS[hash]) {
+                // --- MODO LEITURA ---
+                // 1. Pega os dados da memória
+                const post = TODOS_POSTS[hash];
+                
+                // 2. Preenche o HTML
+                conteudoDiv.innerHTML = `
+                    <h1 style="color: var(--neon-green)">${post.titulo}</h1>
+                    <div class="conteudo-leitura">${post.conteudo}</div>
+                `;
+
+                // 3. Troca as telas
+                telaHome.style.display = 'none';
+                telaLeitura.style.display = 'block';
+                window.scrollTo(0,0);
+
+            } else {
+                // --- MODO HOME (LISTA) ---
+                telaLeitura.style.display = 'none';
+                telaHome.style.display = 'block';
+            }
+        }
+
+        // Ouve o botão voltar do celular
+        window.addEventListener('hashchange', checarNavegacao);
+        
     </script>
 </body>
 </html>
