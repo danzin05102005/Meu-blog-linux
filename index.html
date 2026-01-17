@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Linux Lab - Tech & Games</title>
-    
     <meta name="theme-color" content="#050505">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
@@ -12,245 +11,106 @@
     
     <style>
         /* --- ESTILO CYBERPUNK / NEON --- */
-        :root {
-            --background-body: #050505;
-            --neon-green: #00ff41;
-            --neon-blue: #00f3ff;
-            --card-bg: #111;
-            --font-main: 'Fira Code', monospace;
-        }
-
-        body {
-            background-color: var(--background-body);
-            font-family: var(--font-main);
-            color: #ddd;
-        }
+        :root { --background-body: #050505; --neon-green: #00ff41; --neon-blue: #00f3ff; --card-bg: #111; --font-main: 'Fira Code', monospace; }
+        
+        body { background-color: var(--background-body); font-family: var(--font-main); color: #ddd; }
 
         /* BANNER */
         .cyber-banner {
             background: linear-gradient(180deg, #000 0%, #111 100%);
-            padding: 30px 20px;
-            text-align: center;
+            padding: 30px 20px; text-align: center;
             border-bottom: 2px solid var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
-            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); margin-bottom: 30px;
         }
 
-        .cyber-banner h1 { margin: 0; color: #fff; letter-spacing: 1px; }
-
-        /* CARDS */
+        /* CARDS DOS POSTS */
         article {
             background-color: var(--card-bg);
             border: 1px solid #333;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border-left: 3px solid var(--neon-green); /* Detalhe verde na esquerda */
+            border-radius: 8px; margin-bottom: 25px;
+            animation: entrar 0.5s ease-out;
         }
 
-        /* BOTÕES NEON */
-        button {
-            background-color: transparent;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        button:hover {
-            background-color: var(--neon-green);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-green);
-            border-color: var(--neon-green);
-        }
-
-        /* VARIAÇÃO AZUL */
-        button.contrast {
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-        }
-        button.contrast:hover {
-            background-color: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        /* ESTILO DAS TELAS */
-        .tela { display: none; } /* Tudo começa escondido */
+        h2, h3 { color: var(--neon-green); margin-bottom: 10px; }
+        .data-post { font-size: 0.75em; color: #666; margin-bottom: 15px; display: block; }
         
-        /* ANIMAÇÃO */
-        .fade-in { animation: entrar 0.4s ease-out; }
-        @keyframes entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Ajustes para tabelas e códigos dentro dos posts */
+        table { border: 1px solid #333; margin: 15px 0; }
+        pre { background: #080808; border: 1px solid var(--neon-blue); }
 
-        /* TABELA E CÓDIGO */
-        table { border: 1px solid #333; }
-        pre { border: 1px solid var(--neon-blue); background: #080808; }
-        .destaque { color: var(--neon-green); font-size: 1.5em; font-weight: bold; }
+        @keyframes entrar { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="home" class="tela fade-in">
-        <div class="cyber-banner">
-            <h1>LINUX LAB_</h1>
-            <p style="color: var(--neon-blue); margin-bottom: 0;">> Otimização Extrema</p>
+    <div class="cyber-banner">
+        <h1 style="color: #fff; margin:0">LINUX LAB_</h1>
+        <p style="color: var(--neon-blue); margin:0;">> Otimização Extrema (Dev: Danilo)</p>
+    </div>
+
+    <main class="container" id="lista-posts">
+        <div style="text-align: center; margin-top: 50px;">
+            <p style="color: var(--neon-green)">CONECTANDO AO SERVIDOR...</p>
+            <progress></progress>
         </div>
+    </main>
 
-        <main class="container">
-            <article>
-                <header><small style="color:#666">HARDWARE_LOG</small><h3>Recuperando PC Antigo</h3></header>
-                <p>Como salvei um PC antigo com Linux Mint. Se o seu PC tem 4GB de RAM, o Windows está matando ele.</p>
-                <footer>
-                    <button onclick="location.hash='linux'">Acessar Arquivos</button>
-                </footer>
-            </article>
+    <footer style="text-align: center; opacity: 0.5; font-size: 0.8em; padding: 40px;">
+        SYSTEM STATUS: ONLINE • HOST: GITHUB & FIREBASE
+    </footer>
 
-            <article>
-                <header><small style="color:#666">GAME_LOG</small><h3>Minecraft Otimizado</h3></header>
-                <p>Configuração exata para rodar a última versão sem placa de vídeo.</p>
-                <footer>
-                    <button onclick="location.hash='minecraft'" class="contrast">Acessar Config</button>
-                </footer>
-            </article>
-
-            <footer style="text-align: center; margin-top: 40px; opacity: 0.5; font-size: 0.8em;">
-                SYSTEM STATUS: ONLINE<br>DEV: DANILO
-            </footer>
-        </main>
-    </div>
-
-    <div id="linux" class="tela fade-in container" style="margin-top: 20px;">
-        <nav><ul><li><a href="#" onclick="location.hash=''" style="color: var(--neon-green)">[ Voltar para Base ]</a></li></ul></nav>
-
-        <article>
-            <h2 style="color: var(--neon-green)">Como salvei meu PC antigo com Linux Mint</h2>
-            <p><strong>Por:</strong> Danilo • <strong>Data:</strong> 17/01/2026</p>
-            <p><em>Hardware testado: AMD Athlon II X2 + 4GB de RAM</em></p>
-
-            <p>Se você, assim como eu, tem um computador que já foi considerado bom há 10 anos, mas hoje sofre para abrir um vídeo no YouTube, esse artigo é para você. Muita gente joga essas máquinas no lixo, mas eu provei que elas ainda têm salvação.</p>
-
-            <h3>1. O Problema: Windows em Hardware Antigo</h3>
-            <p>O Windows 10 e 11 são sistemas pesados. Eles rodam centenas de processos em segundo plano (telemetria, atualizações, antivírus) que "comem" o processador e a memória RAM.</p>
-            <p>No meu Athlon II X2, a situação era triste:</p>
-            <ul>
-                <li><strong>Boot Lento:</strong> O PC demorava minutos para ficar usável.</li>
-                <li><strong>RAM Esgotada:</strong> Só de ligar, o sistema já consumia 2.5GB dos meus 4GB disponíveis.</li>
-                <li><strong>Travamentos:</strong> Abrir o navegador e o Discord ao mesmo tempo? Nem pensar.</li>
-            </ul>
-
-            <h3>2. A Solução: Linux Mint (XFCE ou Cinnamon)</h3>
-            <p>Decidi remover o Windows e instalar o <strong>Linux Mint</strong>. A diferença não foi pouca, foi brutal. O Linux gerencia a memória de forma muito mais inteligente.</p>
-
-            <blockquote>
-                "Enquanto o Windows trata 4GB de RAM como o mínimo aceitável, o Linux trata como luxo."
-            </blockquote>
-
-            <h3>3. O Resultado Prático (Comparação)</h3>
-            <figure>
-                <table role="grid">
-                    <thead>
-                        <tr>
-                            <th scope="col">Métrica</th>
-                            <th scope="col">Windows 10</th>
-                            <th scope="col">Linux Mint</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">RAM em Repouso</th>
-                            <td style="color: red">2.4 GB</td>
-                            <td style="color: var(--neon-green)">600 MB - 900 MB</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Navegador</th>
-                            <td>Lento / Travando</td>
-                            <td>Fluido (3 abas)</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Ventoinha (Cooler)</th>
-                            <td>Turbina de avião ✈️</td>
-                            <td>Silencioso 🤫</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </figure>
-
-            <h3>4. Instalação de Programas (Sem vírus)</h3>
-            <p>Para configurar meu ambiente de desenvolvimento web, usei apenas um comando no terminal para instalar o Sublime Text via Flatpak:</p>
-            <pre><code style="color: var(--neon-blue)">flatpak install flathub com.sublimetext.three</code></pre>
-            <p>É rápido, seguro e sem aquelas barrinhas de navegador indesejadas.</p>
-
-            <footer>
-                <hr style="border-color: #333">
-                <button onclick="location.hash=''">Voltar ao Menu</button>
-            </footer>
-        </article>
-    </div>
-
-    <div id="minecraft" class="tela fade-in container" style="margin-top: 20px;">
-        <nav><ul><li><a href="#" onclick="location.hash=''" style="color: var(--neon-blue)">[ Voltar para Base ]</a></li></ul></nav>
-
-        <article style="border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);">
-            <h2 style="color: var(--neon-blue)">Minecraft 1.21 Vanilla em PC de 4GB</h2>
-            <p><strong>Meta:</strong> 60 FPS Estável • <strong>Sistema:</strong> Linux Mint</p>
-
-            <p>Muita gente diz que é impossível jogar as versões novas do Minecraft em PC antigo sem placa de vídeo. Eu provei que estão errados.</p>
-
-            <h3>O Segredo: A Alocação de Memória</h3>
-            <p>O maior erro é colocar memória demais ou de menos. Se você tem 4GB no total, não pode colocar 3GB pro jogo, senão o sistema trava porque falta RAM para o Linux.</p>
-
-            <p>No meu TLauncher, cheguei no <strong>Número Mágico</strong>:</p>
-            <p class="destaque" style="color: var(--neon-blue)">2018 MB</p>
-            <p>Isso deixa quase 2GB livres para o Linux Mint manter o áudio e o sistema rodando liso.</p>
-
-            <h3>Configurações Gráficas (Vanilla Puro)</h3>
-            <p>Eu não usei mods como Sodium ou Optifine. O segredo está no ajuste manual dentro do menu do jogo:</p>
-            <ul>
-                <li>Gráficos: <strong style="color: var(--neon-green)">Rápidos (Fast)</strong></li>
-                <li>Renderização (Chunks): <strong>4 a 6</strong></li>
-                <li>Limite de FPS: <strong>Cravado em 60 FPS</strong></li>
-                <li>Partículas: <strong>Diminuídas (Minimais)</strong></li>
-            </ul>
-
-            <h3>Conclusão</h3>
-            <p>Rodando a versão <strong>1.21.11</strong>, consegui estabilidade total. O jogo abre, o mundo carrega e dá para jogar sobrevivência tranquilo.</p>
-
-            <footer>
-                <hr style="border-color: #333">
-                <button onclick="location.hash=''" class="contrast">Voltar ao Menu</button>
-            </footer>
-        </article>
-    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // Função que decide o que mostrar baseado na URL (Hash)
-        function atualizarTela() {
-            // 1. Pega o hash da URL (ex: #linux, #minecraft ou nada)
-            const destino = location.hash.replace('#', '');
+        // SUAS CHAVES DO FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnkmZ7BMasKQQGnAQSTi3jxiuCbxyLU7M",
+            authDomain: "meubloglinux.firebaseapp.com",
+            projectId: "meubloglinux",
+            storageBucket: "meubloglinux.firebasestorage.app",
+            messagingSenderId: "262696388382",
+            appId: "1:262696388382:web:d2784dc5dbba922cc8eb0f"
+        };
 
-            // 2. Esconde TODAS as telas primeiro
-            document.querySelectorAll('.tela').forEach(tela => {
-                tela.style.display = 'none';
-            });
+        // INICIALIZA O SISTEMA
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const lista = document.getElementById('lista-posts');
 
-            // 3. Mostra a tela certa
-            if (destino === 'linux') {
-                document.getElementById('linux').style.display = 'block';
-                window.scrollTo(0,0);
-            } else if (destino === 'minecraft') {
-                document.getElementById('minecraft').style.display = 'block';
-                window.scrollTo(0,0);
-            } else {
-                // Se não tiver hash (ou for desconhecido), mostra o HOME
-                document.getElementById('home').style.display = 'block';
-                window.scrollTo(0,0);
+        // BUSCA OS POSTS AUTOMATICAMENTE
+        db.collection("posts").orderBy("data", "desc").onSnapshot((querySnapshot) => {
+            lista.innerHTML = ""; // Limpa o carregamento
+            
+            if (querySnapshot.empty) {
+                lista.innerHTML = "<p style='text-align:center'>Nenhum artigo encontrado no banco de dados.</p>";
+                return;
             }
-        }
 
-        // Roda a função sempre que o hash mudar (Botão Voltar, Links, etc)
-        window.addEventListener('hashchange', atualizarTela);
+            querySnapshot.forEach((doc) => {
+                const post = doc.data();
+                
+                // Formata a data (converte de timestamp para dia/mês)
+                const dataFormatada = new Date(post.data).toLocaleDateString('pt-BR');
 
-        // Roda a função quando o site carrega pela primeira vez
-        window.addEventListener('load', atualizarTela);
+                // Cria o HTML do post
+                lista.innerHTML += `
+                    <article>
+                        <header>
+                            <span class="data-post">DATA: ${dataFormatada} • ID: ${doc.id}</span>
+                            <h3>${post.titulo}</h3>
+                        </header>
+                        <div class="conteudo-post">
+                            ${post.conteudo} 
+                        </div>
+                    </article>
+                `;
+            });
+        }, (error) => {
+            console.error(error);
+            lista.innerHTML = `<article style="border-color: red"><h3 style="color:red">ERRO DE CONEXÃO</h3><p>Verifique se o Firestore foi criado no modo TESTE.<br>Erro: ${error.message}</p></article>`;
+        });
     </script>
-
 </body>
 </html>
