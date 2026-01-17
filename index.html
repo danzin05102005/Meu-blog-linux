@@ -1,202 +1,272 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Linux Lab - Tech & Games</title>
     
-    <title>Blog do Técnico - Linux & Games</title>
-    <meta name="description" content="Dicas de otimização para hardware antigo, Linux Mint e Minecraft em PC fraco.">
-    
-    <meta name="theme-color" content="#11191f">
+    <meta name="theme-color" content="#000000">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* ESTILOS VISUAIS */
-        .cabecalho-principal { border-bottom: 1px solid #333; margin-bottom: 30px; padding-bottom: 20px; }
-        
-        /* Destaques */
-        .destaque-numero { color: #00FF00; font-weight: bold; font-size: 1.5em; }
-        
-        /* Animação suave */
-        .fade-in { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* --- ESTILO CYBERPUNK / NEON --- */
+        :root {
+            --background-body: #050505; /* Preto quase absoluto */
+            --neon-green: #00ff41;      /* Verde Matrix */
+            --neon-blue: #00f3ff;       /* Azul Tron */
+            --card-bg: #111;            /* Cinza escuro */
+            --font-main: 'Fira Code', monospace;
         }
-        
-        /* AS TELAS COMEÇAM ESCONDIDAS */
+
+        body {
+            background-color: var(--background-body);
+            font-family: var(--font-main);
+            color: #ddd;
+        }
+
+        /* O Banner Estiloso */
+        .cyber-banner {
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            margin-bottom: 40px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .cyber-banner h1 {
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* Cards com brilho */
+        article {
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 10px;
+        }
+
+        article:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Botões Neon */
+        button {
+            background-color: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green);
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-green);
+            border-color: var(--neon-green);
+        }
+
+        button.contrast {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        button.contrast:hover {
+            background-color: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* Destaques no texto */
+        .destaque-numero { 
+            color: var(--neon-green); 
+            font-size: 1.8em; 
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        /* Tabelas Futuristas */
+        table { border: 1px solid #333; }
+        thead th { color: var(--neon-green); border-bottom: 1px solid var(--neon-green); }
+
+        /* Animação */
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Esconder telas */
         #tela-linux, #tela-minecraft { display: none; }
-        
-        /* Tabela ajustada */
-        table { margin-top: 20px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <main class="container">
+    <div id="tela-menu" class="fade-in">
         
-        <div id="tela-menu" class="fade-in">
-            <nav>
-                <ul><li><strong>🐧 MeuBlogLinux</strong></li></ul>
-                <ul><li><small>Hardware & Otimização</small></li></ul>
-            </nav>
+        <div class="cyber-banner">
+            <h1>LINUX LAB_</h1>
+            <p style="color: var(--neon-blue)">> Otimização Extrema & Games</p>
+        </div>
 
-            <header class="cabecalho-principal">
-                <h1>Bem-vindo ao Laboratório</h1>
-                <p>Onde extraímos desempenho máximo de hardware antigo.</p>
+        <main class="container">
+            <article>
+                <header>
+                    <small style="color: #888">SYSTEM_LOG: 17/01/2026</small>
+                    <h3>Recuperando PC Antigo</h3>
+                </header>
+                <p>Athlon II X2 + 4GB RAM. Veja como o Linux Mint salvou essa máquina da sucata.</p>
+                <footer>
+                    <button onclick="navegar('tela-linux')">Acessar Arquivos</button>
+                </footer>
+            </article>
+
+            <article>
+                <header>
+                    <small style="color: #888">GAME_LOG: 17/01/2026</small>
+                    <h3>Minecraft 1.21 Otimizado</h3>
+                </header>
+                <p>O segredo da alocação de RAM para rodar liso sem placa de vídeo.</p>
+                <footer>
+                    <button onclick="navegar('tela-minecraft')" class="contrast">Acessar Config</button>
+                </footer>
+            </article>
+
+            <footer style="text-align: center; margin-top: 50px; opacity: 0.5;">
+                <small>SYSTEM STATUS: ONLINE • DEV: DANIEL</small>
+            </footer>
+        </main>
+    </div>
+
+    <div id="tela-linux" class="fade-in container" style="margin-top: 20px;">
+        <nav><ul><li><a href="#" onclick="window.history.back()" style="color: var(--neon-green)">[ Voltar para Base ]</a></li></ul></nav>
+
+        <article>
+            <header>
+                <h1 style="color: var(--neon-green)">Linux Mint vs PC Antigo</h1>
+                <p><strong>Hardware:</strong> AMD Athlon II X2 • 4GB RAM</p>
             </header>
 
-            <article>
-                <header>
-                    <small>17/01/2026 • Hardware</small>
-                    <h3>Como salvei um PC antigo com Linux Mint</h3>
-                </header>
-                <p>Se o seu PC tem 4GB de RAM e processador antigo, o Windows está matando ele. Veja a solução completa.</p>
-                <footer>
-                    <button onclick="navegar('tela-linux')">Ler artigo completo</button>
-                </footer>
-            </article>
+            <p>Se você tem um computador de 10 anos atrás, o Windows é um vírus. Ele roda processos inúteis que matam seu processador.</p>
 
-            <article>
-                <header>
-                    <small>17/01/2026 • Games</small>
-                    <h3>Minecraft 1.21 em PC Fraco</h3>
-                </header>
-                <p>Configuração exata para rodar a última versão sem placa de vídeo.</p>
-                <footer>
-                    <button onclick="navegar('tela-minecraft')" class="contrast">Ler artigo completo</button>
-                </footer>
-            </article>
+            <h3>1. O Problema do Windows</h3>
+            <p>Boot lento, RAM esgotada (2.5GB só para ligar) e travamentos constantes.</p>
+
+            <h3>2. A Solução: Linux Mint XFCE</h3>
+            <p>A diferença é brutal. O sistema respeita seu hardware.</p>
             
-            <footer style="text-align: center; margin-top: 50px; opacity: 0.7;">
-                <small>Desenvolvido por Daniel • Hospedado no GitHub Pages</small>
+            <figure>
+                <table role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Métrica</th>
+                            <th scope="col">Windows 10</th>
+                            <th scope="col">Linux Mint</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">RAM em Repouso</th>
+                            <td style="color: red">2.4 GB</td>
+                            <td style="color: var(--neon-green)">600 MB - 900 MB</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Ruído Cooler</th>
+                            <td>Turbina ✈️</td>
+                            <td>Silencioso 🤫</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+
+            <h3>3. Instalação via Terminal</h3>
+            <p class="code-box">Para instalar programas seguros:</p>
+            <pre><code style="color: var(--neon-blue)">flatpak install flathub com.sublimetext.three</code></pre>
+
+            <footer>
+                <hr style="border-color: #333">
+                <button onclick="window.history.back()">Voltar</button>
             </footer>
-        </div>
+        </article>
+    </div>
 
-        <div id="tela-linux" class="fade-in">
-            <nav><ul><li><a href="#" onclick="navegar('tela-menu')">⬅ Voltar para o Menu</a></li></ul></nav>
+    <div id="tela-minecraft" class="fade-in container" style="margin-top: 20px;">
+        <nav><ul><li><a href="#" onclick="window.history.back()" style="color: var(--neon-blue)">[ Voltar para Base ]</a></li></ul></nav>
 
-            <article>
-                <header>
-                    <h1>Como salvei meu PC antigo com Linux Mint</h1>
-                    <p><strong>Por:</strong> O Técnico • <strong>Data:</strong> 17/01/2026</p>
-                    <p><em>Hardware testado: AMD Athlon II X2 + 4GB de RAM</em></p>
-                </header>
+        <article style="border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);">
+            <header>
+                <h1 style="color: var(--neon-blue)">Minecraft 1.21 Vanilla</h1>
+                <p><strong>Meta:</strong> 60 FPS Estável em 4GB de RAM</p>
+            </header>
 
-                <p>Se você, assim como eu, tem um computador que já foi considerado bom há 10 anos, mas hoje sofre para abrir um vídeo no YouTube, esse artigo é para você. Muita gente joga essas máquinas no lixo, mas eu provei que elas ainda têm salvação.</p>
+            <p>Rodar a versão 1.21+ em PC antigo parece impossível, mas é questão de matemática.</p>
 
-                <h3>1. O Problema: Windows em Hardware Antigo</h3>
-                <p>O Windows 10 e 11 são sistemas pesados. Eles rodam centenas de processos em segundo plano (telemetria, atualizações, antivírus) que "comem" o processador e a memória RAM.</p>
-                <p>No meu Athlon II X2, a situação era triste:</p>
-                <ul>
-                    <li><strong>Boot Lento:</strong> O PC demorava minutos para ficar usável.</li>
-                    <li><strong>RAM Esgotada:</strong> Só de ligar, o sistema já consumia 2.5GB dos meus 4GB disponíveis.</li>
-                    <li><strong>Travamentos:</strong> Abrir o navegador e o Discord ao mesmo tempo? Nem pensar.</li>
-                </ul>
+            <h3>O Número Mágico</h3>
+            <p>Não coloque 3GB. O sistema precisa respirar. No TLauncher, configure exatos:</p>
+            <p class="destaque-numero" style="color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue);">2018 MB</p>
 
-                <h3>2. A Solução: Linux Mint (XFCE ou Cinnamon)</h3>
-                <p>Decidi remover o Windows e instalar o <strong>Linux Mint</strong>. A diferença não foi pouca, foi brutal. O Linux gerencia a memória de forma muito mais inteligente.</p>
-                
-                <blockquote>
-                    "Enquanto o Windows trata 4GB de RAM como o mínimo aceitável, o Linux trata como luxo."
-                </blockquote>
+            <h3>Configuração Gráfica</h3>
+            <ul>
+                <li>Gráficos: <strong style="color: var(--neon-green)">Rápidos (Fast)</strong></li>
+                <li>Chunks: <strong>4 a 6</strong></li>
+                <li>FPS: <strong>Cravado em 60</strong> (Evita engasgos)</li>
+            </ul>
 
-                <h3>3. O Resultado Prático (Comparação)</h3>
-                <p>Após a instalação e as atualizações (que fiz via terminal), os números falam por si:</p>
-                
-                <figure>
-                    <table role="grid">
-                        <thead>
-                            <tr>
-                                <th scope="col">Tarefa</th>
-                                <th scope="col">Windows 10</th>
-                                <th scope="col">Linux Mint</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">Consumo ao Ligar</th>
-                                <td>2.4 GB</td>
-                                <td><strong>600 MB - 900 MB</strong></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Navegador (3 abas)</th>
-                                <td>Lento / Travando</td>
-                                <td>Fluido</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Ventoinha (Cooler)</th>
-                                <td>Turbina de avião ✈️</td>
-                                <td>Silencioso 🤫</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </figure>
+            <p>Com essa configuração, joguei Survival sem nenhum crash no Linux Mint.</p>
 
-                <h3>4. Instalação de Programas (Sem vírus)</h3>
-                <p>Outra vantagem gigante é não precisar ficar caçando instaladores <code>.exe</code> em sites duvidosos. No Linux, usamos repositórios oficiais.</p>
-                <p>Para configurar meu ambiente de desenvolvimento web, usei apenas um comando no terminal para instalar o Sublime Text via Flatpak:</p>
-                <pre><code>flatpak install flathub com.sublimetext.three</code></pre>
-                <p>É rápido, seguro e sem aquelas barrinhas de navegador indesejadas.</p>
-
-                <h3>5. Conclusão</h3>
-                <p>Se você tem um PC encostado ou passando raiva com lentidão, não compre um novo ainda. Baixe a ISO do Linux Mint, faça um pendrive bootável e dê uma nova vida para ele. Meu Athlon II X2 agradece!</p>
-
-                <footer>
-                    <hr>
-                    <button onclick="navegar('tela-menu')" class="secondary">Voltar para o Menu</button>
-                </footer>
-            </article>
-        </div>
-
-        <div id="tela-minecraft" class="fade-in">
-            <nav><ul><li><a href="#" onclick="navegar('tela-menu')">⬅ Voltar para o Menu</a></li></ul></nav>
-
-            <article>
-                <header>
-                    <h1>Como rodar Minecraft 1.21 Vanilla em PC de 4GB</h1>
-                    <p><strong>Configuração:</strong> Athlon II X2 • 4GB RAM • Linux Mint</p>
-                </header>
-
-                <p>Muita gente diz que é impossível jogar as versões novas do Minecraft (1.21+) em computadores antigos sem placa de vídeo dedicada. Eu provei que estão errados.</p>
-
-                <h3>O Segredo: A Alocação de Memória</h3>
-                <p>O maior erro é colocar memória demais ou de menos. Se você tem 4GB no total, não pode colocar 3GB pro jogo, senão o sistema trava porque falta RAM para o Linux.</p>
-                
-                <p>No meu TLauncher, cheguei no <strong>Número Mágico</strong>:</p>
-                <p class="destaque-numero">2018 MB</p>
-                <p>Isso deixa quase 2GB livres para o Linux Mint manter o áudio e o sistema rodando liso, sem engasgos.</p>
-
-                <h3>Configurações Gráficas (Vanilla Puro)</h3>
-                <p>Eu não usei mods como Sodium ou Optifine. O segredo está no ajuste manual dentro do menu do jogo:</p>
-                <ul>
-                    <li><strong>Gráficos:</strong> Rápidos (Fast)</li>
-                    <li><strong>Renderização (Chunks):</strong> Entre 4 e 6</li>
-                    <li><strong>Limite de FPS:</strong> <mark>Cravado em 60 FPS</mark></li>
-                    <li><strong>Partículas:</strong> Diminuídas (Minimais)</li>
-                </ul>
-
-                <h3>Conclusão</h3>
-                <p>Rodando a versão <strong>1.21.11</strong>, consegui estabilidade total. O jogo abre, o mundo carrega e dá para jogar sobrevivência tranquilo. O segredo é o equilíbrio entre o sistema operacional leve (Linux) e a alocação de RAM precisa.</p>
-
-                <footer>
-                    <hr>
-                    <button onclick="navegar('tela-menu')" class="contrast">Voltar para o Menu</button>
-                </footer>
-            </article>
-        </div>
-
-    </main>
+            <footer>
+                <hr style="border-color: #333">
+                <button onclick="window.history.back()" class="contrast">Voltar</button>
+            </footer>
+        </article>
+    </div>
 
     <script>
+        // Quando a página carrega pela primeira vez
+        window.onload = function() {
+            // Garante que o histórico inicial é o menu
+            history.replaceState({page: 'menu'}, "Menu", "");
+        };
+
         function navegar(telaDestino) {
+            // 1. Rola para o topo
             window.scrollTo(0, 0);
+            
+            // 2. Adiciona um novo ponto na história do navegador
+            // Isso faz o botão "Voltar" do celular funcionar!
+            history.pushState({page: telaDestino}, null, "");
+
+            // 3. Atualiza a tela visualmente
+            atualizarTela(telaDestino);
+        }
+
+        // Essa função só muda o visual (display block/none)
+        function atualizarTela(telaId) {
             document.getElementById('tela-menu').style.display = 'none';
             document.getElementById('tela-linux').style.display = 'none';
             document.getElementById('tela-minecraft').style.display = 'none';
-            document.getElementById(telaDestino).style.display = 'block';
+            document.getElementById(telaId).style.display = 'block';
         }
+
+        // OUVINTE MÁGICO DO BOTÃO VOLTAR
+        // Quando você aperta "Voltar" no celular, o navegador dispara esse evento
+        window.onpopstate = function(event) {
+            if (event.state && event.state.page) {
+                // Se tiver histórico salvo, vai pra página salva
+                atualizarTela(event.state.page);
+            } else {
+                // Se não tiver nada (voltou pro início), mostra o menu
+                atualizarTela('tela-menu');
+            }
+        };
     </script>
 
 </body>
