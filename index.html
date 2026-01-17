@@ -5,19 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Linux Lab - Tech & Games</title>
     
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#050505">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-    
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- ESTILO CYBERPUNK / NEON --- */
         :root {
-            --background-body: #050505; /* Preto quase absoluto */
-            --neon-green: #00ff41;      /* Verde Matrix */
-            --neon-blue: #00f3ff;       /* Azul Tron */
-            --card-bg: #111;            /* Cinza escuro */
+            --background-body: #050505;
+            --neon-green: #00ff41;
+            --neon-blue: #00f3ff;
+            --card-bg: #111;
             --font-main: 'Fira Code', monospace;
         }
 
@@ -27,246 +26,180 @@
             color: #ddd;
         }
 
-        /* O Banner Estiloso */
+        /* BANNER */
         .cyber-banner {
-            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-            padding: 40px 20px;
+            background: linear-gradient(180deg, #000 0%, #111 100%);
+            padding: 30px 20px;
             text-align: center;
             border-bottom: 2px solid var(--neon-green);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            margin-bottom: 40px;
-            border-radius: 0 0 15px 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+            margin-bottom: 30px;
         }
 
-        .cyber-banner h1 {
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-green);
-            margin-bottom: 5px;
-            letter-spacing: 2px;
-        }
+        .cyber-banner h1 { margin: 0; color: #fff; letter-spacing: 1px; }
 
-        /* Cards com brilho */
+        /* CARDS */
         article {
             background-color: var(--card-bg);
             border: 1px solid #333;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-radius: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
-        article:hover {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
-            transform: translateY(-5px);
-        }
-
-        /* Botões Neon */
+        /* BOTÕES NEON */
         button {
             background-color: transparent;
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
-            box-shadow: 0 0 5px var(--neon-green);
-            font-weight: bold;
             text-transform: uppercase;
-            transition: all 0.3s;
+            font-weight: bold;
+            transition: 0.2s;
         }
-
         button:hover {
             background-color: var(--neon-green);
             color: #000;
-            box-shadow: 0 0 20px var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
             border-color: var(--neon-green);
         }
 
+        /* VARIAÇÃO AZUL */
         button.contrast {
             border-color: var(--neon-blue);
             color: var(--neon-blue);
-            box-shadow: 0 0 5px var(--neon-blue);
         }
-
         button.contrast:hover {
             background-color: var(--neon-blue);
             color: #000;
-            box-shadow: 0 0 20px var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
         }
 
-        /* Destaques no texto */
-        .destaque-numero { 
-            color: var(--neon-green); 
-            font-size: 1.8em; 
-            text-shadow: 0 0 10px var(--neon-green);
-        }
+        /* ESTILO DAS TELAS */
+        .tela { display: none; } /* Tudo começa escondido */
+        
+        /* ANIMAÇÃO */
+        .fade-in { animation: entrar 0.4s ease-out; }
+        @keyframes entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tabelas Futuristas */
+        /* TABELA E CÓDIGO */
         table { border: 1px solid #333; }
-        thead th { color: var(--neon-green); border-bottom: 1px solid var(--neon-green); }
-
-        /* Animação */
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Esconder telas */
-        #tela-linux, #tela-minecraft { display: none; }
+        pre { border: 1px solid var(--neon-blue); background: #080808; }
+        .destaque { color: var(--neon-green); font-size: 1.5em; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="tela-menu" class="fade-in">
-        
+    <div id="home" class="tela fade-in">
         <div class="cyber-banner">
             <h1>LINUX LAB_</h1>
-            <p style="color: var(--neon-blue)">> Otimização Extrema & Games</p>
+            <p style="color: var(--neon-blue); margin-bottom: 0;">> Otimização Extrema</p>
         </div>
 
         <main class="container">
             <article>
-                <header>
-                    <small style="color: #888">SYSTEM_LOG: 17/01/2026</small>
-                    <h3>Recuperando PC Antigo</h3>
-                </header>
-                <p>Athlon II X2 + 4GB RAM. Veja como o Linux Mint salvou essa máquina da sucata.</p>
+                <header><small style="color:#666">HARDWARE_LOG</small><h3>Recuperando PC Antigo</h3></header>
+                <p>Como o Linux Mint ressuscitou meu Athlon II X2.</p>
                 <footer>
-                    <button onclick="navegar('tela-linux')">Acessar Arquivos</button>
+                    <button onclick="location.hash='linux'">Acessar Arquivos</button>
                 </footer>
             </article>
 
             <article>
-                <header>
-                    <small style="color: #888">GAME_LOG: 17/01/2026</small>
-                    <h3>Minecraft 1.21 Otimizado</h3>
-                </header>
-                <p>O segredo da alocação de RAM para rodar liso sem placa de vídeo.</p>
+                <header><small style="color:#666">GAME_LOG</small><h3>Minecraft Otimizado</h3></header>
+                <p>Configuração de 2018MB para rodar liso.</p>
                 <footer>
-                    <button onclick="navegar('tela-minecraft')" class="contrast">Acessar Config</button>
+                    <button onclick="location.hash='minecraft'" class="contrast">Acessar Config</button>
                 </footer>
             </article>
 
-            <footer style="text-align: center; margin-top: 50px; opacity: 0.5;">
-                <small>SYSTEM STATUS: ONLINE • DEV: DANIEL</small>
+            <footer style="text-align: center; margin-top: 40px; opacity: 0.5; font-size: 0.8em;">
+                SYSTEM STATUS: ONLINE<br>DEV: DANIEL
             </footer>
         </main>
     </div>
 
-    <div id="tela-linux" class="fade-in container" style="margin-top: 20px;">
-        <nav><ul><li><a href="#" onclick="window.history.back()" style="color: var(--neon-green)">[ Voltar para Base ]</a></li></ul></nav>
+    <div id="linux" class="tela fade-in container" style="margin-top: 20px;">
+        <nav><ul><li><a href="#" onclick="location.hash=''" style="color: var(--neon-green)">[ Voltar para Base ]</a></li></ul></nav>
 
         <article>
-            <header>
-                <h1 style="color: var(--neon-green)">Linux Mint vs PC Antigo</h1>
-                <p><strong>Hardware:</strong> AMD Athlon II X2 • 4GB RAM</p>
-            </header>
+            <h2 style="color: var(--neon-green)">Linux Mint vs PC Antigo</h2>
+            <p>Se você tem um computador de 10 anos atrás, o Windows é o problema.</p>
 
-            <p>Se você tem um computador de 10 anos atrás, o Windows é um vírus. Ele roda processos inúteis que matam seu processador.</p>
+            <h3>O Resultado</h3>
+            <table role="grid">
+                <thead>
+                    <tr><th>Sistema</th><th>RAM Inicial</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Windows 10</td><td style="color: red">2.4 GB</td></tr>
+                    <tr><td>Linux Mint</td><td style="color: var(--neon-green)">600 MB - 900 MB</td></tr>
+                </tbody>
+            </table>
 
-            <h3>1. O Problema do Windows</h3>
-            <p>Boot lento, RAM esgotada (2.5GB só para ligar) e travamentos constantes.</p>
-
-            <h3>2. A Solução: Linux Mint XFCE</h3>
-            <p>A diferença é brutal. O sistema respeita seu hardware.</p>
-            
-            <figure>
-                <table role="grid">
-                    <thead>
-                        <tr>
-                            <th scope="col">Métrica</th>
-                            <th scope="col">Windows 10</th>
-                            <th scope="col">Linux Mint</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">RAM em Repouso</th>
-                            <td style="color: red">2.4 GB</td>
-                            <td style="color: var(--neon-green)">600 MB - 900 MB</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Ruído Cooler</th>
-                            <td>Turbina ✈️</td>
-                            <td>Silencioso 🤫</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </figure>
-
-            <h3>3. Instalação via Terminal</h3>
-            <p class="code-box">Para instalar programas seguros:</p>
+            <h3>Comando Essencial</h3>
+            <p>Instale programas via Flatpak para evitar vírus:</p>
             <pre><code style="color: var(--neon-blue)">flatpak install flathub com.sublimetext.three</code></pre>
 
             <footer>
-                <hr style="border-color: #333">
-                <button onclick="window.history.back()">Voltar</button>
+                <button onclick="location.hash=''">Voltar</button>
             </footer>
         </article>
     </div>
 
-    <div id="tela-minecraft" class="fade-in container" style="margin-top: 20px;">
-        <nav><ul><li><a href="#" onclick="window.history.back()" style="color: var(--neon-blue)">[ Voltar para Base ]</a></li></ul></nav>
+    <div id="minecraft" class="tela fade-in container" style="margin-top: 20px;">
+        <nav><ul><li><a href="#" onclick="location.hash=''" style="color: var(--neon-blue)">[ Voltar para Base ]</a></li></ul></nav>
 
-        <article style="border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);">
-            <header>
-                <h1 style="color: var(--neon-blue)">Minecraft 1.21 Vanilla</h1>
-                <p><strong>Meta:</strong> 60 FPS Estável em 4GB de RAM</p>
-            </header>
+        <article style="border-color: var(--neon-blue);">
+            <h2 style="color: var(--neon-blue)">Minecraft 1.21 Vanilla</h2>
+            
+            <p>O segredo para não travar em 4GB de RAM é a matemática.</p>
 
-            <p>Rodar a versão 1.21+ em PC antigo parece impossível, mas é questão de matemática.</p>
+            <h3>Alocação de RAM</h3>
+            <p>No TLauncher, use exatos:</p>
+            <p class="destaque" style="color: var(--neon-blue)">2018 MB</p>
 
-            <h3>O Número Mágico</h3>
-            <p>Não coloque 3GB. O sistema precisa respirar. No TLauncher, configure exatos:</p>
-            <p class="destaque-numero" style="color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue);">2018 MB</p>
-
-            <h3>Configuração Gráfica</h3>
+            <h3>Gráficos</h3>
             <ul>
-                <li>Gráficos: <strong style="color: var(--neon-green)">Rápidos (Fast)</strong></li>
+                <li>Gráficos: <strong>Rápidos (Fast)</strong></li>
                 <li>Chunks: <strong>4 a 6</strong></li>
-                <li>FPS: <strong>Cravado em 60</strong> (Evita engasgos)</li>
+                <li>FPS: <strong>Limitado a 60</strong></li>
             </ul>
 
-            <p>Com essa configuração, joguei Survival sem nenhum crash no Linux Mint.</p>
-
             <footer>
-                <hr style="border-color: #333">
-                <button onclick="window.history.back()" class="contrast">Voltar</button>
+                <button onclick="location.hash=''" class="contrast">Voltar</button>
             </footer>
         </article>
     </div>
 
     <script>
-        // Quando a página carrega pela primeira vez
-        window.onload = function() {
-            // Garante que o histórico inicial é o menu
-            history.replaceState({page: 'menu'}, "Menu", "");
-        };
+        // Função que decide o que mostrar baseado na URL (Hash)
+        function atualizarTela() {
+            // 1. Pega o hash da URL (ex: #linux, #minecraft ou nada)
+            const destino = location.hash.replace('#', '');
 
-        function navegar(telaDestino) {
-            // 1. Rola para o topo
-            window.scrollTo(0, 0);
-            
-            // 2. Adiciona um novo ponto na história do navegador
-            // Isso faz o botão "Voltar" do celular funcionar!
-            history.pushState({page: telaDestino}, null, "");
+            // 2. Esconde TODAS as telas primeiro
+            document.querySelectorAll('.tela').forEach(tela => {
+                tela.style.display = 'none';
+            });
 
-            // 3. Atualiza a tela visualmente
-            atualizarTela(telaDestino);
-        }
-
-        // Essa função só muda o visual (display block/none)
-        function atualizarTela(telaId) {
-            document.getElementById('tela-menu').style.display = 'none';
-            document.getElementById('tela-linux').style.display = 'none';
-            document.getElementById('tela-minecraft').style.display = 'none';
-            document.getElementById(telaId).style.display = 'block';
-        }
-
-        // OUVINTE MÁGICO DO BOTÃO VOLTAR
-        // Quando você aperta "Voltar" no celular, o navegador dispara esse evento
-        window.onpopstate = function(event) {
-            if (event.state && event.state.page) {
-                // Se tiver histórico salvo, vai pra página salva
-                atualizarTela(event.state.page);
+            // 3. Mostra a tela certa
+            if (destino === 'linux') {
+                document.getElementById('linux').style.display = 'block';
+                window.scrollTo(0,0);
+            } else if (destino === 'minecraft') {
+                document.getElementById('minecraft').style.display = 'block';
+                window.scrollTo(0,0);
             } else {
-                // Se não tiver nada (voltou pro início), mostra o menu
-                atualizarTela('tela-menu');
+                // Se não tiver hash (ou for desconhecido), mostra o HOME
+                document.getElementById('home').style.display = 'block';
+                window.scrollTo(0,0);
             }
-        };
+        }
+
+        // Roda a função sempre que o hash mudar (Botão Voltar, Links, etc)
+        window.addEventListener('hashchange', atualizarTela);
+
+        // Roda a função quando o site carrega pela primeira vez
+        window.addEventListener('load', atualizarTela);
     </script>
 
 </body>
