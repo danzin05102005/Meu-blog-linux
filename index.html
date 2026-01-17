@@ -3,17 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
     <title>Blog do Técnico - Linux & Games</title>
+    <meta name="description" content="Dicas de otimização para hardware antigo, Linux Mint e Minecraft em PC fraco.">
+    
+    <meta name="theme-color" content="#11191f">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     
     <style>
-        /* ESTILOS EXTRAS */
-        .cabecalho-principal { border-bottom: 1px solid #333; margin-bottom: 30px; padding-bottom: 20px; }
+        /* AJUSTES VISUAIS EXTRAS */
         
-        /* Destaques */
-        .destaque-numero { color: #00FF00; font-weight: bold; font-size: 1.5em; }
+        /* Cabeçalho com linha sutil */
+        .cabecalho-principal { 
+            border-bottom: 1px solid #333; 
+            margin-bottom: 30px; 
+            padding-bottom: 20px; 
+        }
+        
+        /* Números em destaque (verde matrix) */
+        .destaque-numero { 
+            color: #00FF00; 
+            font-weight: bold; 
+            font-size: 1.5em; 
+        }
+
+        /* Espaçamento melhor nas tabelas */
         table { margin-top: 20px; margin-bottom: 20px; }
+        
+        /* Animação suave para aparecer as telas */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         /* O SEGREDO: As telas dos artigos começam escondidas */
         #tela-linux, #tela-minecraft {
@@ -25,11 +50,11 @@
 
     <main class="container">
         
-        <div id="tela-menu">
+        <div id="tela-menu" class="fade-in">
             
             <nav>
                 <ul>
-                    <li><strong>🐧 Linux Tech Blog</strong></li>
+                    <li><strong>🐧 MeuBlogLinux</strong></li>
                 </ul>
                 <ul>
                     <li><small>Hardware & Otimização</small></li>
@@ -38,7 +63,7 @@
 
             <header class="cabecalho-principal">
                 <h1>Bem-vindo ao Laboratório</h1>
-                <p>Dicas reais de quem extrai desempenho máximo de hardware antigo.</p>
+                <p>Onde extraímos desempenho máximo de hardware antigo.</p>
             </header>
 
             <article>
@@ -48,7 +73,7 @@
                 </header>
                 <p>Se o seu PC tem 4GB de RAM e processador antigo, o Windows está matando ele. Veja a solução.</p>
                 <footer>
-                    <button onclick="abrirLinux()">Ler artigo completo</button>
+                    <button onclick="navegar('tela-linux')">Ler artigo completo</button>
                 </footer>
             </article>
 
@@ -59,15 +84,19 @@
                 </header>
                 <p>Configuração exata para rodar a última versão sem placa de vídeo.</p>
                 <footer>
-                    <button onclick="abrirMinecraft()" class="contrast">Ler artigo completo</button>
+                    <button onclick="navegar('tela-minecraft')" class="contrast">Ler artigo completo</button>
                 </footer>
             </article>
+            
+            <footer style="text-align: center; margin-top: 50px; opacity: 0.7;">
+                <small>Desenvolvido por Daniel • Hospedado no GitHub Pages</small>
+            </footer>
         </div>
 
-        <div id="tela-linux">
+        <div id="tela-linux" class="fade-in">
             <nav>
                 <ul>
-                    <li><a href="#" onclick="voltarMenu()">⬅ Voltar para o Menu</a></li>
+                    <li><a href="#" onclick="navegar('tela-menu')">⬅ Voltar para o Menu</a></li>
                 </ul>
             </nav>
 
@@ -78,27 +107,19 @@
                     <p><em>Hardware testado: AMD Athlon II X2 + 4GB de RAM</em></p>
                 </header>
 
-                <p>Se você, assim como eu, tem um computador que já foi considerado bom há 10 anos, mas hoje sofre para abrir um vídeo no YouTube, esse artigo é para você. Muita gente joga essas máquinas no lixo, mas eu provei que elas ainda têm salvação.</p>
+                <p>Se você tem um computador que já foi considerado bom há 10 anos, mas hoje sofre para abrir um vídeo no YouTube, esse artigo é para você.</p>
 
                 <h3>1. O Problema: Windows em Hardware Antigo</h3>
-                <p>O Windows 10 e 11 são sistemas pesados. Eles rodam centenas de processos em segundo plano (telemetria, atualizações, antivírus) que "comem" o processador e a memória RAM.</p>
-                <p>No meu Athlon II X2, a situação era triste:</p>
-                <ul>
-                    <li><strong>Boot Lento:</strong> O PC demorava minutos para ficar usável.</li>
-                    <li><strong>RAM Esgotada:</strong> Só de ligar, o sistema já consumia 2.5GB dos meus 4GB disponíveis.</li>
-                    <li><strong>Travamentos:</strong> Abrir o navegador e o Discord ao mesmo tempo? Nem pensar.</li>
-                </ul>
+                <p>O Windows 10 e 11 rodam centenas de processos em segundo plano (telemetria, atualizações, antivírus) que "comem" o processador.</p>
 
-                <h3>2. A Solução: Linux Mint (XFCE ou Cinnamon)</h3>
-                <p>Decidi remover o Windows e instalar o <strong>Linux Mint</strong>. A diferença não foi pouca, foi brutal. O Linux gerencia a memória de forma muito mais inteligente.</p>
+                <h3>2. A Solução: Linux Mint</h3>
+                <p>Decidi instalar o <strong>Linux Mint (XFCE)</strong>. A diferença foi brutal.</p>
                 
                 <blockquote>
                     "Enquanto o Windows trata 4GB de RAM como o mínimo aceitável, o Linux trata como luxo."
                 </blockquote>
 
-                <h3>3. O Resultado Prático (Comparação)</h3>
-                <p>Após a instalação e as atualizações (que fiz via terminal), os números falam por si:</p>
-                
+                <h3>3. O Resultado Prático</h3>
                 <figure>
                     <table role="grid">
                         <thead>
@@ -115,39 +136,29 @@
                                 <td><strong>600 MB - 900 MB</strong></td>
                             </tr>
                             <tr>
-                                <th scope="row">Navegador (3 abas)</th>
-                                <td>Lento / Travando</td>
+                                <th scope="row">Navegador</th>
+                                <td>Travando</td>
                                 <td>Fluido</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Ventoinha (Cooler)</th>
-                                <td>Turbina de avião ✈️</td>
-                                <td>Silencioso 🤫</td>
                             </tr>
                         </tbody>
                     </table>
                 </figure>
 
-                <h3>4. Instalação de Programas (Sem vírus)</h3>
-                <p>Outra vantagem gigante é não precisar ficar caçando instaladores <code>.exe</code> em sites duvidosos. No Linux, usamos repositórios oficiais.</p>
-                <p>Para configurar meu ambiente de desenvolvimento web, usei apenas um comando no terminal para instalar o Sublime Text via Flatpak:</p>
+                <h3>4. Dica de Ouro</h3>
+                <p>Para instalar programas com segurança, use o Terminal:</p>
                 <pre><code>flatpak install flathub com.sublimetext.three</code></pre>
-                <p>É rápido, seguro e sem aquelas barrinhas de navegador indesejadas.</p>
-
-                <h3>5. Conclusão</h3>
-                <p>Se você tem um PC encostado ou passando raiva com lentidão, não compre um novo ainda. Baixe a ISO do Linux Mint, faça um pendrive bootável e dê uma nova vida para ele. Meu Athlon II X2 agradece!</p>
 
                 <footer>
                     <hr>
-                    <button onclick="voltarMenu()" class="secondary">Voltar para o Menu</button>
+                    <button onclick="navegar('tela-menu')" class="secondary">Voltar para o Menu</button>
                 </footer>
             </article>
         </div>
 
-        <div id="tela-minecraft">
+        <div id="tela-minecraft" class="fade-in">
             <nav>
                 <ul>
-                    <li><a href="#" onclick="voltarMenu()">⬅ Voltar para o Menu</a></li>
+                    <li><a href="#" onclick="navegar('tela-menu')">⬅ Voltar para o Menu</a></li>
                 </ul>
             </nav>
 
@@ -157,30 +168,29 @@
                     <p><strong>Configuração:</strong> Athlon II X2 • 4GB RAM • Linux Mint</p>
                 </header>
 
-                <p>Muita gente diz que é impossível jogar as versões novas do Minecraft (1.21+) em computadores antigos sem placa de vídeo dedicada. Eu provei que estão errados.</p>
+                <p>Muita gente diz que é impossível jogar as versões novas do Minecraft em PC antigo. Eu provei que estão errados.</p>
 
                 <h3>O Segredo: A Alocação de Memória</h3>
-                <p>O maior erro é colocar memória demais ou de menos. Se você tem 4GB no total, não pode colocar 3GB pro jogo, senão o sistema trava porque falta RAM para o Linux.</p>
+                <p>Se você tem 4GB no total, não pode colocar 3GB pro jogo, senão o sistema trava.</p>
                 
                 <p>No meu TLauncher, cheguei no <strong>Número Mágico</strong>:</p>
                 <p class="destaque-numero">2018 MB</p>
-                <p>Isso deixa quase 2GB livres para o Linux Mint manter o áudio e o sistema rodando liso, sem engasgos.</p>
+                <p>Isso deixa memória livre para o Linux Mint manter o áudio e o sistema estável.</p>
 
-                <h3>Configurações Gráficas (Vanilla Puro)</h3>
-                <p>Eu não usei mods como Sodium ou Optifine. O segredo está no ajuste manual dentro do menu do jogo:</p>
+                <h3>Configurações Gráficas</h3>
                 <ul>
                     <li><strong>Gráficos:</strong> Rápidos (Fast)</li>
-                    <li><strong>Renderização (Chunks):</strong> Entre 4 e 6</li>
+                    <li><strong>Renderização (Chunks):</strong> 4 a 6</li>
                     <li><strong>Limite de FPS:</strong> <mark>Cravado em 60 FPS</mark></li>
-                    <li><strong>Partículas:</strong> Diminuídas (Minimais)</li>
+                    <li><strong>Partículas:</strong> Mínimas</li>
                 </ul>
 
                 <h3>Conclusão</h3>
-                <p>Rodando a versão <strong>1.21.11</strong>, consegui estabilidade total. O jogo abre, o mundo carrega e dá para jogar sobrevivência tranquilo. O segredo é o equilíbrio entre o sistema operacional leve (Linux) e a alocação de RAM precisa.</p>
+                <p>Rodando a versão <strong>1.21.11</strong>, consegui estabilidade total. O segredo é o equilíbrio.</p>
 
                 <footer>
                     <hr>
-                    <button onclick="voltarMenu()" class="contrast">Voltar para o Menu</button>
+                    <button onclick="navegar('tela-menu')" class="contrast">Voltar para o Menu</button>
                 </footer>
             </article>
         </div>
@@ -188,25 +198,18 @@
     </main>
 
     <script>
-        function abrirLinux() {
-            window.scrollTo(0,0); // Sobe pro topo
-            document.getElementById('tela-menu').style.display = 'none';
-            document.getElementById('tela-linux').style.display = 'block';
-            document.getElementById('tela-minecraft').style.display = 'none';
-        }
-
-        function abrirMinecraft() {
-            window.scrollTo(0,0); // Sobe pro topo
+        // Função inteligente para trocar de tela
+        function navegar(telaDestino) {
+            // 1. Sobe para o topo da página suavemente
+            window.scrollTo(0, 0);
+            
+            // 2. Esconde todas as telas
             document.getElementById('tela-menu').style.display = 'none';
             document.getElementById('tela-linux').style.display = 'none';
-            document.getElementById('tela-minecraft').style.display = 'block';
-        }
-
-        function voltarMenu() {
-            window.scrollTo(0,0); // Sobe pro topo
-            document.getElementById('tela-linux').style.display = 'none';
             document.getElementById('tela-minecraft').style.display = 'none';
-            document.getElementById('tela-menu').style.display = 'block';
+            
+            // 3. Mostra apenas a tela desejada
+            document.getElementById(telaDestino).style.display = 'block';
         }
     </script>
 
