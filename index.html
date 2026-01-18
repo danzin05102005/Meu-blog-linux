@@ -205,16 +205,21 @@
         // --- CARREGAR POSTS ---
         db.collection("posts").orderBy("data", "desc").onSnapshot((snapshot) => {
             const listaDiv = document.getElementById('lista-posts');
-            if(snapshot.empty) { listaDiv.innerHTML = "<p style='text-align:center; padding: 50px;'>O bloco ainda não saiu (sem posts).</p>"; return; }
+            
+            if(snapshot.empty) { 
+                listaDiv.innerHTML = "<p style='text-align:center; padding: 50px;'>O bloco ainda não saiu (sem posts).</p>"; 
+                TODOS_POSTS = {};
+                return; 
+            }
 
             listaDiv.innerHTML = "";
-            TODOS_POSTS = {};
+            TODOS_POSTS = {}; 
 
             snapshot.forEach((doc) => {
                 const post = doc.data();
                 TODOS_POSTS[doc.id] = post;
                 const likes = post.likes ? post.likes : 0;
-                const views = post.views ? post.views : 0; // Pega as views ou 0
+                const views = post.views ? post.views : 0;
 
                 listaDiv.innerHTML += `
                     <div class="card-post" onclick="abrirArtigo('${doc.id}')" style="cursor: pointer;">
@@ -231,10 +236,12 @@
                     </div>
                 `;
             });
-            checarRota();
+            
+            // Só checa a rota DEPOIS de carregar tudo para evitar tela branca ou redirects errados
+            checarRota(true);
         });
 
-        // --- FUNÇÃO DE BUSCA ---
+        // --- BUSCA ---
         function filtrarPosts() {
             const termo = document.getElementById('input-busca').value.toLowerCase();
             const cards = document.getElementsByClassName('card-post');
@@ -245,45 +252,74 @@
             }
         }
 
-        // --- NAVEGAÇÃO E CONTADOR DE VIEWS ---
+        // --- NAVEGAÇÃO ---
         function navegar(destino) {
             document.querySelectorAll('.tela').forEach(t => t.style.display = 'none');
+            
             if (destino === 'home') {
                 document.getElementById('tela-home').style.display = 'block';
-                location.hash = ''; window.scrollTo(0,0);
+                location.hash = ''; 
+                ID_POST_ATUAL = null;
+                window.scrollTo(0,0);
             } else if (destino === 'sobre') {
                 document.getElementById('tela-sobre').style.display = 'block';
-                location.hash = 'sobre'; window.scrollTo(0,0);
+                location.hash = 'sobre'; 
+                window.scrollTo(0,0);
                 iniciarRelogioBloqueio();
             }
         }
-        function abrirArtigo(id) { location.hash = id; }
+
+        function abrirArtigo(id) { 
+            location.hash = id; 
+        }
         
-        function checarRota() {
+        function checarRota(isUpdate = false) {
             const hash = location.hash.replace('#', '');
-            if (hash === 'sobre') { navegar('sobre'); }
+            
+            // SEGURANÇA: Se o Firebase não carregou ainda, NÃO faz nada.
+            if (Object.keys(TODOS_POSTS).length === 0 && hash && hash !== 'sobre') {
+                return;
+            }
+
+            if (hash === 'sobre') { 
+                navegar('sobre'); 
+            } 
             else if (hash && TODOS_POSTS[hash]) {
-                ID_POST_ATUAL = hash;
                 const post = TODOS_POSTS[hash];
                 const likes = post.likes ? post.likes : 0;
                 
-                // --- NOVA LÓGICA DE VIEWS (INCREMENTA +1) ---
-                // Verifica se já contou nesta sessão para não flodar
-                if (!sessionStorage.getItem('view_registrada_' + ID_POST_ATUAL)) {
-                     const incremento = firebase.firestore.FieldValue.increment(1);
-                     db.collection("posts").doc(ID_POST_ATUAL).set({ views: incremento }, { merge: true });
-                     sessionStorage.setItem('view_registrada_' + ID_POST_ATUAL, 'true');
-                     console.log("Visualização contabilizada!");
-                }
+                // Se for um post NOVO ou primeira carga
+                if (ID_POST_ATUAL !== hash) {
+                    ID_POST_ATUAL = hash;
+                    
+                    // Incrementa View apenas se não viu nessa sessão
+                    if (!sessionStorage.getItem('view_registrada_' + hash)) {
+                         const incremento = firebase.firestore.FieldValue.increment(1);
+                         db.collection("posts").doc(hash).set({ views: incremento }, { merge: true });
+                         sessionStorage.setItem('view_registrada_' + hash, 'true');
+                    }
 
-                document.getElementById('conteudo-artigo').innerHTML = `<h1 style="color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 15px;">${post.titulo}</h1>${post.conteudo}`;
+                    document.getElementById('conteudo-artigo').innerHTML = `
+                        <h1 style="color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 15px;">${post.titulo}</h1>
+                        ${post.conteudo}
+                    `;
+                    document.querySelectorAll('.tela').forEach(t => t.style.display = 'none');
+                    document.getElementById('tela-leitura').style.display = 'block';
+                    window.scrollTo(0,0);
+                } 
+                
                 configurarBotaoLike(likes);
-                document.querySelectorAll('.tela').forEach(t => t.style.display = 'none');
-                document.getElementById('tela-leitura').style.display = 'block';
-                window.scrollTo(0,0);
-            } else { if(location.hash !== '#sobre') navegar('home'); }
+                
+            } else {
+                // Só volta para home se não achou e já terminou de carregar
+                if(location.hash !== '' && location.hash !== '#sobre') {
+                    navegar('home');
+                } else if (location.hash === '') {
+                    document.getElementById('tela-home').style.display = 'block';
+                }
+            }
         }
-        window.addEventListener('hashchange', checarRota);
+        window.addEventListener('hashchange', () => checarRota(false));
 
         // --- LIKES ---
         function configurarBotaoLike(likes) {
