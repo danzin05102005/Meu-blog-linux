@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Linux Folia - Tech & Games</title> <meta name="theme-color" content="#050505">
+    <title>Linux Folia - Tech & Games</title>
+    <meta name="theme-color" content="#050505">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&display=swap" rel="stylesheet">
@@ -22,7 +23,6 @@
         /* ========================================= */
         /* 🎭 TEMA DE CARNAVAL (CSS) 🎭       */
         /* ========================================= */
-        /* Para remover o tema, apague daqui até o final do bloco */
         :root {
             --neon-green: #d600ff; /* Roxo Neon */
             --neon-blue: #ffd700;  /* Dourado */
@@ -36,18 +36,38 @@
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
-        /* FIM DO BLOCO DE CARNAVAL */
-        /* ========================================= */
+        /* FIM DO TEMA */
 
         /* HEADER FIXO */
         .cyber-nav {
             position: fixed; top: 0; left: 0; width: 100%; background: rgba(0,0,0,0.95);
             border-bottom: 2px solid var(--neon-green); padding: 15px 20px; z-index: 999;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 0 15px rgba(214, 0, 255, 0.3); /* Sombra Roxa */
+            box-shadow: 0 0 15px rgba(214, 0, 255, 0.3);
         }
         .cyber-nav a { color: #fff; text-decoration: none; margin-left: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .cyber-nav a:hover { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+
+        /* BUSCA (NOVO) */
+        .busca-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        #input-busca {
+            background: #0a0a0a !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+            padding-left: 40px;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+        #input-busca:focus {
+            border-color: var(--neon-blue) !important;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        .icone-busca {
+            position: absolute; left: 15px; top: 12px; color: #666;
+        }
 
         /* CARDS (LISTA DE POSTS) */
         .card-post {
@@ -88,16 +108,14 @@
 <body>
 
     <script>
-        // Função leve para criar confetes sem travar o PC
         document.addEventListener("DOMContentLoaded", () => {
             const cores = ['#d600ff', '#ffd700', '#00ff41', '#00f3ff'];
-            const quantidade = 30; // Poucos confetes para não pesar
-
+            const quantidade = 30;
             for (let i = 0; i < quantidade; i++) {
                 const confete = document.createElement('div');
                 confete.classList.add('confete');
                 confete.style.left = Math.random() * 100 + 'vw';
-                confete.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Velocidade aleatória
+                confete.style.animationDuration = (Math.random() * 3 + 2) + 's';
                 confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
                 document.body.appendChild(confete);
             }
@@ -113,10 +131,15 @@
     </nav>
 
     <div id="tela-home" class="tela fade-in container">
-        <header style="text-align: center; margin-bottom: 40px;">
+        <header style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #fff; margin:0">> SYSTEM LOGS</h1>
             <p style="color: var(--neon-blue);">🎉 Edição Especial de Carnaval 🎉</p>
         </header>
+
+        <div class="busca-container">
+            <span class="icone-busca">🔍</span>
+            <input type="text" id="input-busca" onkeyup="filtrarPosts()" placeholder="Pesquisar comando, jogo ou dica...">
+        </div>
         
         <div id="lista-posts">
             <div style="text-align: center; margin-top: 50px;">
@@ -202,13 +225,14 @@
                 TODOS_POSTS[doc.id] = post;
                 const likes = post.likes ? post.likes : 0;
 
+                // Adicionei a classe 'titulo-post' para facilitar a busca
                 listaDiv.innerHTML += `
                     <div class="card-post" onclick="abrirArtigo('${doc.id}')" style="cursor: pointer;">
                         <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
                             <small style="color:#aaa">${new Date(post.data).toLocaleDateString('pt-BR')}</small>
                             <small style="color: var(--neon-blue)">🎭 ${likes}</small>
                         </div>
-                        <h3 style="margin: 0; color: #fff;">${post.titulo}</h3>
+                        <h3 class="titulo-post" style="margin: 0; color: #fff;">${post.titulo}</h3>
                         <p style="color: #888; font-size: 0.9em; margin-top: 10px;">Toque para ler...</p>
                         <button style="margin-top:10px; font-size: 0.8em; padding: 5px 15px; border-color: var(--neon-blue); color: var(--neon-blue);">ACESSAR</button>
                     </div>
@@ -216,6 +240,22 @@
             });
             checarRota();
         });
+
+        // --- FUNÇÃO DE BUSCA (NOVO) ---
+        function filtrarPosts() {
+            const termo = document.getElementById('input-busca').value.toLowerCase();
+            const cards = document.getElementsByClassName('card-post');
+
+            for (let i = 0; i < cards.length; i++) {
+                const titulo = cards[i].getElementsByClassName('titulo-post')[0].innerText.toLowerCase();
+                
+                if (titulo.includes(termo)) {
+                    cards[i].style.display = "block"; // Mostra
+                } else {
+                    cards[i].style.display = "none";  // Esconde
+                }
+            }
+        }
 
         // --- NAVEGAÇÃO ---
         function navegar(destino) {
