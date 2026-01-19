@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux Lab | Cyberpunk Blog</title>
     <style>
-        /* --- ESTILO GERAL (CSS) --- */
+        /* =========================================
+           ESTILO CYBERPUNK (O que você gostou)
+           ========================================= */
         :root {
-            --bg-color: #0d0d0d;
-            --text-color: #e0e0e0;
-            --neon-green: #00ff41;
-            --neon-purple: #bc13fe;
-            --dark-panel: #1a1a1a;
+            --bg-color: #050505;
+            --text-primary: #e0e0e0;
+            --neon-green: #00ff41;  /* Aquele verde hacker */
+            --neon-purple: #bc13fe; /* O roxo do neon */
+            --card-bg: #111;
         }
 
         * {
@@ -23,128 +25,131 @@
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
             padding-bottom: 50px;
         }
 
-        /* --- CABEÇALHO (HERO) --- */
+        /* CABEÇALHO COM ANIMAÇÃO */
         header {
             text-align: center;
             padding: 40px 20px;
-            border-bottom: 2px solid var(--neon-green);
+            border-bottom: 1px solid #333;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
         }
 
         h1 {
             font-size: 2.5rem;
             color: var(--neon-green);
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+            margin-bottom: 10px;
         }
 
-        p.subtitle {
+        .subtitle {
             color: var(--neon-purple);
-            font-weight: bold;
+            font-size: 1rem;
+            letter-spacing: 2px;
         }
 
-        /* --- GRID DE ARTIGOS --- */
+        /* GRID DE POSTS */
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
 
-        .grid-artigos {
+        .grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
 
         .card {
-            background-color: var(--dark-panel);
+            background-color: var(--card-bg);
             border: 1px solid #333;
-            padding: 20px;
+            padding: 25px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             position: relative;
+            overflow: hidden;
         }
 
+        /* Efeito Hover (passar o mouse) */
         .card:hover {
             border-color: var(--neon-green);
-            transform: translateX(5px);
-            box-shadow: -5px 5px 0px var(--neon-purple);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 3px; height: 100%;
+            background-color: var(--neon-purple);
         }
 
         .card h2 {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             margin-bottom: 10px;
             color: #fff;
         }
 
         .card p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #aaa;
+            line-height: 1.5;
         }
 
-        .tag {
-            background-color: var(--neon-purple);
-            color: #fff;
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            border-radius: 4px;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
-        /* --- TELA DE LEITURA (Oculta no início) --- */
-        #leitura-view {
-            display: none; /* Começa escondido */
+        /* TELA DE LEITURA (Começa escondida) */
+        #leitura-overlay {
+            display: none; /* Segredo: Oculto no início */
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            padding: 20px;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         .btn-voltar {
             background: transparent;
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
-            padding: 10px 20px;
+            padding: 10px 25px;
+            font-size: 1rem;
             cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            transition: 0.3s;
             display: inline-block;
         }
 
         .btn-voltar:hover {
             background: var(--neon-green);
             color: #000;
+            box-shadow: 0 0 10px var(--neon-green);
         }
 
-        #conteudo-artigo h2 {
-            color: var(--neon-green);
+        #artigo-conteudo h2 {
             font-size: 2rem;
+            color: var(--neon-green);
             margin-bottom: 10px;
         }
 
-        #conteudo-artigo .meta {
-            color: #666;
-            margin-bottom: 20px;
+        #artigo-conteudo .meta {
+            color: var(--neon-purple);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
             border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
         }
 
-        #conteudo-artigo p {
-            margin-bottom: 15px;
-            line-height: 1.6;
+        #artigo-conteudo p {
+            margin-bottom: 20px;
             font-size: 1.1rem;
+            line-height: 1.8;
+            color: #ccc;
         }
 
-        /* Responsivo para Tablet/PC */
-        @media (min-width: 600px) {
-            .grid-artigos {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -152,104 +157,96 @@
     <div id="home-view">
         <header>
             <h1>Linux_Lab_</h1>
-            <p class="subtitle">> System Ready...</p>
+            <div class="subtitle" id="typewriter">> System Online...</div>
         </header>
 
         <div class="container">
-            <div class="grid-artigos">
+            <div class="grid">
                 <div class="card" onclick="abrirArtigo(1)">
-                    <span class="tag">Hardware</span>
-                    <h2>Renascimento do PC Antigo</h2>
-                    <p>Como reviver um Core 2 Duo usando Linux Mint e otimizações de Kernel.</p>
+                    <h2>Revivendo Hardware Antigo</h2>
+                    <p>Como transformei um PC "lixo" em uma máquina produtiva usando Linux Mint e XFCE.</p>
                 </div>
 
                 <div class="card" onclick="abrirArtigo(2)">
-                    <span class="tag">Gaming</span>
-                    <h2>Jogando no Linux</h2>
-                    <p>Steam, Proton e a verdade sobre rodar GTA V em hardware modesto.</p>
+                    <h2>Jogos no Linux (Guia)</h2>
+                    <p>A saga para rodar GTA e CS2. O que fazer quando o processador não tem SSE4.2?</p>
                 </div>
 
                 <div class="card" onclick="abrirArtigo(3)">
-                    <span class="tag">Terminal</span>
-                    <h2>Comandos Essenciais</h2>
-                    <p>Pare de ter medo da tela preta. O guia definitivo do terminal.</p>
+                    <h2>Estética Cyberpunk</h2>
+                    <p>Personalizando o terminal e o VS Code para ter o visual hacker definitivo.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="leitura-view">
-        <button class="btn-voltar" onclick="fecharArtigo()">< Voltar</button>
+    <div id="leitura-overlay">
+        <button class="btn-voltar" onclick="fecharArtigo()">< Voltar ao Lab</button>
         
-        <div id="conteudo-artigo">
+        <div id="artigo-conteudo">
             </div>
     </div>
 
     <script>
-        /* --- BANCO DE DADOS DOS ARTIGOS --- */
-        const artigos = {
+        // Banco de Dados dos seus posts
+        const posts = {
             1: {
-                titulo: "Renascimento do PC Antigo",
-                data: "19 Jan 2026 | Autor: Danilo",
+                titulo: "Revivendo Hardware Antigo",
+                meta: "19 Jan 2026 | Autor: Danilo",
                 texto: `
-                    <p>Muitas pessoas jogam fora computadores antigos achando que não servem mais. Grande erro.</p>
-                    <p>Neste laboratório, instalamos o Linux Mint XFCE em uma máquina com 4GB de RAM. O resultado? O sistema consome apenas 600MB ligado.</p>
-                    <p>Com navegadores leves e desativando animações, essa máquina voltou a ser produtiva para estudos e programação web.</p>
-                `
+                    <p>Muitos jogam fora computadores antigos achando que não prestam. Mas com o Kernel Linux certo, eles voam.</p>
+                    <p>Neste teste, pegamos uma máquina com 4GB de RAM. No Windows, ela travava para abrir o navegador. No Linux Mint XFCE, o sistema consome apenas 600MB ligado.</p>
+                    <p>O segredo é evitar ambientes pesados como GNOME e focar na eficiência.</p>`
             },
             2: {
-                titulo: "Jogando no Linux: O Guia",
-                data: "19 Jan 2026 | Autor: Danilo",
+                titulo: "Jogos no Linux: O Guia",
+                meta: "19 Jan 2026 | Categoria: Gaming",
                 texto: `
-                    <p>A era de que 'Linux não roda jogo' acabou. Com a Steam e o Proton, a barreira caiu.</p>
-                    <p>Porém, hardware antigo ainda sofre. Tentamos rodar CS2 sem SSE4.2 e falhamos, mas descobrimos joias como Unturned e MTA (GTA San Andreas Online) que rodam liso.</p>
-                    <p>O segredo é usar o Lutris para gerenciar jogos fora da Steam.</p>
-                `
+                    <p>A batalha de hoje foi tentar rodar CS2. Infelizmente, sem instruções SSE4.2 no processador, não rolou.</p>
+                    <p>Mas descobrimos o <strong>Lutris</strong> e o <strong>MTA (Multi Theft Auto)</strong>. O GTA San Andreas Online roda perfeito, com ping baixo e servidores brasileiros lotados.</p>
+                    <p>Não precisa de PC da NASA para se divertir, só precisa do sistema certo.</p>`
             },
             3: {
-                titulo: "Comandos Essenciais",
-                data: "18 Jan 2026 | Autor: Danilo",
+                titulo: "Estética Cyberpunk",
+                meta: "18 Jan 2026 | Categoria: Rice",
                 texto: `
-                    <p>sudo apt update: Atualiza a lista de repositórios.</p>
-                    <p>sudo apt install: Instala programas.</p>
-                    <p>ls: Lista arquivos da pasta.</p>
-                    <p>Não tenha medo do terminal. Ele é seu amigo.</p>
-                `
+                    <p>Rice é a arte de deixar seu Linux bonito. Usamos cores neon (#00ff41) e fundos escuros.</p>
+                    <p>No terminal, transparência é essencial. Fontes monospaced completam o visual.</p>`
             }
         };
 
-        /* --- LÓGICA DO SISTEMA (JAVASCRIPT) --- */
-
+        // --- FUNÇÃO PARA ABRIR O ARTIGO ---
         function abrirArtigo(id) {
-            const dados = artigos[id];
+            const dados = posts[id];
 
-            // 1. Preenche o conteúdo na tela de leitura
-            const htmlConteudo = `
+            // 1. Preenche o conteúdo
+            const html = `
                 <h2>${dados.titulo}</h2>
-                <div class="meta">${dados.data}</div>
+                <div class="meta">${dados.meta}</div>
                 ${dados.texto}
             `;
-            document.getElementById('conteudo-artigo').innerHTML = htmlConteudo;
+            document.getElementById('artigo-conteudo').innerHTML = html;
 
-            // 2. Troca a visualização (Esconde Home -> Mostra Artigo)
+            // 2. Troca as telas
             document.getElementById('home-view').style.display = 'none';
-            document.getElementById('leitura-view').style.display = 'block';
-            window.scrollTo(0, 0); // Sobe para o topo
+            document.getElementById('leitura-overlay').style.display = 'block';
+            window.scrollTo(0, 0);
 
-            // 3. A MÁGICA DO HISTÓRICO (Corrige o botão voltar do celular)
-            // Cria um novo estado no histórico do navegador
+            // 3. A CORREÇÃO MÁGICA (Isso resolve o bug do voltar)
+            // Adiciona um estado no histórico. O navegador acha que mudou de página.
             history.pushState({ page: 'artigo' }, null, '#artigo');
         }
 
+        // --- FUNÇÃO PARA FECHAR (Botão da tela) ---
         function fecharArtigo() {
-            // Quando clica no botão "Voltar" da tela, a gente simula o botão do celular
+            // Volta no histórico (aciona o evento popstate abaixo)
             history.back();
         }
 
-        // 4. ESCUTA O BOTÃO VOLTAR DO CELULAR/NAVEGADOR
+        // --- ESCUTA O BOTÃO VOLTAR DO CELULAR/NAVEGADOR ---
         window.addEventListener('popstate', function(event) {
-            // Se o usuário voltou no histórico, restauramos a Home
-            document.getElementById('leitura-view').style.display = 'none';
+            // Se o usuário apertou voltar, a gente restaura a Home
+            document.getElementById('leitura-overlay').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
         });
 
