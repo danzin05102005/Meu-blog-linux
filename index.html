@@ -3,136 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linux Lab | Cyberpunk</title>
+    <title>Linux Lab | Cyberpunk Blog</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* --- ESTILO GERAL CYBERPUNK --- */
-        :root {
-            --bg: #050505;
-            --panel: #111;
-            --text: #eee;
-            --neon-green: #00ff41;
-            --neon-purple: #9d00ff;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 0;
-            padding-bottom: 80px; /* Espaço pro botão do Pix */
-        }
-
-        /* --- CABEÇALHO & RELÓGIO --- */
-        header {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 2px solid var(--neon-green);
-            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-        }
-
+        /* --- ESTILO CYBERPUNK --- */
+        :root { --bg: #050505; --panel: #111; --text: #eee; --neon-green: #00ff41; --neon-purple: #9d00ff; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding-bottom: 80px; }
+        
+        header { text-align: center; padding: 20px; border-bottom: 2px solid var(--neon-green); background: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
         h1 { margin: 0; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
+        #relogio { font-size: 2.5rem; font-weight: bold; text-shadow: 0 0 10px var(--neon-green); margin: 10px 0; }
         
-        #relogio {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-green);
-            margin: 10px 0;
-        }
+        .search-box { margin: 20px auto; max-width: 90%; text-align: center; }
+        #busca-input { width: 100%; max-width: 400px; padding: 10px; background: #000; border: 1px solid var(--neon-purple); color: var(--neon-green); outline: none; border-radius: 5px; }
 
-        /* --- BARRA DE BUSCA --- */
-        .search-box {
-            margin: 20px auto;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        #busca-input {
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-            background: #000;
-            border: 1px solid var(--neon-purple);
-            color: var(--neon-green);
-            font-size: 1rem;
-            outline: none;
-            border-radius: 5px;
-        }
-
-        /* --- GRID DE POSTS --- */
         .container { padding: 20px; max-width: 800px; margin: 0 auto; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-
-        .card {
-            background: var(--panel);
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            border-color: var(--neon-green);
-            transform: translateY(-5px);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
-        }
-
+        
+        .card { background: var(--panel); border: 1px solid #333; padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .card:hover { border-color: var(--neon-green); transform: translateY(-5px); box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
         .card h2 { color: #fff; font-size: 1.2rem; margin-bottom: 5px; }
-        .card span { font-size: 0.8rem; color: var(--neon-purple); }
+        .card span { font-size: 0.8rem; color: var(--neon-purple); display: block; margin-bottom: 5px; }
 
-        /* --- TELA DE LEITURA (OVERLAY) --- */
-        #leitura-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg);
-            overflow-y: auto;
-            z-index: 100;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+        #leitura-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); overflow-y: auto; z-index: 100; padding: 20px; box-sizing: border-box; }
+        .btn-voltar { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 10px 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; display: inline-block; }
 
-        .btn-voltar {
-            background: transparent;
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
-            padding: 10px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
+        /* Estilo do conteúdo do post */
+        #conteudo-post h2 { color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 10px; }
+        #conteudo-post p { line-height: 1.6; color: #ccc; margin-bottom: 15px; }
+        #conteudo-post img { max-width: 100%; border: 1px solid var(--neon-purple); border-radius: 5px; margin: 10px 0; }
 
-        /* --- BOTÃO PIX FLUTUANTE --- */
-        .btn-pix {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--neon-purple);
-            color: #fff;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(157, 0, 255, 0.5);
-            cursor: pointer;
-            border: none;
-            z-index: 50;
-            animation: pulsando 2s infinite;
-        }
-
-        @keyframes pulsando {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
+        .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--neon-purple); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px rgba(157, 0, 255, 0.5); cursor: pointer; border: none; z-index: 50; animation: pulsando 2s infinite; }
+        @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        #loading { text-align: center; color: var(--neon-purple); margin-top: 50px; display: none; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -142,125 +47,155 @@
             <h1>Linux_Lab_</h1>
             <div id="relogio">00:00:00</div>
             <div class="search-box">
-                <input type="text" id="busca-input" placeholder="Buscar comando ou artigo..." onkeyup="filtrarPosts()">
+                <input type="text" id="busca-input" placeholder="Buscar no sistema..." onkeyup="window.filtrarPosts()">
             </div>
         </header>
 
         <div class="container">
+            <div id="loading">Conectando ao banco de dados...</div>
             <div class="grid" id="grid-posts">
                 </div>
         </div>
     </div>
 
-    <button class="btn-pix" onclick="fazerPix()">💸 Apoiar com Pix</button>
+    <button class="btn-pix" onclick="window.fazerPix()">💸 Apoiar</button>
 
     <div id="leitura-overlay">
-        <button class="btn-voltar" onclick="fecharPost()">< Voltar</button>
+        <button class="btn-voltar" onclick="window.fecharPost()">< Voltar ao Lab</button>
         <div id="conteudo-post"></div>
     </div>
 
-    <script>
-        /* --- DADOS DOS POSTS --- */
-        const artigos = [
-            {
-                id: 1,
-                titulo: "Revivendo PC Antigo",
-                categoria: "Hardware",
-                texto: "<h2>O Poder do XFCE</h2><p>Não jogue seu Core 2 Duo fora. Com Linux Mint XFCE e um SSD, ele voa. O consumo de RAM fica abaixo de 600MB.</p>"
-            },
-            {
-                id: 2,
-                titulo: "Jogos no Linux (GTA & CS)",
-                categoria: "Gaming",
-                texto: "<h2>MTA e Lutris</h2><p>Seu PC não tem SSE4.2 para o CS2? Sem problemas. O <strong>MTA San Andreas</strong> roda liso e tem servidores BR lotados. Use o Lutris para instalar.</p>"
-            },
-            {
-                id: 3,
-                titulo: "Terminal: Comandos Básicos",
-                categoria: "Tutorial",
-                texto: "<h2>Não tenha medo</h2><p><code>sudo apt update</code>: Atualiza listas.<br><code>sudo apt install htop</code>: Instala o monitor de sistema.</p>"
-            },
-            {
-                id: 4,
-                titulo: "Personalização Cyberpunk",
-                categoria: "Rice",
-                texto: "<h2>Estilo Neon</h2><p>Use cores hexadecimais como #00ff41 (Verde Matrix) e #bc13fe (Roxo Cyber) para deixar seu terminal incrível.</p>"
+    <script type="module">
+        // Importa o Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // SUA CONFIGURAÇÃO REAL
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnkmZ7BMasKQQGnAQSTi3jxiuCbxyLU7M",
+            authDomain: "meubloglinux.firebaseapp.com",
+            projectId: "meubloglinux",
+            storageBucket: "meubloglinux.firebasestorage.app",
+            messagingSenderId: "262696388382",
+            appId: "1:262696388382:web:d2784dc5dbba922cc8eb0f"
+        };
+
+        // Inicializa
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let listaArtigos = [];
+
+        // BUSCA DADOS DO FIREBASE
+        async function carregarPosts() {
+            const grid = document.getElementById('grid-posts');
+            const loading = document.getElementById('loading');
+            
+            loading.style.display = 'block';
+            grid.innerHTML = '';
+
+            try {
+                // Tenta pegar a coleção 'artigos'
+                const q = query(collection(db, "artigos")); 
+                const querySnapshot = await getDocs(q);
+
+                listaArtigos = []; // Reseta a lista
+                querySnapshot.forEach((doc) => {
+                    let dados = doc.data();
+                    dados.id = doc.id; 
+                    listaArtigos.push(dados);
+                });
+
+                renderizar(listaArtigos);
+            } catch (error) {
+                console.error("Erro:", error);
+                grid.innerHTML = '<p style="color:red; text-align:center;">Erro de conexão. Verifique se a coleção "artigos" existe no Firestore.</p>';
+            } finally {
+                loading.style.display = 'none';
             }
-        ];
+        }
 
-        /* --- 1. RENDERIZAR POSTS (COM BUSCA) --- */
-        const grid = document.getElementById('grid-posts');
-
+        // RENDERIZA OS CARDS
         function renderizar(lista) {
-            grid.innerHTML = ''; // Limpa
+            const grid = document.getElementById('grid-posts');
+            grid.innerHTML = '';
+            
+            if(lista.length === 0) {
+                grid.innerHTML = '<p style="text-align:center;">Nenhum artigo encontrado. Crie um documento na coleção "artigos" do Firebase.</p>';
+                return;
+            }
+
             lista.forEach(post => {
+                const cat = post.categoria || 'Sistema';
+                const tit = post.titulo || 'Sem Título';
+                
                 grid.innerHTML += `
-                    <div class="card" onclick="abrirPost(${post.id})">
-                        <span>// ${post.categoria}</span>
-                        <h2>${post.titulo}</h2>
+                    <div class="card" onclick="window.abrirPost('${post.id}')">
+                        <span>// ${cat}</span>
+                        <h2>${tit}</h2>
                     </div>
                 `;
             });
         }
-        // Inicia mostrando tudo
-        renderizar(artigos);
 
-        /* --- 2. FILTRO DE BUSCA --- */
-        function filtrarPosts() {
+        // --- FUNÇÕES GLOBAIS ---
+
+        window.abrirPost = function(id) {
+            const post = listaArtigos.find(p => p.id === id);
+            if (post) {
+                // Tenta pegar 'conteudo' ou 'texto', o que existir no banco
+                let conteudoHTML = post.conteudo || post.texto || '<p>Sem conteúdo...</p>';
+                
+                // Adiciona o título dentro do post se não tiver
+                if (!conteudoHTML.includes('<h2>')) {
+                    conteudoHTML = `<h2>${post.titulo}</h2>` + conteudoHTML;
+                }
+
+                document.getElementById('conteudo-post').innerHTML = conteudoHTML;
+                document.getElementById('home-view').style.display = 'none';
+                document.getElementById('leitura-overlay').style.display = 'block';
+                window.scrollTo(0,0);
+                
+                // Correção do botão voltar
+                history.pushState({page: 'leitura'}, null, '#leitura');
+            }
+        };
+
+        window.fecharPost = function() {
+            history.back();
+        };
+
+        window.filtrarPosts = function() {
             const termo = document.getElementById('busca-input').value.toLowerCase();
-            const filtrados = artigos.filter(post => 
-                post.titulo.toLowerCase().includes(termo) || 
-                post.categoria.toLowerCase().includes(termo)
+            const filtrados = listaArtigos.filter(post => 
+                (post.titulo && post.titulo.toLowerCase().includes(termo)) || 
+                (post.categoria && post.categoria.toLowerCase().includes(termo))
             );
             renderizar(filtrados);
-        }
+        };
 
-        /* --- 3. RELÓGIO DIGITAL --- */
+        window.fazerPix = function() {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            // Aqui você pode colocar sua chave pix real depois
+            alert("Obrigado pelo apoio! (Configurar Chave Pix)");
+        };
+
+        // Relógio
         function atualizarRelogio() {
             const agora = new Date();
-            const hora = agora.toLocaleTimeString('pt-BR');
-            document.getElementById('relogio').innerText = hora;
+            document.getElementById('relogio').innerText = agora.toLocaleTimeString('pt-BR');
         }
         setInterval(atualizarRelogio, 1000);
         atualizarRelogio();
-
-        /* --- 4. SISTEMA DE ABRIR POST (CORRIGIDO) --- */
-        function abrirPost(id) {
-            const post = artigos.find(p => p.id === id);
-            
-            // Preenche o conteúdo
-            document.getElementById('conteudo-post').innerHTML = post.texto;
-
-            // Troca a tela
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('leitura-overlay').style.display = 'block';
-            window.scrollTo(0,0);
-
-            // CORREÇÃO DO BUG DO VOLTAR
-            history.pushState({page: 'leitura'}, null, '#leitura');
-        }
-
-        function fecharPost() {
-            history.back(); // Aciona o popstate
-        }
-
-        // Evento que detecta o botão voltar do celular
+        
+        // Listener do botão voltar
         window.addEventListener('popstate', function() {
             document.getElementById('leitura-overlay').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
         });
 
-        /* --- 5. BOTÃO PIX COM CONFETE --- */
-        function fazerPix() {
-            // Solta o confete!
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-            
-            alert("Chave Pix copiada! (Simulação)\nObrigado pelo café, Dev! ☕");
-        }
+        // INICIAR
+        carregarPosts();
 
     </script>
 </body>
