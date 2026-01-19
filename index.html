@@ -19,6 +19,35 @@
         h1 { margin: 0; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; }
         #relogio { font-size: 2.5rem; font-weight: bold; text-shadow: 0 0 10px var(--neon-green); margin: 10px 0; }
         
+        /* NOVO: BARRA DE NAVEGAÇÃO (MENU) */
+        .nav-bar {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+            text-decoration: none; /* Para links funcionarem como botões */
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
         /* EFEITO DE DIGITAÇÃO */
         .cursor-blink { animation: piscar 1s infinite; font-weight: bold; color: var(--neon-green); }
         @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
@@ -48,12 +77,14 @@
         .btn-like:hover { border-color: #ff4040; color: #ff4040; }
         .btn-like.curtido { background: rgba(255, 64, 64, 0.2); border-color: #ff4040; color: #ff4040; cursor: default; }
 
-        /* TELA DE LEITURA */
-        #leitura-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); overflow-y: auto; z-index: 100; padding: 20px; box-sizing: border-box; }
+        /* TELAS DE OVERLAY (LEITURA E SOBRE) */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); overflow-y: auto; z-index: 100; padding: 20px; box-sizing: border-box; }
         .btn-voltar { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 10px 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
-        #conteudo-post h2 { color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 10px; }
-        #conteudo-post img { max-width: 100%; border-radius: 5px; margin: 10px 0; border: 1px solid var(--neon-purple); }
-        #conteudo-post p { line-height: 1.6; color: #ccc; margin-bottom: 15px; }
+        
+        /* Conteúdo dos posts e do sobre */
+        .overlay-content h2 { color: var(--neon-green); border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .overlay-content img { max-width: 100%; border-radius: 5px; margin: 10px 0; border: 1px solid var(--neon-purple); }
+        .overlay-content p { line-height: 1.6; color: #ccc; margin-bottom: 15px; }
         pre { background: #1a1a1a; padding: 10px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; color: var(--neon-green); }
 
         /* BOTÃO PIX */
@@ -87,6 +118,11 @@
                 > _
             </div>
 
+            <div class="nav-bar">
+                <button class="nav-btn" onclick="window.abrirSobre()">[ 💾 SOBRE ]</button>
+                <a href="mailto:danilogardiano@gmail.com?subject=Ideia para o Linux Lab&body=Ola Danilo, tenho uma sugestão de post:" class="nav-btn">[ 💡 ENVIAR IDEIA ]</a>
+            </div>
+
             <div class="search-box">
                 <input type="text" id="busca-input" placeholder="Buscar no sistema..." onkeyup="window.filtrarPosts()">
             </div>
@@ -114,9 +150,27 @@
         <button class="cookie-btn btn-deny" onclick="window.recusarCookies()">RECUSAR</button>
     </div>
 
-    <div id="leitura-overlay">
-        <button class="btn-voltar" onclick="window.fecharPost()">< Voltar ao Lab</button>
-        <div id="conteudo-post"></div>
+    <div id="leitura-overlay" class="overlay">
+        <button class="btn-voltar" onclick="window.fecharOverlays()">< Voltar ao Lab</button>
+        <div id="conteudo-post" class="overlay-content"></div>
+    </div>
+
+    <div id="sobre-overlay" class="overlay">
+        <button class="btn-voltar" onclick="window.fecharOverlays()">< Voltar ao Lab</button>
+        <div class="overlay-content" style="max-width: 800px; margin: 0 auto;">
+            <h2>// SOBRE O PROJETO</h2>
+            <p>O <strong>Linux Lab</strong> é um experimento digital focado em tecnologia, hacking ético e cultura open source.</p>
+            <p>Este sistema foi desenvolvido do zero utilizando tecnologias modernas de front-end e Firebase para armazenamento de dados em tempo real.</p>
+            
+            <h3>// MISSÃO</h3>
+            <p>> Compartilhar conhecimento acessível.</p>
+            <p>> Desmistificar o uso do Linux para jogos e trabalho.</p>
+            <p>> Criar uma comunidade engajada e descentralizada.</p>
+
+            <h3>// DESENVOLVEDOR</h3>
+            <p>Criado e mantido por <strong>Danilo Gardiano</strong>.</p>
+            <p>Status: <span style="color:var(--neon-green)">ONLINE</span></p>
+        </div>
     </div>
 
     <script type="module">
@@ -136,7 +190,20 @@
         const db = getFirestore(app);
         let listaArtigos = [];
 
-        // --- 1. EFEITO DE DIGITAÇÃO ---
+        // --- FUNÇÕES DE NAVEGAÇÃO ---
+        window.abrirSobre = function() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('sobre-overlay').style.display = 'block';
+            window.scrollTo(0,0);
+        };
+
+        window.fecharOverlays = function() {
+            document.getElementById('leitura-overlay').style.display = 'none';
+            document.getElementById('sobre-overlay').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        };
+
+        // --- EFEITO DIGITAÇÃO ---
         const mensagens = [
             "Iniciando Kernel v5.1...",
             "Carregando módulos de segurança...",
@@ -161,7 +228,7 @@
         }
         digitarTerminal();
 
-        // --- 2. SISTEMA DE LIKES (LOCALSTORAGE) ---
+        // --- SISTEMA DE LIKES ---
         function jaCurtiu(id) {
             const likesSalvos = JSON.parse(localStorage.getItem('meusLikes') || '[]');
             return likesSalvos.includes(id);
@@ -183,7 +250,7 @@
             confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX / window.innerWidth, y: event.clientY / window.innerHeight } });
         };
 
-        // --- 3. MATRIX RAIN ---
+        // --- MATRIX RAIN ---
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -206,7 +273,7 @@
         }
         setInterval(drawMatrix, 50);
 
-        // --- 4. RENDERIZAÇÃO ---
+        // --- RENDERIZAÇÃO ---
         function iniciarSincronizacao() {
             const grid = document.getElementById('grid-posts');
             const loading = document.getElementById('loading');
@@ -275,7 +342,9 @@
             }
         };
 
-        window.fecharPost = function() { history.back(); };
+        // Atualizado para fechar qualquer overlay
+        window.fecharPost = function() { window.fecharOverlays(); };
+        
         window.filtrarPosts = function() {
             const termo = document.getElementById('busca-input').value.toLowerCase();
             const filtrados = listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo));
@@ -294,8 +363,7 @@
         
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
         window.addEventListener('popstate', () => {
-            document.getElementById('leitura-overlay').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
+            window.fecharOverlays();
         });
 
         iniciarSincronizacao();
