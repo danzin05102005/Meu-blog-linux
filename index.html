@@ -7,100 +7,59 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* --- ESTILO GERAL --- */
-        :root {
-            --bg: #050505; --panel: rgba(17, 17, 17, 0.95); --text: #eee; --neon-green: #00ff41; --neon-purple: #9d00ff; --border: #333; --matrix-trail: rgba(0, 0, 0, 0.05);
-        }
-        body.light-mode {
-            --bg: #e0e0e0; --panel: rgba(255, 255, 255, 0.95); --text: #111; --neon-green: #008f11; --neon-purple: #6200a3; --border: #ccc; --matrix-trail: rgba(255, 255, 255, 0.05);
-        }
-        /* Cursor Crosshair (Mira) */
+        :root { --bg: #050505; --panel: rgba(17, 17, 17, 0.95); --text: #eee; --neon-green: #00ff41; --neon-purple: #9d00ff; --border: #333; --matrix-trail: rgba(0, 0, 0, 0.05); }
+        body.light-mode { --bg: #e0e0e0; --panel: rgba(255, 255, 255, 0.95); --text: #111; --neon-green: #008f11; --neon-purple: #6200a3; --border: #ccc; --matrix-trail: rgba(255, 255, 255, 0.05); }
         body { background-color: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding-bottom: 0; overflow-x: hidden; transition: 0.3s; cursor: crosshair; }
-        
         button, a, .card { cursor: alias; } 
-
         canvas#matrix { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; }
-
         header { text-align: center; padding: 20px; border-bottom: 2px solid var(--neon-green); background: var(--panel); backdrop-filter: blur(5px); transition: 0.3s; position: relative; }
-        
-        /* GLITCH TÍTULO */
         h1 { margin: 0; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; position: relative; display: inline-block; }
-        h1:hover {
-            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-            color: var(--neon-purple);
-        }
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
-
+        h1:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; color: var(--neon-purple); }
+        @keyframes glitch { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
         #relogio { font-size: 2.5rem; font-weight: bold; text-shadow: 0 0 10px var(--neon-green); margin: 10px 0; }
-        
         #btn-terminal { background: transparent; border: none; color: var(--neon-green); font-size: 1.5rem; cursor: pointer; position: absolute; top: 20px; right: 20px; font-weight: bold; animation: piscar 2s infinite; }
-
         .nav-bar { margin-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .nav-btn { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 8px 16px; cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold; text-transform: uppercase; transition: 0.3s; text-decoration: none; display: inline-block; }
         .nav-btn:hover { background: var(--neon-green); color: var(--bg); box-shadow: 0 0 15px var(--neon-green); }
-
         .cursor-blink { animation: piscar 1s infinite; font-weight: bold; color: var(--neon-green); }
         @keyframes piscar { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
-
         .search-box { margin: 20px auto; max-width: 90%; text-align: center; }
         #busca-input { width: 100%; max-width: 400px; padding: 10px; background: var(--bg); border: 1px solid var(--neon-purple); color: var(--neon-green); outline: none; border-radius: 5px; transition: 0.3s; }
-
         .container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 60vh; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative; display: flex; flex-direction: column; }
         .card:hover { border-color: var(--neon-green); transform: translateY(-5px); box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
         .card-img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); display: block; background: #222; }
         .card-body { padding: 15px; }
         .card h2 { color: var(--text); font-size: 1.2rem; margin: 5px 0; }
         .card span { font-size: 0.8rem; color: var(--neon-purple); display: block; margin-bottom: 5px; }
-        
         .like-area { margin-top: 10px; display: flex; align-items: center; font-size: 0.9rem; color: #888; }
         .btn-like { background: none; border: 1px solid var(--border); color: #888; cursor: pointer; padding: 5px 12px; border-radius: 20px; margin-right: 5px; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
         .btn-like:hover { border-color: #ff4040; color: #ff4040; }
         .btn-like.curtido { background: rgba(255, 64, 64, 0.2); border-color: #ff4040; color: #ff4040; cursor: default; }
-
-        /* OVERLAYS */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); overflow-y: auto; z-index: 100; padding: 20px; box-sizing: border-box; }
         .btn-voltar { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 10px 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
         .overlay-content h2 { color: var(--neon-green); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .overlay-content img { max-width: 100%; border-radius: 5px; margin: 10px 0; border: 1px solid var(--neon-purple); }
         .overlay-content p { line-height: 1.6; color: var(--text); margin-bottom: 15px; }
-        
         pre { background: #1a1a1a; padding: 10px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; color: #00ff41; }
-        
-        /* TERMINAL OTIMIZADO */
         #secret-terminal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.95); border-bottom: 2px solid var(--neon-green); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; font-family: 'Courier New', monospace; text-align: left; }
-
         .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--neon-purple); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px rgba(157, 0, 255, 0.5); cursor: pointer; border: none; z-index: 50; animation: pulsando 2s infinite; }
         @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
         #cookie-banner { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; background-color: var(--panel); border: 1px solid var(--neon-green); padding: 20px; z-index: 200; border-radius: 10px; text-align: center; color: var(--text); }
         .cookie-btn { padding: 10px 20px; margin: 5px; cursor: pointer; font-weight: bold; border-radius: 5px; }
         .btn-accept { background: var(--neon-green); border: none; }
         .btn-deny { background: transparent; border: 1px solid #555; color: var(--text); }
-
         footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--neon-green); background: var(--panel); margin-top: 50px; position: relative; z-index: 10; transition: 0.3s; }
         .social-links { margin: 15px 0; }
         .social-links a { color: var(--neon-purple); text-decoration: none; margin: 0 15px; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
         .social-links a:hover { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); letter-spacing: 2px; }
         .copyright { color: #888; font-size: 0.8rem; }
-        
-        /* NOVO: MOSTRADOR DE IP NO FOOTER */
         #ip-display { font-size: 0.8rem; color: var(--neon-purple); margin-top: 10px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-
     <canvas id="matrix"></canvas>
-
     <div id="secret-terminal">
         <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">
             Linux Lab Shell v1.0<br>
@@ -112,17 +71,12 @@
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
         </div>
     </div>
-
     <div id="home-view">
         <header>
             <button id="btn-terminal" onclick="window.toggleTerminal(); window.playClick()">>_</button>
             <h1>Linux_Lab_</h1>
             <div id="relogio">00:00:00</div>
-            
-            <div id="terminal-typing" style="color:var(--neon-purple); font-size:0.9rem; margin: 10px 0; min-height: 20px;">
-                > _
-            </div>
-
+            <div id="terminal-typing" style="color:var(--neon-purple); font-size:0.9rem; margin: 10px 0; min-height: 20px;">> _</div>
             <div class="nav-bar">
                 <button class="nav-btn" id="btn-sound" onclick="window.alternarSom()">[ 🔇 SOM ]</button>
                 <button class="nav-btn" onclick="window.alternarTema()">[ 🌗 TEMA ]</button>
@@ -130,57 +84,43 @@
                 <button class="nav-btn" onclick="window.abrirSobre()">[ 💾 SOBRE ]</button>
                 <a href="mailto:dan2050mg@gmail.com?subject=Ideia para o Linux Lab&body=Ola Danilo, tenho uma sugestão de post:" class="nav-btn" onmouseenter="window.playHover()">[ 💡 ENVIAR IDEIA ]</a>
             </div>
-
-            <div class="search-box">
-                <input type="text" id="busca-input" placeholder="Buscar no sistema..." onkeyup="window.filtrarPosts()">
-            </div>
+            <div class="search-box"><input type="text" id="busca-input" placeholder="Buscar no sistema..." onkeyup="window.filtrarPosts()"></div>
         </header>
-
         <div class="container">
             <div id="loading" style="text-align:center; color:var(--neon-purple); margin-top:20px;">Carregando sistema...</div>
             <div class="grid" id="grid-posts"></div>
         </div>
-
         <footer>
             <p style="font-weight: bold;">LINUX_LAB_ // SYSTEM.ROOT</p>
-            <div class="social-links">
-                <a href="https://x.com/DaniloGardiano" target="_blank" onmouseenter="window.playHover()">TWITTER</a>
-            </div>
+            <div class="social-links"><a href="https://x.com/DaniloGardiano" target="_blank" onmouseenter="window.playHover()">TWITTER</a></div>
             <p class="copyright">Developed by <strong>Danilo</strong> © 2026<br>All systems operational.</p>
             <div id="ip-display">CLIENT IP: DETECTING...</div>
         </footer>
     </div>
-
     <button class="btn-pix" onclick="window.fazerPix()">💸 Apoiar</button>
-
     <div id="cookie-banner">
         <p>🍪 Sistema: Aceita cookies?</p>
         <button class="cookie-btn btn-accept" onclick="window.aceitarCookies()">ACEITAR</button>
         <button class="cookie-btn btn-deny" onclick="window.recusarCookies()">RECUSAR</button>
     </div>
-
     <div id="leitura-overlay" class="overlay">
         <button class="btn-voltar" onclick="history.back()">< Voltar ao Lab</button>
         <div id="conteudo-post" class="overlay-content"></div>
     </div>
-
     <div id="sobre-overlay" class="overlay">
         <button class="btn-voltar" onclick="history.back()">< Voltar ao Lab</button>
         <div class="overlay-content" style="max-width: 800px; margin: 0 auto;">
             <h2>// SOBRE O PROJETO</h2>
             <p>O <strong>Linux Lab</strong> é um experimento digital focado em tecnologia, hacking ético e cultura open source.</p>
-            <p>Este sistema foi desenvolvido do zero utilizando tecnologias modernas de front-end e Firebase para armazenamento de dados em tempo real.</p>
             <h3>// DESENVOLVEDOR</h3>
             <p>Criado e mantido por <strong>Danilo Gardiano</strong>.</p>
         </div>
     </div>
-
     <div id="tutorial-overlay" class="overlay">
         <button class="btn-voltar" onclick="history.back()">< Entendido</button>
         <div class="overlay-content" style="max-width: 800px; margin: 0 auto; text-align: left;">
             <h2 style="color:var(--neon-purple)">// GUIA DO SISTEMA</h2>
             <p>Bem-vindo ao Linux Lab. Este não é um blog comum. Veja como interagir com o sistema:</p>
-
             <div style="border:1px solid var(--neon-green); padding:15px; margin-bottom:20px; border-radius:5px;">
                 <strong style="color:var(--neon-green)">1. TERMINAL SECRETO 🖥️</strong><br>
                 Clique no botão <strong>>_</strong> no topo da tela ou pressione a tecla <strong>' (aspas simples)</strong> no teclado.<br><br>
@@ -195,299 +135,113 @@
                     <li><code>exit</code> (Fecha o terminal)</li>
                 </ul>
             </div>
-
             <div style="border:1px solid var(--neon-green); padding:15px; margin-bottom:20px; border-radius:5px;">
                 <strong style="color:var(--neon-green)">2. PERSONALIZAÇÃO 🌗</strong><br>
                 Use o botão <strong>[ TEMA ]</strong> e <strong>[ SOM ]</strong> no menu para deixar o sistema do seu jeito.
             </div>
-
             <p>Explore, aprenda e divirta-se. O sistema é seu.</p>
-            
             <button id="btn-sessao" onclick="window.iniciarSessao()" style="background:var(--neon-green); border:none; padding:10px 20px; font-weight:bold; cursor:pointer; margin-top:10px;">INICIAR SESSÃO ></button>
         </div>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, query, onSnapshot, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDnkmZ7BMasKQQGnAQSTi3jxiuCbxyLU7M",
-            authDomain: "meubloglinux.firebaseapp.com",
-            projectId: "meubloglinux",
-            storageBucket: "meubloglinux.firebasestorage.app",
-            messagingSenderId: "262696388382",
-            appId: "1:262696388382:web:d2784dc5dbba922cc8eb0f"
-        };
-
+        import { getFirestore, collection, query, onSnapshot, doc, updateDoc, increment, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        const firebaseConfig = { apiKey: "AIzaSyDnkmZ7BMasKQQGnAQSTi3jxiuCbxyLU7M", authDomain: "meubloglinux.firebaseapp.com", projectId: "meubloglinux", storageBucket: "meubloglinux.firebasestorage.app", messagingSenderId: "262696388382", appId: "1:262696388382:web:d2784dc5dbba922cc8eb0f" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         let listaArtigos = [];
 
-        // --- IP TRACKER (NOVO) ---
+        // --- IP TRACKER (ESPIÃO) ---
         async function rastrearIP() {
             try {
-                // Usa API gratuita para pegar IP
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
                 const ip = data.ip;
-
-                // Atualiza Footer
                 document.getElementById('ip-display').innerText = `CLIENT IP: ${ip} [TRACKED]`;
-
-                // Atualiza Terminal Secreto
-                const termLog = document.getElementById('terminal-ip-log');
-                termLog.innerHTML = `> CONNECTION ESTABLISHED.<br>> CLIENT IP: <span style="color:#ff0055">${ip}</span><br>> ACCESS LOGGED.`;
+                document.getElementById('terminal-ip-log').innerHTML = `> CONNECTION ESTABLISHED.<br>> CLIENT IP: <span style="color:#ff0055">${ip}</span><br>> ACCESS LOGGED.`;
+                
+                // SALVAR NO BANCO DE DADOS (SILENCIOSAMENTE)
+                // Verifica se já não salvamos hoje pra não spammar o banco
+                const hoje = new Date().toISOString().slice(0,10);
+                const visitado = localStorage.getItem('logData');
+                
+                if (visitado !== hoje) {
+                    await addDoc(collection(db, "logs"), {
+                        ip: ip,
+                        data: new Date().toISOString(),
+                        agent: navigator.userAgent
+                    });
+                    localStorage.setItem('logData', hoje);
+                }
             } catch (e) {
-                console.log("Erro ao pegar IP");
                 document.getElementById('ip-display').innerText = "CLIENT IP: HIDDEN [PROXY DETECTED]";
             }
         }
-        rastrearIP(); // Roda ao iniciar
+        rastrearIP();
 
         // --- SISTEMA DE SOM ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
         let somAtivado = false; 
-
-        function destravaAudio() {
-            if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-            ['click', 'touchstart', 'keydown'].forEach(evt => document.removeEventListener(evt, destravaAudio));
-        }
+        function destravaAudio() { if (audioCtx.state === 'suspended') { audioCtx.resume(); } ['click', 'touchstart', 'keydown'].forEach(evt => document.removeEventListener(evt, destravaAudio)); }
         ['click', 'touchstart', 'keydown'].forEach(evt => document.addEventListener(evt, destravaAudio));
-
-        function beep(duration, frequency, volume, type, callback) {
-            if (!somAtivado) return;
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            if (volume) gainNode.gain.value = volume;
-            if (frequency) oscillator.frequency.value = frequency;
-            if (type) oscillator.type = type;
-            oscillator.start(audioCtx.currentTime);
-            oscillator.stop(audioCtx.currentTime + ((duration || 500) / 1000));
-            if (callback) oscillator.onended = callback;
-        }
-
+        function beep(duration, frequency, volume, type, callback) { if (!somAtivado) return; const oscillator = audioCtx.createOscillator(); const gainNode = audioCtx.createGain(); oscillator.connect(gainNode); gainNode.connect(audioCtx.destination); if (volume) gainNode.gain.value = volume; if (frequency) oscillator.frequency.value = frequency; if (type) oscillator.type = type; oscillator.start(audioCtx.currentTime); oscillator.stop(audioCtx.currentTime + ((duration || 500) / 1000)); if (callback) oscillator.onended = callback; }
         window.playHover = () => beep(50, 800, 0.05, "sine");
         window.playClick = () => beep(100, 400, 0.1, "square");
-
-        window.alternarSom = function() {
-            somAtivado = !somAtivado;
-            const btn = document.getElementById('btn-sound');
-            if (somAtivado) {
-                btn.innerText = "[ 🔊 SOM ]"; btn.style.borderColor = "var(--neon-green)"; 
-                window.playClick(); 
-                if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-            } else {
-                btn.innerText = "[ 🔇 SOM ]"; btn.style.borderColor = "#555";
-            }
-            localStorage.setItem('somLinuxLab', somAtivado ? 'on' : 'off');
-        };
-        if (localStorage.getItem('somLinuxLab') === 'on') { 
-            somAtivado = true; 
-            document.getElementById('btn-sound').innerText = "[ 🔊 SOM ]"; 
-        }
-
-        function anexarSons() {
-            document.querySelectorAll('button, a, .card, input').forEach(el => {
-                el.addEventListener('mouseenter', window.playHover);
-                el.addEventListener('click', window.playClick);
-            });
-        }
+        window.alternarSom = function() { somAtivado = !somAtivado; const btn = document.getElementById('btn-sound'); if (somAtivado) { btn.innerText = "[ 🔊 SOM ]"; btn.style.borderColor = "var(--neon-green)"; window.playClick(); if (audioCtx.state === 'suspended') { audioCtx.resume(); } } else { btn.innerText = "[ 🔇 SOM ]"; btn.style.borderColor = "#555"; } localStorage.setItem('somLinuxLab', somAtivado ? 'on' : 'off'); };
+        if (localStorage.getItem('somLinuxLab') === 'on') { somAtivado = true; document.getElementById('btn-sound').innerText = "[ 🔊 SOM ]"; }
+        function anexarSons() { document.querySelectorAll('button, a, .card, input').forEach(el => { el.addEventListener('mouseenter', window.playHover); el.addEventListener('click', window.playClick); }); }
         setTimeout(anexarSons, 2000); 
 
         // --- KONAMI CODE ---
         const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
         let konamiIndex = 0;
-        document.addEventListener('keydown', (e) => {
-            if (e.key === konamiCode[konamiIndex]) {
-                konamiIndex++;
-                if (konamiIndex === konamiCode.length) {
-                    alert("👾 MODO GOD ATIVADO! 👾");
-                    document.documentElement.style.setProperty('--neon-green', '#ff00ff'); 
-                    confetti({ particleCount: 500, spread: 200, origin: { y: 0.6 } });
-                    window.playClick();
-                    konamiIndex = 0;
-                }
-            } else { konamiIndex = 0; }
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === konamiCode[konamiIndex]) { konamiIndex++; if (konamiIndex === konamiCode.length) { alert("👾 MODO GOD ATIVADO! 👾"); document.documentElement.style.setProperty('--neon-green', '#ff00ff'); confetti({ particleCount: 500, spread: 200, origin: { y: 0.6 } }); window.playClick(); konamiIndex = 0; } } else { konamiIndex = 0; } });
 
         // --- NAVEGAÇÃO ---
-        function abrirOverlay(id, hash) {
-            document.getElementById('home-view').style.display = 'none';
-            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); 
-            document.getElementById(id).style.display = 'block';
-            window.scrollTo(0,0);
-            history.pushState({page: id}, null, hash);
-            window.playClick();
-        }
-
+        function abrirOverlay(id, hash) { document.getElementById('home-view').style.display = 'none'; document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); window.playClick(); }
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
-        window.abrirTutorial = () => {
-            abrirOverlay('tutorial-overlay', '#ajuda');
-            if (localStorage.getItem('vistoTutorial')) {
-                document.getElementById('btn-sessao').style.display = 'none';
-            } else {
-                document.getElementById('btn-sessao').style.display = 'inline-block';
-            }
-        };
-
-        window.iniciarSessao = () => {
-            localStorage.setItem('vistoTutorial', 'sim');
-            window.playClick();
-            history.back(); 
-        };
-
-        function resetarParaHome() {
-            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none');
-            document.getElementById('home-view').style.display = 'block';
-        }
-
+        window.abrirTutorial = () => { abrirOverlay('tutorial-overlay', '#ajuda'); if (localStorage.getItem('vistoTutorial')) { document.getElementById('btn-sessao').style.display = 'none'; } else { document.getElementById('btn-sessao').style.display = 'inline-block'; } };
+        window.iniciarSessao = () => { localStorage.setItem('vistoTutorial', 'sim'); window.playClick(); history.back(); };
+        function resetarParaHome() { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'block'; }
         if (!localStorage.getItem('vistoTutorial')) { setTimeout(() => { window.abrirTutorial(); }, 1500); }
 
         // --- TERMINAL ---
-        window.toggleTerminal = function() {
-            const term = document.getElementById('secret-terminal');
-            const input = document.getElementById('terminal-input');
-            if (window.getComputedStyle(term).display === 'none') { term.style.display = 'block'; input.focus(); } 
-            else { term.style.display = 'none'; }
-        };
+        window.toggleTerminal = function() { const term = document.getElementById('secret-terminal'); const input = document.getElementById('terminal-input'); if (window.getComputedStyle(term).display === 'none') { term.style.display = 'block'; input.focus(); } else { term.style.display = 'none'; } };
         document.addEventListener('keydown', (e) => { if (e.key === "'" || e.key === "`") { e.preventDefault(); window.toggleTerminal(); } });
-
         function mudarCorMatrix(cor) { document.documentElement.style.setProperty('--neon-green', cor); localStorage.setItem('matrixColor', cor); }
         if(localStorage.getItem('matrixColor')) mudarCorMatrix(localStorage.getItem('matrixColor'));
-
         const terminalInput = document.getElementById('terminal-input');
         const terminalOutput = document.getElementById('terminal-output');
-        terminalInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                window.playClick();
-                const comando = this.value.toLowerCase().trim();
-                this.value = ''; 
-                terminalOutput.innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${comando}</div>`;
-                let resposta = "";
-                if (comando === 'exit') { window.toggleTerminal(); return; }
-                else if (comando === 'help') resposta = "Comandos: help, clear, date, reboot, matrix red/blue/default, whoami, exit";
-                else if (comando === 'clear') { terminalOutput.innerHTML = "Linux Lab Shell v1.0<br>"; return; }
-                else if (comando === 'date') resposta = new Date().toString();
-                else if (comando === 'reboot') { resposta = "Reiniciando..."; setTimeout(() => location.reload(), 1000); }
-                else if (comando === 'whoami') resposta = "Visitante (Guest)";
-                else if (comando === 'matrix red') { mudarCorMatrix('#ff0000'); resposta = "Alerta Vermelho! 🔴"; }
-                else if (comando === 'matrix blue') { mudarCorMatrix('#00eeff'); resposta = "Resfriamento ativo. 🔵"; }
-                else if (comando === 'matrix green' || comando === 'matrix default') { mudarCorMatrix('#00ff41'); resposta = "Padrão restaurado. 🟢"; }
-                else if (comando !== '') resposta = `Comando desconhecido: ${comando}`;
-                if(resposta) terminalOutput.innerHTML += `<div style="color:#eee; margin-bottom:10px;">${resposta}</div>`;
-                document.getElementById('secret-terminal').scrollTop = document.getElementById('secret-terminal').scrollHeight;
-            }
-        });
+        terminalInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { window.playClick(); const comando = this.value.toLowerCase().trim(); this.value = ''; terminalOutput.innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${comando}</div>`; let resposta = ""; if (comando === 'exit') { window.toggleTerminal(); return; } else if (comando === 'help') resposta = "Comandos: help, clear, date, reboot, matrix red/blue/default, whoami, exit"; else if (comando === 'clear') { terminalOutput.innerHTML = "Linux Lab Shell v1.0<br>"; return; } else if (comando === 'date') resposta = new Date().toString(); else if (comando === 'reboot') { resposta = "Reiniciando..."; setTimeout(() => location.reload(), 1000); } else if (comando === 'whoami') resposta = "Visitante (Guest)"; else if (comando === 'matrix red') { mudarCorMatrix('#ff0000'); resposta = "Alerta Vermelho! 🔴"; } else if (comando === 'matrix blue') { mudarCorMatrix('#00eeff'); resposta = "Resfriamento ativo. 🔵"; } else if (comando === 'matrix green' || comando === 'matrix default') { mudarCorMatrix('#00ff41'); resposta = "Padrão restaurado. 🟢"; } else if (comando !== '') resposta = `Comando desconhecido: ${comando}`; if(resposta) terminalOutput.innerHTML += `<div style="color:#eee; margin-bottom:10px;">${resposta}</div>`; document.getElementById('secret-terminal').scrollTop = document.getElementById('secret-terminal').scrollHeight; } });
 
-        // --- TEMA ---
-        window.alternarTema = function() {
-            document.body.classList.toggle('light-mode');
-            window.playClick();
-            localStorage.setItem('temaLinuxLab', document.body.classList.contains('light-mode') ? 'claro' : 'escuro');
-        };
+        // --- TEMA E MATRIX ---
+        window.alternarTema = function() { document.body.classList.toggle('light-mode'); window.playClick(); localStorage.setItem('temaLinuxLab', document.body.classList.contains('light-mode') ? 'claro' : 'escuro'); };
         if (localStorage.getItem('temaLinuxLab') === 'claro') document.body.classList.add('light-mode');
-
-        // --- MATRIX ---
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const letters = "010101LINUXCODEHACKERGLITCH";
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-        function drawMatrix() {
-            const corRastro = getComputedStyle(document.documentElement).getPropertyValue('--matrix-trail').trim();
-            const corLetra = getComputedStyle(document.documentElement).getPropertyValue('--neon-green').trim();
-            ctx.fillStyle = corRastro; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = corLetra; ctx.font = fontSize + "px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                const text = letters[Math.floor(Math.random() * letters.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
+        const canvas = document.getElementById('matrix'); const ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight; const letters = "010101LINUXCODEHACKERGLITCH"; const fontSize = 14; const columns = canvas.width / fontSize; const drops = Array(Math.floor(columns)).fill(1);
+        function drawMatrix() { const corRastro = getComputedStyle(document.documentElement).getPropertyValue('--matrix-trail').trim(); const corLetra = getComputedStyle(document.documentElement).getPropertyValue('--neon-green').trim(); ctx.fillStyle = corRastro; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = corLetra; ctx.font = fontSize + "px monospace"; for (let i = 0; i < drops.length; i++) { const text = letters[Math.floor(Math.random() * letters.length)]; ctx.fillText(text, i * fontSize, drops[i] * fontSize); if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0; drops[i]++; } }
         setInterval(drawMatrix, 50);
 
         // --- DIGITAÇÃO ---
         const mensagens = [ "Iniciando Kernel v5.1...", "Carregando módulos...", "Conectando ao Firebase...", "Bem-vindo ao Linux Lab." ];
-        async function digitarTerminal() {
-            const elemento = document.getElementById('terminal-typing');
-            for (let i = 0; i < mensagens.length; i++) {
-                const frase = mensagens[i];
-                elemento.innerText = "> "; 
-                for (let letra of frase) { elemento.innerText += letra; await new Promise(r => setTimeout(r, 50)); }
-                await new Promise(r => setTimeout(r, 1000));
-            }
-            elemento.innerHTML = "> Sistema Online <span class='cursor-blink'>_</span>";
-        }
+        async function digitarTerminal() { const elemento = document.getElementById('terminal-typing'); for (let i = 0; i < mensagens.length; i++) { const frase = mensagens[i]; elemento.innerText = "> "; for (let letra of frase) { elemento.innerText += letra; await new Promise(r => setTimeout(r, 50)); } await new Promise(r => setTimeout(r, 1000)); } elemento.innerHTML = "> Sistema Online <span class='cursor-blink'>_</span>"; }
         digitarTerminal();
 
         // --- CORE ---
         function jaCurtiu(id) { return JSON.parse(localStorage.getItem('meusLikes') || '[]').includes(id); }
         function salvarLike(id) { const likes = JSON.parse(localStorage.getItem('meusLikes') || '[]'); likes.push(id); localStorage.setItem('meusLikes', JSON.stringify(likes)); }
-        window.curtirPost = async function(event, id) {
-            event.stopPropagation();
-            if (jaCurtiu(id)) { alert("Já curtiu! 👍"); return; }
-            window.playClick();
-            await updateDoc(doc(db, "artigos", id), { likes: increment(1) });
-            salvarLike(id);
-            confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX / window.innerWidth, y: event.clientY / window.innerHeight } });
-        };
-
-        function iniciarSincronizacao() {
-            onSnapshot(query(collection(db, "artigos")), (snapshot) => {
-                listaArtigos = [];
-                snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; listaArtigos.push(d); });
-                renderizar(listaArtigos);
-                document.getElementById('loading').style.display = 'none';
-            });
-        }
-
-        function renderizar(lista) {
-            const grid = document.getElementById('grid-posts');
-            grid.innerHTML = '';
-            [...lista].reverse().forEach(post => {
-                let img = (post.imagem && post.imagem.trim() !== "") ? `<img src="${post.imagem}" class="card-img" onerror="this.style.display='none'">` : "";
-                const classeBtn = jaCurtiu(post.id) ? "btn-like curtido" : "btn-like";
-                const icone = jaCurtiu(post.id) ? "❤️" : "🤍";
-                grid.innerHTML += `<div class="card" onclick="window.abrirPost('${post.id}')">${img}<div class="card-body"><span>// ${post.categoria || 'Geral'}</span><h2>${post.titulo}</h2><div class="like-area"><button class="${classeBtn}" onclick="window.curtirPost(event, '${post.id}')">${icone} ${post.likes || 0}</button></div></div></div>`;
-            });
-            anexarSons();
-        }
-
-        window.abrirPost = function(id) {
-            const post = listaArtigos.find(p => p.id === id);
-            if (post) {
-                let html = post.conteudo || '<p>...</p>';
-                if (post.imagem && post.imagem.trim() !== "") html = `<img src="${post.imagem}" style="width:100%; border-radius:10px; margin-bottom:20px;">` + html;
-                if (!html.includes('<h2>')) html = `<h2>${post.titulo}</h2>` + html;
-                document.getElementById('conteudo-post').innerHTML = html;
-                abrirOverlay('leitura-overlay', '#leitura');
-            }
-        };
-
-        window.filtrarPosts = function() {
-            const termo = document.getElementById('busca-input').value.toLowerCase();
-            renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo)));
-        };
-        window.fazerPix = function() {
-            window.playClick();
-            navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
-        };
-        
+        window.curtirPost = async function(event, id) { event.stopPropagation(); if (jaCurtiu(id)) { alert("Já curtiu! 👍"); return; } window.playClick(); await updateDoc(doc(db, "artigos", id), { likes: increment(1) }); salvarLike(id); confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX / window.innerWidth, y: event.clientY / window.innerHeight } }); };
+        function iniciarSincronizacao() { onSnapshot(query(collection(db, "artigos")), (snapshot) => { listaArtigos = []; snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; listaArtigos.push(d); }); renderizar(listaArtigos); document.getElementById('loading').style.display = 'none'; }); }
+        function renderizar(lista) { const grid = document.getElementById('grid-posts'); grid.innerHTML = ''; [...lista].reverse().forEach(post => { let img = (post.imagem && post.imagem.trim() !== "") ? `<img src="${post.imagem}" class="card-img" onerror="this.style.display='none'">` : ""; const classeBtn = jaCurtiu(post.id) ? "btn-like curtido" : "btn-like"; const icone = jaCurtiu(post.id) ? "❤️" : "🤍"; grid.innerHTML += `<div class="card" onclick="window.abrirPost('${post.id}')">${img}<div class="card-body"><span>// ${post.categoria || 'Geral'}</span><h2>${post.titulo}</h2><div class="like-area"><button class="${classeBtn}" onclick="window.curtirPost(event, '${post.id}')">${icone} ${post.likes || 0}</button></div></div></div>`; }); anexarSons(); }
+        window.abrirPost = function(id) { const post = listaArtigos.find(p => p.id === id); if (post) { let html = post.conteudo || '<p>...</p>'; if (post.imagem && post.imagem.trim() !== "") html = `<img src="${post.imagem}" style="width:100%; border-radius:10px; margin-bottom:20px;">` + html; if (!html.includes('<h2>')) html = `<h2>${post.titulo}</h2>` + html; document.getElementById('conteudo-post').innerHTML = html; abrirOverlay('leitura-overlay', '#leitura'); } };
+        window.filtrarPosts = function() { const termo = document.getElementById('busca-input').value.toLowerCase(); renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo))); };
+        window.fazerPix = function() { window.playClick(); navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com")); };
         if(!localStorage.getItem('linuxLabCookies')) document.getElementById('cookie-banner').style.display = 'block';
         window.aceitarCookies = () => { window.playClick(); localStorage.setItem('linuxLabCookies','ok'); document.getElementById('cookie-banner').style.display='none'; }
         window.recusarCookies = () => { window.playClick(); localStorage.setItem('linuxLabCookies','no'); document.getElementById('cookie-banner').style.display='none'; }
-        
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
         window.addEventListener('popstate', () => { resetarParaHome(); });
-
         iniciarSincronizacao();
     </script>
 </body>
