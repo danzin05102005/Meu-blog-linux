@@ -37,7 +37,7 @@
         .container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 60vh; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative; display: flex; flex-direction: column; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative; display: flex; flex-direction: column; cursor: pointer; }
         .card:hover { border-color: var(--neon-green); transform: translateY(-5px); box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
         .card-img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); display: block; background: #222; }
         .card-body { padding: 15px; }
@@ -58,7 +58,7 @@
         
         pre { background: #1a1a1a; padding: 10px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; color: #00ff41; }
         
-        /* TERMINAL OTIMIZADO (35vh e z-index alto) */
+        /* TERMINAL OTIMIZADO */
         #secret-terminal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.95); border-bottom: 2px solid var(--neon-green); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; font-family: 'Courier New', monospace; text-align: left; }
 
         .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--neon-purple); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px rgba(157, 0, 255, 0.5); cursor: pointer; border: none; z-index: 50; animation: pulsando 2s infinite; }
@@ -93,7 +93,7 @@
 
     <div id="home-view">
         <header>
-            <button id="btn-terminal" onclick="window.toggleTerminal()">>_</button>
+            <button id="btn-terminal" onclick="window.toggleTerminal(); window.playClick()">>_</button>
             <h1>Linux_Lab_</h1>
             <div id="relogio">00:00:00</div>
             
@@ -102,10 +102,11 @@
             </div>
 
             <div class="nav-bar">
+                <button class="nav-btn" id="btn-sound" onclick="window.alternarSom()">[ 🔇 SOM ]</button>
                 <button class="nav-btn" onclick="window.alternarTema()">[ 🌗 TEMA ]</button>
                 <button class="nav-btn" onclick="window.abrirTutorial()">[ ❓ AJUDA ]</button>
                 <button class="nav-btn" onclick="window.abrirSobre()">[ 💾 SOBRE ]</button>
-                <a href="mailto:dan2050mg@gmail.com?subject=Ideia para o Linux Lab&body=Ola Danilo, tenho uma sugestão de post:" class="nav-btn">[ 💡 ENVIAR IDEIA ]</a>
+                <a href="mailto:dan2050mg@gmail.com?subject=Ideia para o Linux Lab&body=Ola Danilo, tenho uma sugestão de post:" class="nav-btn" onmouseenter="window.playHover()">[ 💡 ENVIAR IDEIA ]</a>
             </div>
 
             <div class="search-box">
@@ -121,7 +122,7 @@
         <footer>
             <p style="font-weight: bold;">LINUX_LAB_ // SYSTEM.ROOT</p>
             <div class="social-links">
-                <a href="https://x.com/DaniloGardiano" target="_blank">TWITTER</a>
+                <a href="https://x.com/DaniloGardiano" target="_blank" onmouseenter="window.playHover()">TWITTER</a>
             </div>
             <p class="copyright">Developed by <strong>Danilo</strong> © 2026<br>All systems operational.</p>
         </footer>
@@ -174,9 +175,7 @@
 
             <div style="border:1px solid var(--neon-green); padding:15px; margin-bottom:20px; border-radius:5px;">
                 <strong style="color:var(--neon-green)">2. PERSONALIZAÇÃO 🌗</strong><br>
-                Use o botão <strong>[ TEMA ]</strong> no menu para alternar entre:<br>
-                - <strong>Modo Cyberpunk</strong> (Escuro/Hacker)<br>
-                - <strong>Modo Laboratório</strong> (Claro/Clean)
+                Use o botão <strong>[ TEMA ]</strong> e <strong>[ SOM ]</strong> no menu para deixar o sistema do seu jeito.
             </div>
 
             <p>Explore, aprenda e divirta-se. O sistema é seu.</p>
@@ -201,13 +200,95 @@
         const db = getFirestore(app);
         let listaArtigos = [];
 
-        // --- SISTEMA DE NAVEGAÇÃO UNIFICADO ---
+        // --- SISTEMA DE SOM (WEB AUDIO API) ---
+        // Cria um contexto de áudio (o "gerador" de som)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        let somAtivado = false; // Começa mudo por padrão para não assustar
+
+        // Função para criar um "bip" sintético
+        function beep(duration, frequency, volume, type, callback) {
+            if (!somAtivado) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (volume) { gainNode.gain.value = volume; }
+            if (frequency) { oscillator.frequency.value = frequency; }
+            if (type) { oscillator.type = type; }
+            
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + ((duration || 500) / 1000));
+            if (callback) { oscillator.onended = callback; }
+        }
+
+        window.playHover = () => beep(50, 800, 0.05, "sine"); // Som agudo e curto (Hover)
+        window.playClick = () => beep(100, 400, 0.1, "square"); // Som mais "robótico" (Click)
+
+        // Alternar Mudo/Som
+        window.alternarSom = function() {
+            somAtivado = !somAtivado;
+            const btn = document.getElementById('btn-sound');
+            if (somAtivado) {
+                btn.innerText = "[ 🔊 SOM ]";
+                btn.style.borderColor = "var(--neon-green)";
+                window.playClick(); // Toca um som pra confirmar
+                // Tenta iniciar o contexto se estiver suspenso (regra de navegadores)
+                if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+            } else {
+                btn.innerText = "[ 🔇 SOM ]";
+                btn.style.borderColor = "#555";
+            }
+            localStorage.setItem('somLinuxLab', somAtivado ? 'on' : 'off');
+        };
+
+        // Carregar preferência de som
+        if (localStorage.getItem('somLinuxLab') === 'on') {
+            somAtivado = true;
+            document.getElementById('btn-sound').innerText = "[ 🔊 SOM ]";
+        }
+
+        // Adicionar sons a todos os botões automaticamente
+        function anexarSons() {
+            const interativos = document.querySelectorAll('button, a, .card, input');
+            interativos.forEach(el => {
+                el.addEventListener('mouseenter', window.playHover);
+                el.addEventListener('click', window.playClick);
+            });
+        }
+        // Chama a função depois que tudo carregar e sempre que renderizar posts
+        setTimeout(anexarSons, 2000); 
+
+
+        // --- KONAMI CODE (EASTER EGG) ---
+        const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+        let konamiIndex = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    // CÓDIGO ATIVADO!
+                    alert("👾 MODO GOD ATIVADO! 👾");
+                    document.documentElement.style.setProperty('--neon-green', '#ff00ff'); // Cor rosa neon
+                    confetti({ particleCount: 500, spread: 200, origin: { y: 0.6 } });
+                    window.playClick();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // --- SISTEMA DE NAVEGAÇÃO ---
         function abrirOverlay(id, hash) {
             document.getElementById('home-view').style.display = 'none';
             document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); 
             document.getElementById(id).style.display = 'block';
             window.scrollTo(0,0);
             history.pushState({page: id}, null, hash);
+            window.playClick();
         }
 
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
@@ -221,16 +302,14 @@
             document.getElementById('home-view').style.display = 'block';
         }
 
-        // --- VERIFICAÇÃO AUTOMÁTICA DE NOVATO ---
         if (!localStorage.getItem('vistoTutorial')) {
             setTimeout(() => { window.abrirTutorial(); }, 1500);
         }
 
-        // --- TERMINAL OTIMIZADO ---
+        // --- TERMINAL ---
         window.toggleTerminal = function() {
             const term = document.getElementById('secret-terminal');
             const input = document.getElementById('terminal-input');
-            // Correção: Usa getComputedStyle para garantir que sabe se está visível ou não no primeiro clique
             if (window.getComputedStyle(term).display === 'none') { 
                 term.style.display = 'block'; 
                 input.focus(); 
@@ -245,13 +324,13 @@
             document.documentElement.style.setProperty('--neon-green', cor);
             localStorage.setItem('matrixColor', cor);
         }
-        // Aplica cor salva ao iniciar
         if(localStorage.getItem('matrixColor')) mudarCorMatrix(localStorage.getItem('matrixColor'));
 
         const terminalInput = document.getElementById('terminal-input');
         const terminalOutput = document.getElementById('terminal-output');
         terminalInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
+                window.playClick();
                 const comando = this.value.toLowerCase().trim();
                 this.value = ''; 
                 terminalOutput.innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${comando}</div>`;
@@ -276,11 +355,12 @@
         // --- TEMA ---
         window.alternarTema = function() {
             document.body.classList.toggle('light-mode');
+            window.playClick();
             localStorage.setItem('temaLinuxLab', document.body.classList.contains('light-mode') ? 'claro' : 'escuro');
         };
         if (localStorage.getItem('temaLinuxLab') === 'claro') document.body.classList.add('light-mode');
 
-        // --- MATRIX ---
+        // --- MATRIX RAIN ---
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -323,6 +403,7 @@
         window.curtirPost = async function(event, id) {
             event.stopPropagation();
             if (jaCurtiu(id)) { alert("Já curtiu! 👍"); return; }
+            window.playClick();
             await updateDoc(doc(db, "artigos", id), { likes: increment(1) });
             salvarLike(id);
             confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX / window.innerWidth, y: event.clientY / window.innerHeight } });
@@ -346,6 +427,7 @@
                 const icone = jaCurtiu(post.id) ? "❤️" : "🤍";
                 grid.innerHTML += `<div class="card" onclick="window.abrirPost('${post.id}')">${img}<div class="card-body"><span>// ${post.categoria || 'Geral'}</span><h2>${post.titulo}</h2><div class="like-area"><button class="${classeBtn}" onclick="window.curtirPost(event, '${post.id}')">${icone} ${post.likes || 0}</button></div></div></div>`;
             });
+            anexarSons(); // Reaplica os sons aos novos elementos
         }
 
         window.abrirPost = function(id) {
@@ -364,12 +446,13 @@
             renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo)));
         };
         window.fazerPix = function() {
+            window.playClick();
             navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
         };
         
         if(!localStorage.getItem('linuxLabCookies')) document.getElementById('cookie-banner').style.display = 'block';
-        window.aceitarCookies = () => { localStorage.setItem('linuxLabCookies','ok'); document.getElementById('cookie-banner').style.display='none'; }
-        window.recusarCookies = () => { localStorage.setItem('linuxLabCookies','no'); document.getElementById('cookie-banner').style.display='none'; }
+        window.aceitarCookies = () => { window.playClick(); localStorage.setItem('linuxLabCookies','ok'); document.getElementById('cookie-banner').style.display='none'; }
+        window.recusarCookies = () => { window.playClick(); localStorage.setItem('linuxLabCookies','no'); document.getElementById('cookie-banner').style.display='none'; }
         
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
         window.addEventListener('popstate', () => { resetarParaHome(); });
