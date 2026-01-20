@@ -82,7 +82,7 @@
     <canvas id="matrix"></canvas>
 
     <div id="secret-terminal">
-        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v4.0<br>Digite 'help' para ver os comandos.<br></div>
+        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v5.0 (Silent Mode)<br>Digite 'help' para ver os comandos.<br></div>
         <div style="display:flex;">
             <span style="color:var(--neon-green); margin-right:10px;">root@linuxlab:~$</span>
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
@@ -91,13 +91,12 @@
 
     <div id="home-view">
         <header>
-            <button id="btn-terminal" onclick="window.toggleTerminal(); window.playClick()">>_</button>
+            <button id="btn-terminal" onclick="window.toggleTerminal()">>_</button>
             <h1>Linux_Lab_</h1>
             <div id="relogio">00:00:00</div>
             <div id="terminal-typing" style="color:var(--neon-purple); font-size:0.9rem; margin: 10px 0; min-height: 20px;">> _</div>
 
             <div class="nav-bar">
-                <button class="nav-btn" id="btn-sound" onclick="window.alternarSom()">[ 🔇 SOM ]</button>
                 <button class="nav-btn" onclick="window.alternarTema()">[ 🌗 TEMA ]</button>
                 <button class="nav-btn" onclick="window.abrirTutorial()">[ ❓ AJUDA ]</button>
                 <button class="nav-btn" onclick="window.abrirSobre()">[ 💾 SOBRE ]</button>
@@ -202,31 +201,16 @@
 
         // --- FUNÇÕES GLOBAIS ---
         
-        // Som e Efeitos
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
-        let somAtivado = false; 
-        function destravaAudio() { if (audioCtx.state === 'suspended') { audioCtx.resume(); } ['click', 'keydown'].forEach(evt => document.removeEventListener(evt, destravaAudio)); }
-        ['click', 'keydown'].forEach(evt => document.addEventListener(evt, destravaAudio));
-        function beep(duration, frequency, volume, type) { if (!somAtivado) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); gain.gain.value = volume; osc.frequency.value = frequency; osc.type = type; osc.start(); osc.stop(audioCtx.currentTime + (duration / 1000)); }
-        
-        window.playClick = () => beep(100, 400, 0.1, "square");
-        window.playHover = () => beep(50, 800, 0.05, "sine");
-        
-        window.alternarSom = function() { somAtivado = !somAtivado; document.getElementById('btn-sound').innerText = somAtivado ? "[ 🔊 SOM ]" : "[ 🔇 SOM ]"; localStorage.setItem('somLinuxLab', somAtivado ? 'on' : 'off'); };
-        if (localStorage.getItem('somLinuxLab') === 'on') { somAtivado = true; document.getElementById('btn-sound').innerText = "[ 🔊 SOM ]"; }
-
         // Navegação
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
         window.abrirTutorial = () => abrirOverlay('tutorial-overlay', '#ajuda');
         window.abrirContato = () => abrirOverlay('contato-overlay', '#contato');
         window.iniciarSessao = () => { localStorage.setItem('vistoTutorial', 'sim'); history.back(); };
-        function abrirOverlay(id, hash) { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'none'; document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); window.playClick(); }
+        function abrirOverlay(id, hash) { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'none'; document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); }
         window.addEventListener('popstate', () => { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'block'; });
 
         // Pix
         window.fazerPix = function() {
-            window.playClick();
             navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
         };
 
@@ -237,7 +221,6 @@
         const terminalInput = document.getElementById('terminal-input');
         terminalInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                window.playClick();
                 const cmd = this.value.toLowerCase().trim();
                 this.value = ''; 
                 document.getElementById('terminal-output').innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${cmd}</div>`;
@@ -264,7 +247,6 @@
         window.curtirPost = async (event, id) => { 
             event.stopPropagation(); 
             await updateDoc(doc(db, "artigos", id), { likes: increment(1) }); 
-            window.playClick(); 
             confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX/window.innerWidth, y: event.clientY/window.innerHeight } }); 
         };
 
@@ -300,7 +282,6 @@
             const nome = document.getElementById('coment-nome').value || "Anônimo";
             const texto = document.getElementById('coment-texto').value;
             if(!texto) return alert("Erro: Mensagem vazia.");
-            window.playClick();
             await addDoc(collection(db, "artigos", currentPostId, "comentarios"), { nome, texto, data: new Date().toISOString() });
             document.getElementById('coment-texto').value = '';
         };
@@ -318,7 +299,6 @@
         
         window.alternarTema = function() {
             document.body.classList.toggle('light-mode');
-            window.playClick();
         };
 
         function renderizar(lista) {
