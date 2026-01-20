@@ -106,7 +106,7 @@
     </div>
 
     <div id="secret-terminal">
-        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v2.0<br>Digite 'help' para ver os comandos.<br></div>
+        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v3.0<br>Digite 'help' para ver os comandos.<br></div>
         <div style="display:flex;">
             <span style="color:var(--neon-green); margin-right:10px;">root@linuxlab:~$</span>
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
@@ -192,6 +192,8 @@
                 <strong>COMANDOS:</strong><br>
                 <code>matrix red</code> - Alerta Vermelho<br>
                 <code>matrix blue</code> - Resfriamento Azul<br>
+                <code>date</code> - Ver Hora<br>
+                <code>exit</code> - Fechar Terminal<br>
                 <code>reboot</code> - Reiniciar
             </div>
             <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--neon-green); color:black;">[ INICIAR ]</button>
@@ -209,8 +211,7 @@
         let listaArtigos = [];
         let currentPostId = null;
 
-        // --- TORNANDO FUNÇÕES GLOBAIS (CORREÇÃO DE BUG) ---
-        // Isso conecta o HTML (onclick) com o Módulo JS
+        // --- FUNÇÕES GLOBAIS ---
         
         // Rádio
         const audioStream = new Audio('https://stream.nightride.fm/nightride.m4a');
@@ -273,11 +274,17 @@
                 const cmd = this.value.toLowerCase().trim();
                 this.value = ''; 
                 document.getElementById('terminal-output').innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${cmd}</div>`;
+                
                 if(cmd === 'matrix red') document.documentElement.style.setProperty('--neon-green', '#ff0000');
                 else if(cmd === 'matrix blue') document.documentElement.style.setProperty('--neon-green', '#00eaff');
                 else if(cmd === 'matrix green') document.documentElement.style.setProperty('--neon-green', '#00ff41');
                 else if(cmd === 'reboot') location.reload();
+                else if(cmd === 'date') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">${new Date().toString()}</div>`;
+                else if(cmd === 'exit') window.toggleTerminal();
+                else if(cmd === 'whoami') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">guest_user@linuxlab</div>`;
                 else if(cmd === 'clear') document.getElementById('terminal-output').innerHTML = '';
+                else if(cmd === 'help') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">Available: matrix [red/blue/green], date, reboot, clear, exit, whoami</div>`;
+                else document.getElementById('terminal-output').innerHTML += `<div style="color:#ff0000">Command not found. Type 'help'.</div>`;
             }
         });
 
@@ -304,7 +311,6 @@
                 document.getElementById('conteudo-post').innerHTML = html;
                 setTimeout(() => Prism.highlightAll(), 100);
                 
-                // Carregar Comentários
                 const divComents = document.getElementById('lista-comentarios');
                 divComents.innerHTML = '<p>Carregando logs...</p>';
                 if(window.unsubscribeComentarios) window.unsubscribeComentarios();
