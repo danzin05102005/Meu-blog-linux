@@ -58,7 +58,23 @@
         
         pre { background: #1a1a1a; padding: 10px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; color: #00ff41; }
         
-        #secret-terminal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 50vh; background: rgba(0,0,0,0.95); border-bottom: 2px solid var(--neon-green); z-index: 999; padding: 20px; box-sizing: border-box; overflow-y: auto; font-family: 'Courier New', monospace; text-align: left; }
+        /* TERMINAL (AJUSTADO PARA MOBILE: 35vh de altura) */
+        #secret-terminal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 35vh; /* REDUZIDO PARA FICAR MELHOR NO CELULAR */
+            background: rgba(0,0,0,0.95); 
+            border-bottom: 2px solid var(--neon-green); 
+            z-index: 999; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            overflow-y: auto; 
+            font-family: 'Courier New', monospace; 
+            text-align: left; 
+        }
 
         .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--neon-purple); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px rgba(157, 0, 255, 0.5); cursor: pointer; border: none; z-index: 50; animation: pulsando 2s infinite; }
         @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -165,6 +181,8 @@
                     <li><code>matrix blue</code> (Muda para Azul)</li>
                     <li><code>reboot</code> (Reinicia a página)</li>
                     <li><code>date</code> (Mostra o horário do servidor)</li>
+                    <li><code>whoami</code> (Descubra quem você é)</li>
+                    <li><code>exit</code> (Fecha o terminal)</li>
                 </ul>
             </div>
 
@@ -200,7 +218,7 @@
         // --- SISTEMA DE NAVEGAÇÃO UNIFICADO ---
         function abrirOverlay(id, hash) {
             document.getElementById('home-view').style.display = 'none';
-            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); // Fecha outros
+            document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); 
             document.getElementById(id).style.display = 'block';
             window.scrollTo(0,0);
             history.pushState({page: id}, null, hash);
@@ -209,7 +227,7 @@
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
         window.abrirTutorial = () => {
             abrirOverlay('tutorial-overlay', '#ajuda');
-            localStorage.setItem('vistoTutorial', 'sim'); // Marca que viu
+            localStorage.setItem('vistoTutorial', 'sim'); 
         };
 
         function resetarParaHome() {
@@ -218,7 +236,6 @@
         }
 
         // --- VERIFICAÇÃO AUTOMÁTICA DE NOVATO ---
-        // Se não tiver o cookie 'vistoTutorial', abre a ajuda automaticamente após 1 segundo
         if (!localStorage.getItem('vistoTutorial')) {
             setTimeout(() => {
                 window.abrirTutorial();
@@ -242,7 +259,9 @@
                 this.value = ''; 
                 terminalOutput.innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${comando}</div>`;
                 let resposta = "";
-                if (comando === 'help') resposta = "Comandos: help, clear, date, reboot, matrix red/blue/green, whoami";
+                // COMANDO EXIT ADICIONADO AQUI
+                if (comando === 'exit') { window.toggleTerminal(); return; }
+                else if (comando === 'help') resposta = "Comandos: help, clear, date, reboot, matrix red/blue/green, whoami, exit";
                 else if (comando === 'clear') { terminalOutput.innerHTML = "Linux Lab Shell v1.0<br>"; return; }
                 else if (comando === 'date') resposta = new Date().toString();
                 else if (comando === 'reboot') { resposta = "Reiniciando..."; setTimeout(() => location.reload(), 1000); }
