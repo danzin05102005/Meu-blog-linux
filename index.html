@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux Lab | Cyberpunk</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
     
     <style>
         /* --- ESTILO GERAL --- */
@@ -71,10 +79,18 @@
         .btn-voltar { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 10px 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
         .overlay-content h2 { color: var(--neon-green); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .overlay-content img { max-width: 100%; border-radius: 5px; margin: 10px 0; border: 1px solid var(--neon-purple); }
+        /* Ajuste para imagens dentro do Prism (se houver) */
         .overlay-content p { line-height: 1.6; color: var(--text); margin-bottom: 15px; }
         
-        pre { background: #1a1a1a; padding: 10px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; color: #00ff41; }
-        
+        /* Ajuste do Prism para ficar bonito no overlay */
+        pre[class*="language-"] {
+            border: 1px solid var(--neon-green) !important;
+            border-radius: 8px !important;
+            background: #111 !important;
+            text-shadow: none !important;
+            margin-bottom: 20px !important;
+        }
+
         /* TERMINAL OTIMIZADO */
         #secret-terminal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.95); border-bottom: 2px solid var(--neon-green); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; font-family: 'Courier New', monospace; text-align: left; }
 
@@ -447,18 +463,38 @@
                 let img = (post.imagem && post.imagem.trim() !== "") ? `<img src="${post.imagem}" class="card-img" onerror="this.style.display='none'">` : "";
                 const classeBtn = jaCurtiu(post.id) ? "btn-like curtido" : "btn-like";
                 const icone = jaCurtiu(post.id) ? "❤️" : "🤍";
-                grid.innerHTML += `<div class="card" onclick="window.abrirPost('${post.id}')">${img}<div class="card-body"><span>// ${post.categoria || 'Geral'}</span><h2>${post.titulo}</h2><div class="like-area"><button class="${classeBtn}" onclick="window.curtirPost(event, '${post.id}')">${icone} ${post.likes || 0}</button></div></div></div>`;
+                grid.innerHTML += `
+                    <div class="card" onclick="window.abrirPost('${post.id}')">
+                        ${img}
+                        <div class="card-body">
+                            <span>// ${post.categoria || 'Geral'}</span>
+                            <h2>${post.titulo}</h2>
+                            <div class="like-area">
+                                <button class="${classeBtn}" onclick="window.curtirPost(event, '${post.id}')">
+                                    ${icone} ${post.likes || 0}
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
             });
             anexarSons();
         }
 
+        // --- FUNÇÃO ABRIR POST COM SYNTAX HIGHLIGHTING ---
         window.abrirPost = function(id) {
             const post = listaArtigos.find(p => p.id === id);
             if (post) {
                 let html = post.conteudo || '<p>...</p>';
                 if (post.imagem && post.imagem.trim() !== "") html = `<img src="${post.imagem}" style="width:100%; border-radius:10px; margin-bottom:20px;">` + html;
                 if (!html.includes('<h2>')) html = `<h2>${post.titulo}</h2>` + html;
+                
                 document.getElementById('conteudo-post').innerHTML = html;
+                
+                // Força o Prism a colorir o código que acabou de ser inserido
+                setTimeout(() => {
+                    Prism.highlightAll();
+                }, 100);
+
                 abrirOverlay('leitura-overlay', '#leitura');
             }
         };
