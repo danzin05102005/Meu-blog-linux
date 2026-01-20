@@ -151,12 +151,12 @@
     </div>
 
     <div id="leitura-overlay" class="overlay">
-        <button class="btn-voltar" onclick="window.fecharOverlays()">< Voltar ao Lab</button>
+        <button class="btn-voltar" onclick="history.back()">< Voltar ao Lab</button>
         <div id="conteudo-post" class="overlay-content"></div>
     </div>
 
     <div id="sobre-overlay" class="overlay">
-        <button class="btn-voltar" onclick="window.fecharOverlays()">< Voltar ao Lab</button>
+        <button class="btn-voltar" onclick="history.back()">< Voltar ao Lab</button>
         <div class="overlay-content" style="max-width: 800px; margin: 0 auto;">
             <h2>// SOBRE O PROJETO</h2>
             <p>O <strong>Linux Lab</strong> é um experimento digital focado em tecnologia, hacking ético e cultura open source.</p>
@@ -190,19 +190,25 @@
         const db = getFirestore(app);
         let listaArtigos = [];
 
-        // NAVEGAÇÃO
+        // --- NAVEGAÇÃO CORRIGIDA (HISTORY API) ---
+        
+        // Abre o SOBRE e adiciona no histórico
         window.abrirSobre = function() {
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('sobre-overlay').style.display = 'block';
             window.scrollTo(0,0);
+            // CRUCIAL: Avisa o navegador que mudamos de página
+            history.pushState({page: 'sobre'}, null, '#sobre');
         };
-        window.fecharOverlays = function() {
+
+        // Função que reseta a tela para a Home (chamada pelo botão voltar do celular)
+        function resetarParaHome() {
             document.getElementById('leitura-overlay').style.display = 'none';
             document.getElementById('sobre-overlay').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
-        };
+        }
 
-        // DIGITAÇÃO
+        // --- EFEITO DIGITAÇÃO ---
         const mensagens = [
             "Iniciando Kernel v5.1...",
             "Carregando módulos de segurança...",
@@ -225,7 +231,7 @@
         }
         digitarTerminal();
 
-        // LIKES
+        // --- LIKES ---
         function jaCurtiu(id) {
             const likesSalvos = JSON.parse(localStorage.getItem('meusLikes') || '[]');
             return likesSalvos.includes(id);
@@ -246,7 +252,7 @@
             confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX / window.innerWidth, y: event.clientY / window.innerHeight } });
         };
 
-        // MATRIX
+        // --- MATRIX ---
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -269,7 +275,7 @@
         }
         setInterval(drawMatrix, 50);
 
-        // RENDERIZAÇÃO
+        // --- RENDERIZAÇÃO ---
         function iniciarSincronizacao() {
             const grid = document.getElementById('grid-posts');
             const loading = document.getElementById('loading');
@@ -321,6 +327,7 @@
             });
         }
 
+        // Abre o POST e adiciona no histórico
         window.abrirPost = function(id) {
             const post = listaArtigos.find(p => p.id === id);
             if (post) {
@@ -334,11 +341,11 @@
                 document.getElementById('home-view').style.display = 'none';
                 document.getElementById('leitura-overlay').style.display = 'block';
                 window.scrollTo(0,0);
+                // CRUCIAL: Avisa o navegador
                 history.pushState({page: 'leitura'}, null, '#leitura');
             }
         };
 
-        window.fecharPost = function() { window.fecharOverlays(); };
         window.filtrarPosts = function() {
             const termo = document.getElementById('busca-input').value.toLowerCase();
             const filtrados = listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo));
@@ -356,7 +363,12 @@
         window.recusarCookies = () => { localStorage.setItem('linuxLabCookies','no'); document.getElementById('cookie-banner').style.display='none'; }
         
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
-        window.addEventListener('popstate', () => { window.fecharOverlays(); });
+        
+        // --- EVENTO MÁGICO DO BOTÃO VOLTAR ---
+        window.addEventListener('popstate', () => {
+            // Quando aperta voltar, reseta tudo para a Home
+            resetarParaHome();
+        });
 
         iniciarSincronizacao();
     </script>
