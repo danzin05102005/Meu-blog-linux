@@ -56,6 +56,8 @@
         .overlay-content { max-width: 800px; margin: 0 auto; }
         .overlay-content img { max-width: 100%; border-radius: 5px; border: 1px solid var(--neon-purple); }
         .overlay-content p { line-height: 1.6; margin-bottom: 15px; }
+        
+        /* Highlight Fix */
         pre[class*="language-"] { border: 1px solid var(--neon-green) !important; border-radius: 8px !important; background: #111 !important; margin-bottom: 20px !important; }
 
         /* RÁDIO CYBERPUNK */
@@ -72,7 +74,7 @@
         #btn-radio-play:hover { background: var(--text); color: black; }
         #vol-radio { width: 100%; accent-color: var(--neon-purple); cursor: pointer; height: 5px; }
 
-        /* COMENTÁRIOS (CHAT STYLE) */
+        /* COMENTÁRIOS */
         #comentarios-section { margin-top: 40px; border-top: 1px dashed var(--neon-green); padding-top: 20px; }
         .comment-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 5px; margin-bottom: 10px; border-left: 3px solid var(--neon-purple); }
         .comment-user { color: var(--neon-green); font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; display: block; }
@@ -80,7 +82,7 @@
         .comment-form textarea { width: 100%; background: #111; border: 1px solid #333; color: #fff; padding: 10px; font-family: monospace; resize: vertical; }
         .btn-comment { background: var(--neon-purple); color: #fff; border: none; padding: 10px 20px; margin-top: 10px; cursor: pointer; font-weight: bold; }
 
-        /* TERMINAL & EXTRAS */
+        /* EXTRAS */
         #secret-terminal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.95); border-bottom: 2px solid var(--neon-green); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; }
         .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--neon-purple); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px rgba(157, 0, 255, 0.5); border: none; z-index: 50; animation: pulsando 2s infinite; }
         @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -99,8 +101,8 @@
             <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
             <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
         </div>
-        <button id="btn-radio-play" onclick="toggleRadio()">[ ▶ PLAY ]</button>
-        <input type="range" id="vol-radio" min="0" max="1" step="0.1" value="0.3" onchange="mudarVolume(this.value)">
+        <button id="btn-radio-play" onclick="window.toggleRadio()">[ ▶ PLAY ]</button>
+        <input type="range" id="vol-radio" min="0" max="1" step="0.1" value="0.3" onchange="window.mudarVolume(this.value)">
     </div>
 
     <div id="secret-terminal">
@@ -147,13 +149,12 @@
         <button class="btn-voltar" onclick="history.back()">< VOLTAR</button>
         <div class="overlay-content">
             <div id="conteudo-post"></div>
-            
             <div id="comentarios-section">
                 <h3>// COMMS_LOG (Comentários)</h3>
                 <div class="comment-form">
                     <input type="text" id="coment-nome" placeholder="Codename (Seu Nome)" style="width:100%; background:#111; border:1px solid #333; color:var(--neon-green); padding:10px; margin-bottom:5px;">
                     <textarea id="coment-texto" rows="3" placeholder="Digite sua mensagem aqui..."></textarea>
-                    <button class="btn-comment" onclick="enviarComentario()">[ ENVIAR DADOS ]</button>
+                    <button class="btn-comment" onclick="window.enviarComentario()">[ ENVIAR DADOS ]</button>
                 </div>
                 <div id="lista-comentarios" style="margin-top: 20px;"></div>
             </div>
@@ -164,15 +165,11 @@
         <button class="btn-voltar" onclick="history.back()">< FECHAR</button>
         <div class="overlay-content" style="max-width: 600px;">
             <h2 style="color:var(--neon-purple)">// SECURE_INBOX</h2>
-            <p>Envie sua mensagem criptografada diretamente para o administrador.</p>
             <div id="contato-form">
-                <label>IDENTIDADE (Nome):</label>
-                <input type="text" id="ct-nome">
-                <label>CONTATO (Email/Twitter):</label>
-                <input type="text" id="ct-contato">
-                <label>PAYLOAD (Mensagem):</label>
-                <textarea id="ct-msg" rows="5"></textarea>
-                <button class="btn-comment" onclick="enviarContato()" style="width:100%;">[ EXECUTAR ENVIO ]</button>
+                <label>IDENTIDADE (Nome):</label> <input type="text" id="ct-nome">
+                <label>CONTATO (Email/Twitter):</label> <input type="text" id="ct-contato">
+                <label>PAYLOAD (Mensagem):</label> <textarea id="ct-msg" rows="5"></textarea>
+                <button class="btn-comment" onclick="window.enviarContato()" style="width:100%;">[ EXECUTAR ENVIO ]</button>
             </div>
         </div>
     </div>
@@ -181,8 +178,7 @@
         <button class="btn-voltar" onclick="history.back()">< VOLTAR</button>
         <div class="overlay-content">
             <h2>// SOBRE O PROJETO</h2>
-            <p>O <strong>Linux Lab</strong> é um experimento digital focado em tecnologia e cultura open source.</p>
-            <h3>// DESENVOLVEDOR</h3>
+            <p>O <strong>Linux Lab</strong> é um experimento digital.</p>
             <p>Criado e mantido por <strong>Danilo Gardiano</strong>.</p>
         </div>
     </div>
@@ -191,12 +187,11 @@
         <button class="btn-voltar" onclick="window.iniciarSessao()">< FECHAR</button>
         <div class="overlay-content">
             <h2 style="color:var(--neon-purple)">// MANUAL DE OPERAÇÃO v2.0</h2>
-            <p>Bem-vindo ao Linux Lab. Utilize o <strong>Terminal (>_)</strong> para interagir.</p>
+            <p>Utilize o <strong>Terminal (>_)</strong> para interagir.</p>
             <div style="border:1px solid var(--neon-green); padding:15px; margin-bottom:20px;">
                 <strong>COMANDOS:</strong><br>
                 <code>matrix red</code> - Alerta Vermelho<br>
                 <code>matrix blue</code> - Resfriamento Azul<br>
-                <code>matrix green</code> - Padrão<br>
                 <code>reboot</code> - Reiniciar
             </div>
             <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--neon-green); color:black;">[ INICIAR ]</button>
@@ -214,7 +209,10 @@
         let listaArtigos = [];
         let currentPostId = null;
 
-        // --- RÁDIO LOGIC ---
+        // --- TORNANDO FUNÇÕES GLOBAIS (CORREÇÃO DE BUG) ---
+        // Isso conecta o HTML (onclick) com o Módulo JS
+        
+        // Rádio
         const audioStream = new Audio('https://stream.nightride.fm/nightride.m4a');
         let radioTocando = false;
         window.toggleRadio = function() {
@@ -222,7 +220,7 @@
             const bars = document.querySelectorAll('.bar');
             if (!radioTocando) {
                 audioStream.volume = document.getElementById('vol-radio').value;
-                audioStream.play().catch(e => alert("Interaja com a página para tocar!"));
+                audioStream.play().catch(e => alert("Interaja com a página primeiro!"));
                 btn.innerText = "[ ⏸ PAUSE ]"; btn.style.color = "var(--neon-green)";
                 bars.forEach(b => b.style.animationPlayState = 'running');
                 radioTocando = true;
@@ -232,38 +230,76 @@
                 bars.forEach(b => b.style.animationPlayState = 'paused');
                 radioTocando = false;
             }
+            window.playClick();
         };
         window.mudarVolume = (val) => audioStream.volume = val;
-        document.querySelectorAll('.bar').forEach(b => b.style.animationPlayState = 'paused');
 
-        // --- SISTEMA DE SOM GERAL ---
+        // Som e Efeitos
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
         let somAtivado = false; 
         function destravaAudio() { if (audioCtx.state === 'suspended') { audioCtx.resume(); } ['click', 'keydown'].forEach(evt => document.removeEventListener(evt, destravaAudio)); }
         ['click', 'keydown'].forEach(evt => document.addEventListener(evt, destravaAudio));
         function beep(duration, frequency, volume, type) { if (!somAtivado) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); gain.gain.value = volume; osc.frequency.value = frequency; osc.type = type; osc.start(); osc.stop(audioCtx.currentTime + (duration / 1000)); }
+        
         window.playClick = () => beep(100, 400, 0.1, "square");
+        window.playHover = () => beep(50, 800, 0.05, "sine");
+        
         window.alternarSom = function() { somAtivado = !somAtivado; document.getElementById('btn-sound').innerText = somAtivado ? "[ 🔊 SOM ]" : "[ 🔇 SOM ]"; localStorage.setItem('somLinuxLab', somAtivado ? 'on' : 'off'); };
         if (localStorage.getItem('somLinuxLab') === 'on') { somAtivado = true; document.getElementById('btn-sound').innerText = "[ 🔊 SOM ]"; }
 
-        // --- CORE: POSTS & COMENTÁRIOS ---
-        function renderizar(lista) {
-            const grid = document.getElementById('grid-posts'); grid.innerHTML = '';
-            [...lista].reverse().forEach(post => {
-                let img = (post.imagem && post.imagem.trim() !== "") ? `<img src="${post.imagem}" class="card-img" onerror="this.style.display='none'">` : "";
-                grid.innerHTML += `<div class="card" onclick="window.abrirPost('${post.id}')">${img}<div class="card-body"><span>// ${post.categoria || 'Geral'}</span><h2>${post.titulo}</h2><div class="like-area"><button class="btn-like" onclick="window.curtirPost(event, '${post.id}')">❤️ ${post.likes || 0}</button></div></div></div>`;
-            });
-        }
+        // Navegação
+        window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
+        window.abrirTutorial = () => abrirOverlay('tutorial-overlay', '#ajuda');
+        window.abrirContato = () => abrirOverlay('contato-overlay', '#contato');
+        window.iniciarSessao = () => { localStorage.setItem('vistoTutorial', 'sim'); history.back(); };
+        function abrirOverlay(id, hash) { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'none'; document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); window.playClick(); }
+        window.addEventListener('popstate', () => { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'block'; });
+
+        // Pix
+        window.fazerPix = function() {
+            window.playClick();
+            navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
+        };
+
+        // Terminal
+        window.toggleTerminal = () => { const t = document.getElementById('secret-terminal'); t.style.display = (t.style.display==='none')?'block':'none'; if(t.style.display==='block') document.getElementById('terminal-input').focus(); };
+        document.addEventListener('keydown', (e) => { if(e.key==="'"||e.key==="`"){ e.preventDefault(); window.toggleTerminal(); } });
         
-        let unsubscribeComentarios = null; // Para parar de ouvir comentários antigos
-        
+        const terminalInput = document.getElementById('terminal-input');
+        terminalInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                window.playClick();
+                const cmd = this.value.toLowerCase().trim();
+                this.value = ''; 
+                document.getElementById('terminal-output').innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${cmd}</div>`;
+                if(cmd === 'matrix red') document.documentElement.style.setProperty('--neon-green', '#ff0000');
+                else if(cmd === 'matrix blue') document.documentElement.style.setProperty('--neon-green', '#00eaff');
+                else if(cmd === 'matrix green') document.documentElement.style.setProperty('--neon-green', '#00ff41');
+                else if(cmd === 'reboot') location.reload();
+                else if(cmd === 'clear') document.getElementById('terminal-output').innerHTML = '';
+            }
+        });
+
+        // Posts e Interação
+        window.filtrarPosts = function() {
+            const termo = document.getElementById('busca-input').value.toLowerCase();
+            renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo)));
+        };
+
+        window.curtirPost = async (event, id) => { 
+            event.stopPropagation(); 
+            await updateDoc(doc(db, "artigos", id), { likes: increment(1) }); 
+            window.playClick(); 
+            confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX/window.innerWidth, y: event.clientY/window.innerHeight } }); 
+        };
+
         window.abrirPost = function(id) {
             currentPostId = id;
             const post = listaArtigos.find(p => p.id === id);
             if (post) {
                 let html = post.conteudo || '<p>...</p>';
-                if (post.imagem) html = `<img src="${post.imagem}" style="width:100%; border-radius:10px;">` + html;
+                if (post.imagem) html = `<img src="${post.imagem}" style="width:100%; border-radius:10px; margin-bottom:20px;">` + html;
                 if (!html.includes('<h2>')) html = `<h2>${post.titulo}</h2>` + html;
                 document.getElementById('conteudo-post').innerHTML = html;
                 setTimeout(() => Prism.highlightAll(), 100);
@@ -271,10 +307,10 @@
                 // Carregar Comentários
                 const divComents = document.getElementById('lista-comentarios');
                 divComents.innerHTML = '<p>Carregando logs...</p>';
-                if(unsubscribeComentarios) unsubscribeComentarios(); // Limpa listener anterior
+                if(window.unsubscribeComentarios) window.unsubscribeComentarios();
                 
                 const q = query(collection(db, "artigos", id, "comentarios"), orderBy("data", "desc"));
-                unsubscribeComentarios = onSnapshot(q, (snapshot) => {
+                window.unsubscribeComentarios = onSnapshot(q, (snapshot) => {
                     divComents.innerHTML = '';
                     if(snapshot.empty) { divComents.innerHTML = '<p style="color:#666;">// Nenhum dado encontrado.</p>'; return; }
                     snapshot.forEach(doc => {
@@ -283,7 +319,6 @@
                         divComents.innerHTML += `<div class="comment-box"><span class="comment-user">${c.nome} <span class="comment-date">[${dataFormatada}]</span></span>${c.texto}</div>`;
                     });
                 });
-
                 abrirOverlay('leitura-overlay', '#leitura');
             }
         };
@@ -292,52 +327,58 @@
             const nome = document.getElementById('coment-nome').value || "Anônimo";
             const texto = document.getElementById('coment-texto').value;
             if(!texto) return alert("Erro: Mensagem vazia.");
-            
             window.playClick();
-            await addDoc(collection(db, "artigos", currentPostId, "comentarios"), {
-                nome: nome, texto: texto, data: new Date().toISOString()
-            });
+            await addDoc(collection(db, "artigos", currentPostId, "comentarios"), { nome, texto, data: new Date().toISOString() });
             document.getElementById('coment-texto').value = '';
         };
 
-        // --- CONTATO HACKER ---
-        window.abrirContato = () => abrirOverlay('contato-overlay', '#contato');
         window.enviarContato = async () => {
             const nome = document.getElementById('ct-nome').value;
             const contato = document.getElementById('ct-contato').value;
             const msg = document.getElementById('ct-msg').value;
             if(!nome || !msg) return alert("Dados incompletos.");
-            
-            // Salva no Banco de Dados (Inbox Seguro)
-            await addDoc(collection(db, "inbox_contato"), {
-                nome, contato, mensagem: msg, data: new Date().toISOString()
-            });
-            
-            alert("✅ MENSAGEM CRIPTOGRAFADA E ENVIADA.");
+            await addDoc(collection(db, "inbox_contato"), { nome, contato, mensagem: msg, data: new Date().toISOString() });
+            alert("✅ MENSAGEM ENVIADA.");
             history.back();
             document.getElementById('ct-msg').value = '';
         };
-
-        // --- AUXILIARES ---
-        function iniciarSincronizacao() { onSnapshot(query(collection(db, "artigos")), (snapshot) => { listaArtigos = []; snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; listaArtigos.push(d); }); renderizar(listaArtigos); document.getElementById('loading').style.display = 'none'; }); }
-        window.curtirPost = async (event, id) => { event.stopPropagation(); await updateDoc(doc(db, "artigos", id), { likes: increment(1) }); window.playClick(); confetti({ particleCount: 50, spread: 60, origin: { x: event.clientX/window.innerWidth, y: event.clientY/window.innerHeight } }); };
-        function abrirOverlay(id, hash) { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'none'; document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); window.playClick(); }
-        window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
-        window.abrirTutorial = () => abrirOverlay('tutorial-overlay', '#ajuda');
-        window.iniciarSessao = () => { localStorage.setItem('vistoTutorial', 'sim'); history.back(); };
-        window.addEventListener('popstate', () => { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'block'; });
-        if (!localStorage.getItem('vistoTutorial')) setTimeout(() => window.abrirTutorial(), 1500);
         
-        // Terminal & Matrix
-        window.toggleTerminal = () => { const t = document.getElementById('secret-terminal'); t.style.display = (t.style.display==='none')?'block':'none'; if(t.style.display==='block') document.getElementById('terminal-input').focus(); };
-        document.addEventListener('keydown', (e) => { if(e.key==="'"||e.key==="`"){ e.preventDefault(); window.toggleTerminal(); } });
+        window.alternarTema = function() {
+            document.body.classList.toggle('light-mode');
+            window.playClick();
+        };
+
+        function renderizar(lista) {
+            const grid = document.getElementById('grid-posts'); grid.innerHTML = '';
+            [...lista].reverse().forEach(post => {
+                let img = (post.imagem && post.imagem.trim() !== "") ? `<img src="${post.imagem}" class="card-img" onerror="this.style.display='none'">` : "";
+                grid.innerHTML += `<div class="card" onclick="window.abrirPost('${post.id}')">${img}<div class="card-body"><span>// ${post.categoria || 'Geral'}</span><h2>${post.titulo}</h2><div class="like-area"><button class="btn-like" onclick="window.curtirPost(event, '${post.id}')">❤️ ${post.likes || 0}</button></div></div></div>`;
+            });
+        }
+
+        // --- INICIALIZAÇÃO ---
+        // Digitação
+        const mensagens = [ "Iniciando Kernel v5.1...", "Carregando módulos...", "Conectando ao Firebase...", "Bem-vindo ao Linux Lab." ];
+        async function digitarTerminal() {
+            const elemento = document.getElementById('terminal-typing');
+            for (let i = 0; i < mensagens.length; i++) {
+                const frase = mensagens[i];
+                elemento.innerText = "> "; 
+                for (let letra of frase) { elemento.innerText += letra; await new Promise(r => setTimeout(r, 50)); }
+                await new Promise(r => setTimeout(r, 1000));
+            }
+            elemento.innerHTML = "> Sistema Online <span class='cursor-blink'>_</span>";
+        }
+        digitarTerminal();
+
+        // Matrix
         const canvas = document.getElementById('matrix'), ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const drops = Array(Math.floor(canvas.width/14)).fill(1);
         setInterval(() => { ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--neon-green'); ctx.font='14px monospace'; drops.forEach((y,i)=>{ ctx.fillText("01LINUX"[Math.floor(Math.random()*7)], i*14, y*14); if(y*14>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]++; }); }, 50);
 
-        // Inicialização
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
-        iniciarSincronizacao();
+        
+        onSnapshot(query(collection(db, "artigos")), (snapshot) => { listaArtigos = []; snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; listaArtigos.push(d); }); renderizar(listaArtigos); document.getElementById('loading').style.display = 'none'; });
     </script>
 </body>
 </html>
