@@ -25,19 +25,13 @@
             --accent-color: #9d00ff; 
         }
 
-        /* TEMA 2: INFECTED (Verde Tóxico/Vermelho) */
-        body.theme-infected {
-            --matrix-color: #39ff14; 
-            --accent-color: #ff003c; 
-        }
-
-        /* TEMA 3: CYBER CITY (Amarelo/Azul) */
+        /* TEMA: CYBER CITY (Amarelo/Azul) */
         body.theme-cyber {
             --matrix-color: #fcee0a; 
             --accent-color: #00f0ff; 
         }
 
-        /* TEMA 4: FROST (Branco/Azul) */
+        /* TEMA: FROST (Branco/Azul) */
         body.theme-frost {
             --matrix-color: #ffffff; 
             --accent-color: #0066ff; 
@@ -129,7 +123,7 @@
     <canvas id="matrix"></canvas>
 
     <div id="secret-terminal">
-        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v10.1<br>Digite 'help' para ver os comandos.<br></div>
+        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v10.2<br>Digite 'help' para ver os comandos.<br></div>
         <div style="display:flex;">
             <span style="color:var(--matrix-color); margin-right:10px;">root@linuxlab:~$</span>
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
@@ -297,7 +291,6 @@
             if (e.key === 'Enter') {
                 const cmd = this.value.toLowerCase().trim();
                 this.value = ''; 
-                // CORRIGIDO: Agora o terminal também usa a cor do tema atual
                 const corAtual = getComputedStyle(document.body).getPropertyValue('--matrix-color');
                 document.getElementById('terminal-output').innerHTML += `<div style="color:${corAtual}">root@linuxlab:~$ ${cmd}</div>`;
                 
@@ -311,23 +304,21 @@
             }
         });
 
-        // --- SISTEMA DE CORES (MATRIX FIX) ---
+        // --- SISTEMA DE CORES (ATUALIZADO SEM INFECTED) ---
         const themes = [
             { class: '', name: 'VERDE' },
-            { class: 'theme-infected', name: 'INFECTED' },
             { class: 'theme-cyber', name: 'CYBER' },
             { class: 'theme-frost', name: 'FROST' }
         ];
         let currentThemeIndex = 0;
 
         window.ciclarTema = function() {
-            document.body.classList.remove('theme-infected', 'theme-cyber', 'theme-frost');
+            document.body.classList.remove('theme-cyber', 'theme-frost');
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             const nextTheme = themes[currentThemeIndex];
             if(nextTheme.class) document.body.classList.add(nextTheme.class);
             document.getElementById('btn-tema').innerText = `[ 🎨 COR: ${nextTheme.name} ]`;
             
-            // FIX: Limpa a tela do Matrix para mudar de cor imediatamente
             const c = document.getElementById('matrix').getContext('2d');
             c.clearRect(0,0,window.innerWidth, window.innerHeight);
         };
@@ -413,16 +404,13 @@
         }
         digitarTerminal();
 
-        // MATRIX COM FIX DE COR
+        // MATRIX
         const canvas = document.getElementById('matrix'), ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const drops = Array(Math.floor(canvas.width/14)).fill(1);
         setInterval(() => { 
             ctx.fillStyle='rgba(0,0,0,0.05)'; 
             ctx.fillRect(0,0,canvas.width,canvas.height); 
-            
-            // CORRIGIDO: Pega a cor do BODY (onde a classe do tema está)
             ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--matrix-color'); 
-            
             ctx.font='14px monospace'; 
             drops.forEach((y,i)=>{ ctx.fillText("01LINUX"[Math.floor(Math.random()*7)], i*14, y*14); if(y*14>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]++; }); 
         }, 50);
