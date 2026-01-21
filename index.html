@@ -25,7 +25,7 @@
             --accent-color: #9d00ff; 
         }
 
-        /* --- NOVOS TEMAS --- */
+        /* --- TEMAS --- */
         body.theme-cyber { --matrix-color: #fcee0a; --accent-color: #00f0ff; } /* Amarelo/Azul */
         body.theme-frost { --matrix-color: #ffffff; --accent-color: #0066ff; } /* Branco/Azul */
         body.theme-crimson { --matrix-color: #ff003c; --accent-color: #ffcc00; } /* Vermelho/Ouro */
@@ -106,7 +106,7 @@
         #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 40vh; background: rgba(5,5,5,0.98); border-bottom: 2px solid var(--matrix-color); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; transform: translateY(-150%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-size: 0.9rem; }
         #secret-terminal.open { transform: translateY(0); }
 
-        /* HELP BOX (TUTORIAL NOVO) */
+        /* HELP BOX */
         .help-box { border: 1px dashed var(--matrix-color); padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.3); font-family: monospace; }
         .help-cmd { color: var(--accent-color); font-weight: bold; }
         .help-desc { color: #888; margin-left: 10px; }
@@ -124,7 +124,7 @@
 
     <div id="secret-terminal">
         <div id="terminal-output" style="color:#aaa; margin-bottom:10px;">
-            LINUX LAB KERNEL [v11.0]<br>
+            LINUX LAB KERNEL [v11.1]<br>
             Type <span style="color:var(--accent-color)">'help'</span> for command list.<br>
             System ready.<br>
         </div>
@@ -226,16 +226,11 @@
             <h2 style="color:var(--matrix-color)">// SYSTEM_ROOT_ACCESS_MANUAL_v3.0</h2>
             <p><strong>ACCESS LEVEL:</strong> ADMINISTRATOR<br><strong>STATUS:</strong> ONLINE</p>
             <hr style="border-color:#333; margin: 20px 0;">
-            
             <p>Utilize o <strong>Terminal (>_)</strong> para execução de comandos diretos no kernel do site.</p>
-            
             <div class="help-box">
                 <div style="margin-bottom:10px; border-bottom:1px solid #444; padding-bottom:5px;">AVAILABLE COMMANDS:</div>
-                
                 <div><span class="help-cmd">set-theme [name]</span> <span class="help-desc">Muda o esquema de cores.</span></div>
-                <div style="margin-left:20px; color:#666; font-size:0.8rem;">
-                    PARAMS: default, cyber, frost, crimson, amethyst, solar
-                </div>
+                <div style="margin-left:20px; color:#666; font-size:0.8rem;">PARAMS: default, cyber, frost, crimson, amethyst, solar</div>
                 <br>
                 <div><span class="help-cmd">date</span> <span class="help-desc">Exibe timestamp do servidor.</span></div>
                 <div><span class="help-cmd">whoami</span> <span class="help-desc">Exibe usuário atual.</span></div>
@@ -243,7 +238,6 @@
                 <div><span class="help-cmd">clear</span> <span class="help-desc">Limpa o buffer do terminal.</span></div>
                 <div><span class="help-cmd">exit</span> <span class="help-desc">Encerra sessão do terminal.</span></div>
             </div>
-
             <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--matrix-color); color:black;">[ INICIAR SESSÃO ]</button>
         </div>
     </div>
@@ -270,11 +264,12 @@
         ];
         let currentThemeIndex = 0;
 
-        // --- SYSTEM FUNCTIONS ---
+        // --- SYSTEM FUNCTIONS (COM LOCALSTORAGE) ---
         window.ciclarTema = function() {
-            // Remove todas as classes de tema conhecidas
+            // Remove classes antigas
             document.body.classList.remove(...themes.map(t => t.class).filter(c => c));
             
+            // Avança index
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             aplicarTema(currentThemeIndex);
         };
@@ -282,15 +277,28 @@
         function aplicarTema(index) {
             currentThemeIndex = index;
             const t = themes[index];
+            
+            // Aplica classe (se existir)
             if(t.class) document.body.classList.add(t.class);
+            
+            // Atualiza botão
             document.getElementById('btn-tema').innerText = `[ 🎨 COR: ${t.name} ]`;
             
-            // Força Matrix Redraw
+            // SALVA NO NAVEGADOR
+            localStorage.setItem('linux_lab_theme_index', index);
+            
+            // Redraw Matrix
             const c = document.getElementById('matrix').getContext('2d');
             c.clearRect(0,0,window.innerWidth, window.innerHeight);
         }
 
-        // --- TERMINAL LOGIC (UPDATED) ---
+        // CARREGA TEMA AO INICIAR
+        const savedTheme = localStorage.getItem('linux_lab_theme_index');
+        if(savedTheme !== null) {
+            aplicarTema(parseInt(savedTheme));
+        }
+
+        // --- TERMINAL LOGIC ---
         window.toggleTerminal = () => { 
             const t = document.getElementById('secret-terminal'); 
             t.classList.toggle('open');
@@ -327,7 +335,6 @@
                     const themeName = args[1];
                     const foundIndex = themes.findIndex(t => t.id === themeName);
                     if(foundIndex !== -1) {
-                        // Remove classes antigas
                         document.body.classList.remove(...themes.map(t => t.class).filter(c => c));
                         aplicarTema(foundIndex);
                         output.innerHTML += `<div style="color:var(--accent-color)">>> Theme set to ${themeName.toUpperCase()}</div>`;
@@ -337,7 +344,6 @@
                 }
                 else { output.innerHTML += `<div style="color:#ff0000">Command not found: ${cmd}</div>`; }
                 
-                // Auto scroll
                 output.scrollTop = output.scrollHeight;
             }
         });
@@ -376,7 +382,7 @@
             navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
         };
 
-        // Posts Logic
+        // Posts
         window.filtrarPosts = function() {
             const termo = document.getElementById('busca-input').value.toLowerCase();
             renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo)));
@@ -443,7 +449,7 @@
             });
         }
 
-        // --- BOOT ---
+        // --- INICIALIZAÇÃO ---
         const mensagens = [ "Iniciando Kernel v5.1...", "Carregando módulos...", "Conectando ao Firebase...", "Bem-vindo ao Linux Lab." ];
         async function digitarTerminal() {
             const elemento = document.getElementById('terminal-typing');
