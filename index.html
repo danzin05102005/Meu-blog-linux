@@ -70,7 +70,7 @@
 
         /* TERMINAL OTIMIZADO (GPU) */
         #secret-terminal { 
-            display: block; /* Sempre renderizado, mas escondido */
+            display: block;
             position: fixed; 
             top: 0; left: 0; width: 100%; height: 35vh; 
             background: rgba(0,0,0,0.98); 
@@ -80,14 +80,13 @@
             box-sizing: border-box; 
             overflow-y: auto; 
             text-align: left;
-            /* Performance Magic */
-            transform: translateY(-150%); /* Escondido pra cima */
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Animação suave */
+            transform: translateY(-150%); 
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: transform;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         #secret-terminal.open {
-            transform: translateY(0); /* Desliza pra baixo */
+            transform: translateY(0);
         }
 
         /* EXTRAS */
@@ -103,7 +102,7 @@
     <canvas id="matrix"></canvas>
 
     <div id="secret-terminal">
-        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v6.0 (GPU Accelerated)<br>Digite 'help' para ver os comandos.<br></div>
+        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v6.1<br>Digite 'help' para ver os comandos.<br></div>
         <div style="display:flex;">
             <span style="color:var(--neon-green); margin-right:10px;">root@linuxlab:~$</span>
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
@@ -226,7 +225,16 @@
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
         window.abrirTutorial = () => abrirOverlay('tutorial-overlay', '#ajuda');
         window.abrirContato = () => abrirOverlay('contato-overlay', '#contato');
-        window.iniciarSessao = () => { localStorage.setItem('vistoTutorial', 'sim'); history.back(); };
+        
+        // --- FUNÇÃO CORRIGIDA DE INICIAR SESSÃO ---
+        window.iniciarSessao = () => { 
+            localStorage.setItem('vistoTutorial', 'sim'); 
+            history.back(); // Tenta fechar o overlay via histórico
+            // Fallback caso history.back não funcione como esperado no overlay
+            document.getElementById('tutorial-overlay').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        };
+
         function abrirOverlay(id, hash) { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'none'; document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); }
         window.addEventListener('popstate', () => { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'block'; });
 
@@ -240,7 +248,6 @@
             const t = document.getElementById('secret-terminal'); 
             t.classList.toggle('open');
             if(t.classList.contains('open')) {
-                // Pequeno delay pro foco não travar a animação em celulares
                 setTimeout(() => document.getElementById('terminal-input').focus(), 300);
             }
         };
@@ -360,6 +367,13 @@
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
         
         onSnapshot(query(collection(db, "artigos")), (snapshot) => { listaArtigos = []; snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; listaArtigos.push(d); }); renderizar(listaArtigos); document.getElementById('loading').style.display = 'none'; });
+
+        // --- ATIVAR TUTORIAL AUTOMATICAMENTE SE FOR NOVO ---
+        if (!localStorage.getItem('vistoTutorial')) {
+            setTimeout(() => {
+                window.abrirTutorial();
+            }, 1000);
+        }
     </script>
 </body>
 </html>
