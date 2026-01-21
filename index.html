@@ -14,69 +14,79 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 
     <style>
-        /* --- CORE STYLES --- */
-        :root { --bg: #050505; --panel: rgba(17, 17, 17, 0.95); --text: #eee; --neon-green: #00ff41; --neon-purple: #9d00ff; --border: #333; }
-        body.light-mode { --bg: #e0e0e0; --panel: rgba(255, 255, 255, 0.95); --text: #111; --neon-green: #008f11; --neon-purple: #6200a3; --border: #ccc; }
+        /* --- CORE STYLES & TEMAS --- */
+        :root { 
+            --bg: #050505; 
+            --panel: rgba(17, 17, 17, 0.95); 
+            --text: #eee; 
+            --border: #333;
+            
+            /* TEMA 1: CLASSIC (Verde/Roxo) */
+            --matrix-color: #00ff41; 
+            --accent-color: #9d00ff; 
+        }
+
+        /* TEMA 2: INFECTED (Verde/Vermelho) */
+        body.theme-infected {
+            --matrix-color: #39ff14; /* Verde Neon */
+            --accent-color: #ff003c; /* Vermelho Cyber */
+        }
+
+        /* TEMA 3: CYBER CITY (Amarelo/Azul) */
+        body.theme-cyber {
+            --matrix-color: #fcee0a; /* Amarelo Cyberpunk */
+            --accent-color: #00f0ff; /* Azul Cyan */
+        }
+
+        /* TEMA 4: FROST (Branco/Azul Escuro) */
+        body.theme-frost {
+            --matrix-color: #ffffff; /* Branco Puro */
+            --accent-color: #0066ff; /* Azul Royal */
+        }
+
         body { background-color: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding-bottom: 80px; overflow-x: hidden; transition: 0.3s; cursor: crosshair; }
         
         button, a, .card, input, textarea, label { cursor: alias; }
         canvas#matrix { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; }
 
         /* HEADER */
-        header { text-align: center; padding: 20px; border-bottom: 2px solid var(--neon-green); background: var(--panel); backdrop-filter: blur(5px); position: relative; z-index: 10; }
-        h1 { margin: 0; color: var(--neon-green); text-transform: uppercase; letter-spacing: 2px; display: inline-block; }
-        h1:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; color: var(--neon-purple); }
+        header { text-align: center; padding: 20px; border-bottom: 2px solid var(--matrix-color); background: var(--panel); backdrop-filter: blur(5px); position: relative; z-index: 10; transition: 0.3s; }
+        h1 { margin: 0; color: var(--matrix-color); text-transform: uppercase; letter-spacing: 2px; display: inline-block; }
+        h1:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; color: var(--accent-color); }
         @keyframes glitch { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
 
-        #relogio { font-size: 2.5rem; font-weight: bold; text-shadow: 0 0 10px var(--neon-green); margin: 10px 0; }
-        #btn-terminal { background: transparent; border: none; color: var(--neon-green); font-size: 1.5rem; cursor: pointer; position: absolute; top: 20px; right: 20px; font-weight: bold; animation: piscar 2s infinite; }
+        #relogio { font-size: 2.5rem; font-weight: bold; text-shadow: 0 0 10px var(--matrix-color); margin: 10px 0; color: var(--text); }
+        #btn-terminal { background: transparent; border: none; color: var(--matrix-color); font-size: 1.5rem; cursor: pointer; position: absolute; top: 20px; right: 20px; font-weight: bold; animation: piscar 2s infinite; }
         
         .nav-bar { margin-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .nav-btn { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 8px 16px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; text-decoration: none; }
-        .nav-btn:hover { background: var(--neon-green); color: var(--bg); box-shadow: 0 0 15px var(--neon-green); }
+        .nav-btn { background: transparent; border: 1px solid var(--matrix-color); color: var(--matrix-color); padding: 8px 16px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; text-decoration: none; }
+        .nav-btn:hover { background: var(--matrix-color); color: var(--bg); box-shadow: 0 0 15px var(--matrix-color); }
 
         .search-box { margin: 20px auto; max-width: 90%; text-align: center; }
-        #busca-input { width: 100%; max-width: 400px; padding: 10px; background: var(--bg); border: 1px solid var(--neon-purple); color: var(--neon-green); outline: none; border-radius: 5px; }
+        #busca-input { width: 100%; max-width: 400px; padding: 10px; background: var(--bg); border: 1px solid var(--accent-color); color: var(--matrix-color); outline: none; border-radius: 5px; }
 
-        /* WIDGET SCANNER (ATUALIZADO COM AVISO) */
+        /* WIDGET SCANNER */
         #scanner-widget { 
             margin-bottom: 40px; 
-            background: rgba(0, 255, 65, 0.05); 
-            border: 1px solid var(--neon-green); 
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid var(--matrix-color); 
             padding: 20px; 
             border-radius: 8px; 
             position: relative; 
             overflow: hidden;
-            display: flex; /* Coloca lado a lado */
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        
-        /* Efeito de Scan */
-        #scanner-widget::before { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent); animation: scanLine 3s infinite linear; pointer-events: none; }
+        #scanner-widget::before { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, var(--matrix-color), transparent); opacity: 0.1; animation: scanLine 3s infinite linear; pointer-events: none; }
         @keyframes scanLine { 0% { left: -100%; } 100% { left: 200%; } }
 
-        .scan-warning {
-            flex: 1; /* Ocupa espaço na esquerda */
-            text-align: left;
-            font-size: 0.8rem;
-            color: #888;
-            border-left: 3px solid var(--neon-purple);
-            padding-left: 15px;
-            line-height: 1.4;
-        }
+        .scan-warning { flex: 1; text-align: left; font-size: 0.8rem; color: #888; border-left: 3px solid var(--accent-color); padding-left: 15px; line-height: 1.4; }
+        .scan-action-area { flex: 1; text-align: center; }
+        #scan-result { font-family: monospace; color: var(--matrix-color); margin-bottom: 15px; min-height: 20px; }
+        
+        .btn-scan { background: var(--matrix-color); color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-scan:hover { box-shadow: 0 0 15px var(--matrix-color); filter: brightness(1.2); }
 
-        .scan-action-area {
-            flex: 1; /* Ocupa espaço na direita */
-            text-align: center;
-        }
-
-        #scan-result { font-family: monospace; color: var(--neon-green); margin-bottom: 15px; min-height: 20px; }
-        .btn-scan { background: var(--neon-green); color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-scan:hover { box-shadow: 0 0 15px var(--neon-green); }
-
-        /* Responsivo para celular */
         @media (max-width: 600px) {
             #scanner-widget { flex-direction: column-reverse; text-align: center; }
             .scan-warning { border-left: none; border-top: 1px solid #333; padding-top: 10px; margin-top: 10px; text-align: center; }
@@ -86,32 +96,32 @@
         .container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 60vh; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative; display: flex; flex-direction: column; }
-        .card:hover { border-color: var(--neon-green); transform: translateY(-5px); box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
+        .card:hover { border-color: var(--matrix-color); transform: translateY(-5px); box-shadow: 0 0 15px var(--matrix-color); }
         .card-img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border); display: block; background: #222; }
         .card-body { padding: 15px; }
         .card h2 { color: var(--text); font-size: 1.2rem; margin: 5px 0; }
-        .card span { font-size: 0.8rem; color: var(--neon-purple); display: block; margin-bottom: 5px; }
+        .card span { font-size: 0.8rem; color: var(--accent-color); display: block; margin-bottom: 5px; }
         .btn-like { background: none; border: 1px solid var(--border); color: #888; cursor: pointer; padding: 5px 12px; border-radius: 20px; transition: 0.2s; }
-        .btn-like:hover, .btn-like.curtido { border-color: #ff4040; color: #ff4040; }
+        .btn-like:hover, .btn-like.curtido { border-color: var(--accent-color); color: var(--accent-color); }
 
         /* OVERLAYS */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); overflow-y: auto; z-index: 200; padding: 20px; box-sizing: border-box; }
-        .btn-voltar { background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 10px 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
+        .btn-voltar { background: transparent; border: 1px solid var(--matrix-color); color: var(--matrix-color); padding: 10px 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
         .overlay-content { max-width: 800px; margin: 0 auto; }
-        .overlay-content img { max-width: 100%; border-radius: 5px; border: 1px solid var(--neon-purple); }
+        .overlay-content img { max-width: 100%; border-radius: 5px; border: 1px solid var(--accent-color); }
         .overlay-content p { line-height: 1.6; margin-bottom: 15px; }
         
-        pre[class*="language-"] { border: 1px solid var(--neon-green) !important; border-radius: 8px !important; background: #111 !important; margin-bottom: 20px !important; }
+        pre[class*="language-"] { border: 1px solid var(--matrix-color) !important; border-radius: 8px !important; background: #111 !important; margin-bottom: 20px !important; }
 
         /* EXTRAS */
-        #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.98); border-bottom: 2px solid var(--neon-green); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; transform: translateY(-150%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.98); border-bottom: 2px solid var(--matrix-color); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; transform: translateY(-150%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #secret-terminal.open { transform: translateY(0); }
 
-        .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--neon-purple); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px rgba(157, 0, 255, 0.5); border: none; z-index: 50; animation: pulsando 2s infinite; }
+        .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px var(--accent-color); border: none; z-index: 50; animation: pulsando 2s infinite; }
         @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
-        #contato-form input, #contato-form textarea { width: 100%; background: #050505; border: 1px solid var(--neon-green); color: var(--neon-green); padding: 10px; margin-bottom: 10px; font-family: monospace; }
-        footer { text-align: center; padding: 40px; border-top: 1px solid var(--neon-green); background: var(--panel); margin-top: 50px; }
+        #contato-form input, #contato-form textarea { width: 100%; background: #050505; border: 1px solid var(--matrix-color); color: var(--matrix-color); padding: 10px; margin-bottom: 10px; font-family: monospace; }
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--matrix-color); background: var(--panel); margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -119,9 +129,9 @@
     <canvas id="matrix"></canvas>
 
     <div id="secret-terminal">
-        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v9.1<br>Digite 'help' para ver os comandos.<br></div>
+        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v10.0<br>Digite 'help' para ver os comandos.<br></div>
         <div style="display:flex;">
-            <span style="color:var(--neon-green); margin-right:10px;">root@linuxlab:~$</span>
+            <span style="color:var(--matrix-color); margin-right:10px;">root@linuxlab:~$</span>
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
         </div>
     </div>
@@ -131,10 +141,10 @@
             <button id="btn-terminal" onclick="window.toggleTerminal()">>_</button>
             <h1>Linux_Lab_</h1>
             <div id="relogio">00:00:00</div>
-            <div id="terminal-typing" style="color:var(--neon-purple); font-size:0.9rem; margin: 10px 0; min-height: 20px;">> _</div>
+            <div id="terminal-typing" style="color:var(--accent-color); font-size:0.9rem; margin: 10px 0; min-height: 20px;">> _</div>
 
             <div class="nav-bar">
-                <button class="nav-btn" onclick="window.alternarTema()">[ 🌗 TEMA ]</button>
+                <button class="nav-btn" onclick="window.ciclarTema()" id="btn-tema">[ 🎨 COR: VERDE ]</button>
                 <button class="nav-btn" onclick="window.abrirTutorial()">[ ❓ AJUDA ]</button>
                 <button class="nav-btn" onclick="window.abrirSobre()">[ 💾 SOBRE ]</button>
                 <button class="nav-btn" onclick="window.abrirContato()">[ ✉️ CONTATO ]</button>
@@ -147,23 +157,22 @@
             
             <div id="scanner-widget">
                 <div class="scan-warning">
-                    <strong style="color:var(--neon-purple)">[ ! ] SIMULATION MODE</strong><br>
+                    <strong style="color:var(--accent-color)">[ ! ] SIMULATION MODE</strong><br>
                     <span style="font-size:0.75rem;">Este é um ambiente seguro.<br>Seu IP não está sendo exposto publicamente por este script.</span>
                 </div>
-
                 <div class="scan-action-area">
                     <div id="scan-result">[STATUS] Aguardando comando...</div>
                     <button class="btn-scan" onclick="scanNetwork()">[ INICIAR SCAN ]</button>
                 </div>
             </div>
 
-            <div id="loading" style="text-align:center; color:var(--neon-purple); margin-top:20px;">Carregando sistema...</div>
+            <div id="loading" style="text-align:center; color:var(--accent-color); margin-top:20px;">Carregando sistema...</div>
             <div class="grid" id="grid-posts"></div>
         </div>
 
         <footer>
             <p style="font-weight: bold;">LINUX_LAB_ // SYSTEM.ROOT</p>
-            <div class="social-links"><a href="https://x.com/DaniloGardiano" target="_blank" style="color:var(--neon-purple); text-decoration:none; font-weight:bold;">TWITTER</a></div>
+            <div class="social-links"><a href="https://x.com/DaniloGardiano" target="_blank" style="color:var(--accent-color); text-decoration:none; font-weight:bold;">TWITTER</a></div>
             <p class="copyright">Developed by <strong>Danilo</strong> © 2026</p>
         </footer>
     </div>
@@ -177,7 +186,7 @@
             <div id="comentarios-section">
                 <h3>// COMMS_LOG (Comentários)</h3>
                 <div class="comment-form">
-                    <input type="text" id="coment-nome" placeholder="Codename (Seu Nome)" style="width:100%; background:#111; border:1px solid #333; color:var(--neon-green); padding:10px; margin-bottom:5px;">
+                    <input type="text" id="coment-nome" placeholder="Codename (Seu Nome)" style="width:100%; background:#111; border:1px solid #333; color:var(--matrix-color); padding:10px; margin-bottom:5px;">
                     <textarea id="coment-texto" rows="3" placeholder="Digite sua mensagem aqui..."></textarea>
                     <button class="btn-comment" onclick="window.enviarComentario()">[ ENVIAR DADOS ]</button>
                 </div>
@@ -189,7 +198,7 @@
     <div id="contato-overlay" class="overlay">
         <button class="btn-voltar" onclick="history.back()">< FECHAR</button>
         <div class="overlay-content" style="max-width: 600px;">
-            <h2 style="color:var(--neon-purple)">// SECURE_INBOX</h2>
+            <h2 style="color:var(--accent-color)">// SECURE_INBOX</h2>
             <div id="contato-form">
                 <label>IDENTIDADE (Nome):</label> <input type="text" id="ct-nome">
                 <label>CONTATO (Email/Twitter):</label> <input type="text" id="ct-contato">
@@ -202,14 +211,14 @@
     <div id="sobre-overlay" class="overlay">
         <button class="btn-voltar" onclick="history.back()">< VOLTAR</button>
         <div class="overlay-content" style="max-width: 800px; margin: 0 auto;">
-            <h2 style="color:var(--neon-green)">// SYSTEM_INFO: LINUX LAB</h2>
+            <h2 style="color:var(--matrix-color)">// SYSTEM_INFO: LINUX LAB</h2>
             <p style="font-size: 1.1rem;">Bem-vindo ao <strong>Linux Lab</strong>. Este não é apenas um blog, é um nó de resistência na rede.</p>
             <p>Aqui exploramos os limites do <strong>Open Source</strong>, segurança digital e a liberdade que o pinguim nos proporciona.</p>
-            <h3 style="color:var(--neon-purple)">// MISSÃO</h3>
+            <h3 style="color:var(--accent-color)">// MISSÃO</h3>
             <p>Em um mundo onde seus dados são monitorados, o conhecimento é a única defesa. Nosso objetivo é descomplicar o Linux, provar que é possível jogar sem Windows e ensinar você a retomar o controle da sua máquina.</p>
-            <div style="margin-top: 30px; border-top: 1px dashed var(--neon-green); padding-top: 20px;">
+            <div style="margin-top: 30px; border-top: 1px dashed var(--matrix-color); padding-top: 20px;">
                 <p><em>"Talk is cheap. Show me the code."</em></p>
-                <p>Admin: <strong style="color:var(--neon-purple)">Danilo Gardiano</strong></p>
+                <p>Admin: <strong style="color:var(--accent-color)">Danilo Gardiano</strong></p>
             </div>
         </div>
     </div>
@@ -217,9 +226,9 @@
     <div id="tutorial-overlay" class="overlay">
         <button class="btn-voltar" onclick="window.iniciarSessao()">< FECHAR</button>
         <div class="overlay-content">
-            <h2 style="color:var(--neon-purple)">// MANUAL DE OPERAÇÃO v2.0</h2>
+            <h2 style="color:var(--accent-color)">// MANUAL DE OPERAÇÃO v2.0</h2>
             <p>Utilize o <strong>Terminal (>_)</strong> para interagir.</p>
-            <div style="border:1px solid var(--neon-green); padding:15px; margin-bottom:20px;">
+            <div style="border:1px solid var(--matrix-color); padding:15px; margin-bottom:20px;">
                 <strong>COMANDOS:</strong><br>
                 <code>matrix red</code> - Alerta Vermelho<br>
                 <code>matrix blue</code> - Resfriamento Azul<br>
@@ -227,7 +236,7 @@
                 <code>exit</code> - Fechar Terminal<br>
                 <code>reboot</code> - Reiniciar
             </div>
-            <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--neon-green); color:black;">[ INICIAR ]</button>
+            <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--matrix-color); color:black;">[ INICIAR ]</button>
         </div>
     </div>
 
@@ -276,7 +285,7 @@
             navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
         };
 
-        // Terminal (GPU ACCELERATED)
+        // Terminal
         window.toggleTerminal = () => { 
             const t = document.getElementById('secret-terminal'); 
             t.classList.toggle('open');
@@ -289,20 +298,41 @@
             if (e.key === 'Enter') {
                 const cmd = this.value.toLowerCase().trim();
                 this.value = ''; 
-                document.getElementById('terminal-output').innerHTML += `<div style="color:var(--neon-green)">root@linuxlab:~$ ${cmd}</div>`;
+                document.getElementById('terminal-output').innerHTML += `<div style="color:var(--matrix-color)">root@linuxlab:~$ ${cmd}</div>`;
                 
-                if(cmd === 'matrix red') document.documentElement.style.setProperty('--neon-green', '#ff0000');
-                else if(cmd === 'matrix blue') document.documentElement.style.setProperty('--neon-green', '#00eaff');
-                else if(cmd === 'matrix green') document.documentElement.style.setProperty('--neon-green', '#00ff41');
-                else if(cmd === 'reboot') location.reload();
+                if(cmd === 'reboot') location.reload();
                 else if(cmd === 'date') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">${new Date().toString()}</div>`;
                 else if(cmd === 'exit') window.toggleTerminal();
                 else if(cmd === 'whoami') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">guest_user@linuxlab</div>`;
                 else if(cmd === 'clear') document.getElementById('terminal-output').innerHTML = '';
-                else if(cmd === 'help') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">Available: matrix [red/blue/green], date, reboot, clear, exit, whoami</div>`;
-                else document.getElementById('terminal-output').innerHTML += `<div style="color:#ff0000">Command not found. Type 'help'.</div>`;
+                else if(cmd === 'help') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">Available: date, reboot, clear, exit, whoami</div>`;
+                else document.getElementById('terminal-output').innerHTML += `<div style="color:#ff0000">Command not found.</div>`;
             }
         });
+
+        // --- SISTEMA DE CORES/TEMAS ---
+        const themes = [
+            { class: '', name: 'VERDE' },
+            { class: 'theme-infected', name: 'INFECTED' },
+            { class: 'theme-cyber', name: 'CYBER' },
+            { class: 'theme-frost', name: 'FROST' }
+        ];
+        let currentThemeIndex = 0;
+
+        window.ciclarTema = function() {
+            // Remove todos os temas anteriores
+            document.body.classList.remove('theme-infected', 'theme-cyber', 'theme-frost');
+            
+            // Avança para o próximo
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const nextTheme = themes[currentThemeIndex];
+            
+            // Aplica novo tema (se houver classe)
+            if(nextTheme.class) document.body.classList.add(nextTheme.class);
+            
+            // Atualiza texto do botão
+            document.getElementById('btn-tema').innerText = `[ 🎨 COR: ${nextTheme.name} ]`;
+        };
 
         // Posts
         window.filtrarPosts = function() {
@@ -362,10 +392,6 @@
             history.back();
             document.getElementById('ct-msg').value = '';
         };
-        
-        window.alternarTema = function() {
-            document.body.classList.toggle('light-mode');
-        };
 
         function renderizar(lista) {
             const grid = document.getElementById('grid-posts'); grid.innerHTML = '';
@@ -389,9 +415,17 @@
         }
         digitarTerminal();
 
+        // MATRIX COM CORES DINÂMICAS
         const canvas = document.getElementById('matrix'), ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const drops = Array(Math.floor(canvas.width/14)).fill(1);
-        setInterval(() => { ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--neon-green'); ctx.font='14px monospace'; drops.forEach((y,i)=>{ ctx.fillText("01LINUX"[Math.floor(Math.random()*7)], i*14, y*14); if(y*14>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]++; }); }, 50);
+        setInterval(() => { 
+            ctx.fillStyle='rgba(0,0,0,0.05)'; 
+            ctx.fillRect(0,0,canvas.width,canvas.height); 
+            // Pega a cor atual da variável --matrix-color
+            ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--matrix-color'); 
+            ctx.font='14px monospace'; 
+            drops.forEach((y,i)=>{ ctx.fillText("01LINUX"[Math.floor(Math.random()*7)], i*14, y*14); if(y*14>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]++; }); 
+        }, 50);
 
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
         
