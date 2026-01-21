@@ -13,29 +13,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 
     <style>
-        /* --- DEFINIÇÃO DE CORES (TEMAS) --- */
+        /* --- CORE CONFIG --- */
         :root { 
             --bg: #050505; 
             --panel: rgba(17, 17, 17, 0.95); 
             --text: #eee; 
             --border: #333;
             
-            /* TEMA PADRÃO (Verde/Roxo) */
+            /* DEFAULT (VERDE) */
             --matrix-color: #00ff41; 
             --accent-color: #9d00ff; 
         }
 
-        /* TEMA: CYBER CITY (Amarelo/Azul) */
-        body.theme-cyber {
-            --matrix-color: #fcee0a; 
-            --accent-color: #00f0ff; 
-        }
-
-        /* TEMA: FROST (Branco/Azul) */
-        body.theme-frost {
-            --matrix-color: #ffffff; 
-            --accent-color: #0066ff; 
-        }
+        /* --- NOVOS TEMAS --- */
+        body.theme-cyber { --matrix-color: #fcee0a; --accent-color: #00f0ff; } /* Amarelo/Azul */
+        body.theme-frost { --matrix-color: #ffffff; --accent-color: #0066ff; } /* Branco/Azul */
+        body.theme-crimson { --matrix-color: #ff003c; --accent-color: #ffcc00; } /* Vermelho/Ouro */
+        body.theme-amethyst { --matrix-color: #d300ff; --accent-color: #00ffea; } /* Roxo/Ciano */
+        body.theme-solar { --matrix-color: #ffaa00; --accent-color: #ff5500; } /* Laranja/Âmbar */
 
         body { background-color: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding-bottom: 80px; overflow-x: hidden; transition: color 0.3s, border-color 0.3s; cursor: crosshair; }
         
@@ -58,7 +53,7 @@
         .search-box { margin: 20px auto; max-width: 90%; text-align: center; }
         #busca-input { width: 100%; max-width: 400px; padding: 10px; background: var(--bg); border: 1px solid var(--accent-color); color: var(--matrix-color); outline: none; border-radius: 5px; }
 
-        /* WIDGET SCANNER */
+        /* SCANNER WIDGET */
         #scanner-widget { 
             margin-bottom: 40px; 
             background: rgba(255, 255, 255, 0.02); 
@@ -107,9 +102,14 @@
         
         pre[class*="language-"] { border: 1px solid var(--matrix-color) !important; border-radius: 8px !important; background: #111 !important; margin-bottom: 20px !important; }
 
-        /* EXTRAS */
-        #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 35vh; background: rgba(0,0,0,0.98); border-bottom: 2px solid var(--matrix-color); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; transform: translateY(-150%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* TERMINAL SECRETO */
+        #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 40vh; background: rgba(5,5,5,0.98); border-bottom: 2px solid var(--matrix-color); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; transform: translateY(-150%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-size: 0.9rem; }
         #secret-terminal.open { transform: translateY(0); }
+
+        /* HELP BOX (TUTORIAL NOVO) */
+        .help-box { border: 1px dashed var(--matrix-color); padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.3); font-family: monospace; }
+        .help-cmd { color: var(--accent-color); font-weight: bold; }
+        .help-desc { color: #888; margin-left: 10px; }
 
         .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px var(--accent-color); border: none; z-index: 50; animation: pulsando 2s infinite; }
         @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -123,9 +123,13 @@
     <canvas id="matrix"></canvas>
 
     <div id="secret-terminal">
-        <div id="terminal-output" style="color:#ccc; margin-bottom:10px;">Linux Lab Shell v10.2<br>Digite 'help' para ver os comandos.<br></div>
+        <div id="terminal-output" style="color:#aaa; margin-bottom:10px;">
+            LINUX LAB KERNEL [v11.0]<br>
+            Type <span style="color:var(--accent-color)">'help'</span> for command list.<br>
+            System ready.<br>
+        </div>
         <div style="display:flex;">
-            <span style="color:var(--matrix-color); margin-right:10px;">root@linuxlab:~$</span>
+            <span style="color:var(--matrix-color); margin-right:10px;">root@linuxlab:~#</span>
             <input type="text" id="terminal-input" style="background:transparent; border:none; color:#fff; width:100%; outline:none; font-family:'Courier New', monospace;" autocomplete="off">
         </div>
     </div>
@@ -139,7 +143,7 @@
 
             <div class="nav-bar">
                 <button class="nav-btn" onclick="window.ciclarTema()" id="btn-tema">[ 🎨 COR: VERDE ]</button>
-                <button class="nav-btn" onclick="window.abrirTutorial()">[ ❓ AJUDA ]</button>
+                <button class="nav-btn" onclick="window.abrirTutorial()">[ ❓ MANUAL ]</button>
                 <button class="nav-btn" onclick="window.abrirSobre()">[ 💾 SOBRE ]</button>
                 <button class="nav-btn" onclick="window.abrirContato()">[ ✉️ CONTATO ]</button>
             </div>
@@ -219,17 +223,28 @@
     <div id="tutorial-overlay" class="overlay">
         <button class="btn-voltar" onclick="window.iniciarSessao()">< FECHAR</button>
         <div class="overlay-content">
-            <h2 style="color:var(--accent-color)">// MANUAL DE OPERAÇÃO v2.0</h2>
-            <p>Utilize o <strong>Terminal (>_)</strong> para interagir.</p>
-            <div style="border:1px solid var(--matrix-color); padding:15px; margin-bottom:20px;">
-                <strong>COMANDOS:</strong><br>
-                <code>matrix red</code> - Alerta Vermelho<br>
-                <code>matrix blue</code> - Resfriamento Azul<br>
-                <code>date</code> - Ver Hora<br>
-                <code>exit</code> - Fechar Terminal<br>
-                <code>reboot</code> - Reiniciar
+            <h2 style="color:var(--matrix-color)">// SYSTEM_ROOT_ACCESS_MANUAL_v3.0</h2>
+            <p><strong>ACCESS LEVEL:</strong> ADMINISTRATOR<br><strong>STATUS:</strong> ONLINE</p>
+            <hr style="border-color:#333; margin: 20px 0;">
+            
+            <p>Utilize o <strong>Terminal (>_)</strong> para execução de comandos diretos no kernel do site.</p>
+            
+            <div class="help-box">
+                <div style="margin-bottom:10px; border-bottom:1px solid #444; padding-bottom:5px;">AVAILABLE COMMANDS:</div>
+                
+                <div><span class="help-cmd">set-theme [name]</span> <span class="help-desc">Muda o esquema de cores.</span></div>
+                <div style="margin-left:20px; color:#666; font-size:0.8rem;">
+                    PARAMS: default, cyber, frost, crimson, amethyst, solar
+                </div>
+                <br>
+                <div><span class="help-cmd">date</span> <span class="help-desc">Exibe timestamp do servidor.</span></div>
+                <div><span class="help-cmd">whoami</span> <span class="help-desc">Exibe usuário atual.</span></div>
+                <div><span class="help-cmd">reboot</span> <span class="help-desc">Reinicia a interface gráfica.</span></div>
+                <div><span class="help-cmd">clear</span> <span class="help-desc">Limpa o buffer do terminal.</span></div>
+                <div><span class="help-cmd">exit</span> <span class="help-desc">Encerra sessão do terminal.</span></div>
             </div>
-            <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--matrix-color); color:black;">[ INICIAR ]</button>
+
+            <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--matrix-color); color:black;">[ INICIAR SESSÃO ]</button>
         </div>
     </div>
 
@@ -244,7 +259,90 @@
         let listaArtigos = [];
         let currentPostId = null;
 
-        // --- SCANNER LOGIC ---
+        // --- THEMES ARRAY (TOTAL 6) ---
+        const themes = [
+            { id: 'default', class: '', name: 'VERDE' },
+            { id: 'cyber', class: 'theme-cyber', name: 'CYBER' },
+            { id: 'frost', class: 'theme-frost', name: 'FROST' },
+            { id: 'crimson', class: 'theme-crimson', name: 'CRIMSON' },
+            { id: 'amethyst', class: 'theme-amethyst', name: 'AMETHYST' },
+            { id: 'solar', class: 'theme-solar', name: 'SOLAR' }
+        ];
+        let currentThemeIndex = 0;
+
+        // --- SYSTEM FUNCTIONS ---
+        window.ciclarTema = function() {
+            // Remove todas as classes de tema conhecidas
+            document.body.classList.remove(...themes.map(t => t.class).filter(c => c));
+            
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            aplicarTema(currentThemeIndex);
+        };
+
+        function aplicarTema(index) {
+            currentThemeIndex = index;
+            const t = themes[index];
+            if(t.class) document.body.classList.add(t.class);
+            document.getElementById('btn-tema').innerText = `[ 🎨 COR: ${t.name} ]`;
+            
+            // Força Matrix Redraw
+            const c = document.getElementById('matrix').getContext('2d');
+            c.clearRect(0,0,window.innerWidth, window.innerHeight);
+        }
+
+        // --- TERMINAL LOGIC (UPDATED) ---
+        window.toggleTerminal = () => { 
+            const t = document.getElementById('secret-terminal'); 
+            t.classList.toggle('open');
+            if(t.classList.contains('open')) { setTimeout(() => document.getElementById('terminal-input').focus(), 300); }
+        };
+        document.addEventListener('keydown', (e) => { if(e.key==="'"||e.key==="`"){ e.preventDefault(); window.toggleTerminal(); } });
+        
+        const terminalInput = document.getElementById('terminal-input');
+        terminalInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const rawCmd = this.value.trim().toLowerCase();
+                const args = rawCmd.split(' ');
+                const cmd = args[0];
+                this.value = ''; 
+                
+                const corAtual = getComputedStyle(document.body).getPropertyValue('--matrix-color');
+                const output = document.getElementById('terminal-output');
+                output.innerHTML += `<div style="color:${corAtual}">root@linuxlab:~# ${rawCmd}</div>`;
+                
+                // COMANDOS
+                if(cmd === 'reboot') { location.reload(); }
+                else if(cmd === 'date') { output.innerHTML += `<div style="color:#aaa">${new Date().toString()}</div>`; }
+                else if(cmd === 'exit') { window.toggleTerminal(); }
+                else if(cmd === 'whoami') { output.innerHTML += `<div style="color:#aaa">root (admin)</div>`; }
+                else if(cmd === 'clear') { output.innerHTML = ''; }
+                else if(cmd === 'help') { 
+                    output.innerHTML += `<div style="color:#aaa">
+                        COMMANDS:<br>
+                        set-theme [name] - Change UI color (default, cyber, frost, crimson, amethyst, solar)<br>
+                        reboot, date, clear, exit, whoami
+                    </div>`; 
+                }
+                else if(cmd === 'set-theme') {
+                    const themeName = args[1];
+                    const foundIndex = themes.findIndex(t => t.id === themeName);
+                    if(foundIndex !== -1) {
+                        // Remove classes antigas
+                        document.body.classList.remove(...themes.map(t => t.class).filter(c => c));
+                        aplicarTema(foundIndex);
+                        output.innerHTML += `<div style="color:var(--accent-color)">>> Theme set to ${themeName.toUpperCase()}</div>`;
+                    } else {
+                        output.innerHTML += `<div style="color:#ff0000">Error: Theme '${themeName}' not found. Try 'help'.</div>`;
+                    }
+                }
+                else { output.innerHTML += `<div style="color:#ff0000">Command not found: ${cmd}</div>`; }
+                
+                // Auto scroll
+                output.scrollTop = output.scrollHeight;
+            }
+        });
+
+        // --- SCANNER ---
         window.scanNetwork = () => {
             const res = document.getElementById('scan-result');
             res.innerHTML = "Iniciando scan...<br>";
@@ -258,7 +356,7 @@
             }, 2000);
         }
 
-        // --- NAVEGAÇÃO ---
+        // --- NAV & OVERLAYS ---
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
         window.abrirTutorial = () => abrirOverlay('tutorial-overlay', '#ajuda');
         window.abrirContato = () => abrirOverlay('contato-overlay', '#contato');
@@ -278,52 +376,7 @@
             navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
         };
 
-        // Terminal
-        window.toggleTerminal = () => { 
-            const t = document.getElementById('secret-terminal'); 
-            t.classList.toggle('open');
-            if(t.classList.contains('open')) { setTimeout(() => document.getElementById('terminal-input').focus(), 300); }
-        };
-        document.addEventListener('keydown', (e) => { if(e.key==="'"||e.key==="`"){ e.preventDefault(); window.toggleTerminal(); } });
-        
-        const terminalInput = document.getElementById('terminal-input');
-        terminalInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const cmd = this.value.toLowerCase().trim();
-                this.value = ''; 
-                const corAtual = getComputedStyle(document.body).getPropertyValue('--matrix-color');
-                document.getElementById('terminal-output').innerHTML += `<div style="color:${corAtual}">root@linuxlab:~$ ${cmd}</div>`;
-                
-                if(cmd === 'reboot') location.reload();
-                else if(cmd === 'date') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">${new Date().toString()}</div>`;
-                else if(cmd === 'exit') window.toggleTerminal();
-                else if(cmd === 'whoami') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">guest_user@linuxlab</div>`;
-                else if(cmd === 'clear') document.getElementById('terminal-output').innerHTML = '';
-                else if(cmd === 'help') document.getElementById('terminal-output').innerHTML += `<div style="color:#aaa">Available: date, reboot, clear, exit, whoami</div>`;
-                else document.getElementById('terminal-output').innerHTML += `<div style="color:#ff0000">Command not found.</div>`;
-            }
-        });
-
-        // --- SISTEMA DE CORES (ATUALIZADO SEM INFECTED) ---
-        const themes = [
-            { class: '', name: 'VERDE' },
-            { class: 'theme-cyber', name: 'CYBER' },
-            { class: 'theme-frost', name: 'FROST' }
-        ];
-        let currentThemeIndex = 0;
-
-        window.ciclarTema = function() {
-            document.body.classList.remove('theme-cyber', 'theme-frost');
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            const nextTheme = themes[currentThemeIndex];
-            if(nextTheme.class) document.body.classList.add(nextTheme.class);
-            document.getElementById('btn-tema').innerText = `[ 🎨 COR: ${nextTheme.name} ]`;
-            
-            const c = document.getElementById('matrix').getContext('2d');
-            c.clearRect(0,0,window.innerWidth, window.innerHeight);
-        };
-
-        // Posts
+        // Posts Logic
         window.filtrarPosts = function() {
             const termo = document.getElementById('busca-input').value.toLowerCase();
             renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo)));
@@ -390,7 +443,7 @@
             });
         }
 
-        // --- INICIALIZAÇÃO ---
+        // --- BOOT ---
         const mensagens = [ "Iniciando Kernel v5.1...", "Carregando módulos...", "Conectando ao Firebase...", "Bem-vindo ao Linux Lab." ];
         async function digitarTerminal() {
             const elemento = document.getElementById('terminal-typing');
@@ -408,8 +461,7 @@
         const canvas = document.getElementById('matrix'), ctx = canvas.getContext('2d'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const drops = Array(Math.floor(canvas.width/14)).fill(1);
         setInterval(() => { 
-            ctx.fillStyle='rgba(0,0,0,0.05)'; 
-            ctx.fillRect(0,0,canvas.width,canvas.height); 
+            ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height); 
             ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--matrix-color'); 
             ctx.font='14px monospace'; 
             drops.forEach((y,i)=>{ ctx.fillText("01LINUX"[Math.floor(Math.random()*7)], i*14, y*14); if(y*14>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]++; }); 
