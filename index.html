@@ -19,20 +19,19 @@
             --panel: rgba(17, 17, 17, 0.95); 
             --text: #eee; 
             --border: #333;
-            
             /* DEFAULT (VERDE) */
             --matrix-color: #00ff41; 
             --accent-color: #9d00ff; 
         }
 
-        /* --- TEMAS --- */
-        body.theme-cyber { --matrix-color: #fcee0a; --accent-color: #00f0ff; } /* Amarelo/Azul */
-        body.theme-frost { --matrix-color: #ffffff; --accent-color: #0066ff; } /* Branco/Azul */
-        body.theme-crimson { --matrix-color: #ff003c; --accent-color: #ffcc00; } /* Vermelho/Ouro */
-        body.theme-amethyst { --matrix-color: #d300ff; --accent-color: #00ffea; } /* Roxo/Ciano */
-        body.theme-solar { --matrix-color: #ffaa00; --accent-color: #ff5500; } /* Laranja/Âmbar */
+        /* TEMAS */
+        body.theme-cyber { --matrix-color: #fcee0a; --accent-color: #00f0ff; }
+        body.theme-frost { --matrix-color: #ffffff; --accent-color: #0066ff; }
+        body.theme-crimson { --matrix-color: #ff003c; --accent-color: #ffcc00; }
+        body.theme-amethyst { --matrix-color: #d300ff; --accent-color: #00ffea; }
+        body.theme-solar { --matrix-color: #ffaa00; --accent-color: #ff5500; }
 
-        body { background-color: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding-bottom: 80px; overflow-x: hidden; transition: color 0.3s, border-color 0.3s; cursor: crosshair; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Courier New', monospace; margin: 0; padding-bottom: 80px; overflow-x: hidden; transition: 0.3s; cursor: crosshair; }
         
         button, a, .card, input, textarea, label { cursor: alias; }
         canvas#matrix { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; }
@@ -53,35 +52,54 @@
         .search-box { margin: 20px auto; max-width: 90%; text-align: center; }
         #busca-input { width: 100%; max-width: 400px; padding: 10px; background: var(--bg); border: 1px solid var(--accent-color); color: var(--matrix-color); outline: none; border-radius: 5px; }
 
-        /* SCANNER WIDGET */
-        #scanner-widget { 
-            margin-bottom: 40px; 
-            background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid var(--matrix-color); 
-            padding: 20px; 
-            border-radius: 8px; 
-            position: relative; 
-            overflow: hidden;
-            display: flex; align-items: center; justify-content: space-between; gap: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            transition: 0.3s;
+        /* COOKIE BANNER (NOVO) */
+        #cookie-banner {
+            position: fixed; bottom: -200px; left: 0; width: 100%;
+            background: rgba(10, 10, 10, 0.95); border-top: 2px solid var(--accent-color);
+            padding: 20px; text-align: center; z-index: 9999;
+            transition: bottom 0.5s ease-in-out;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
         }
+        #cookie-banner.show { bottom: 0; }
+        .btn-cookie { padding: 10px 20px; border: none; font-weight: bold; cursor: pointer; margin: 0 5px; text-transform: uppercase; }
+        .btn-accept { background: var(--matrix-color); color: #000; }
+        .btn-reject { background: transparent; border: 1px solid #555; color: #888; }
+
+        /* COMENTÁRIOS 2.0 (VISUAL FÓRUM) */
+        .comment-box { 
+            background: rgba(255,255,255,0.03); 
+            border-left: 3px solid var(--matrix-color); 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            display: flex; gap: 15px;
+            align-items: flex-start;
+        }
+        .avatar-circle {
+            width: 40px; height: 40px;
+            background: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+        .comment-content { flex: 1; }
+        .comment-user { display: block; font-weight: bold; color: var(--matrix-color); margin-bottom: 5px; font-size: 0.9rem; }
+        .comment-date { color: #666; font-size: 0.75rem; margin-left: 10px; font-weight: normal; }
+        .comment-text { color: #ccc; line-height: 1.4; font-size: 0.9rem; }
+
+        /* WIDGETS & GRID */
+        #scanner-widget { margin-bottom: 40px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--matrix-color); padding: 20px; border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 20px; transition: 0.3s; }
         #scanner-widget::before { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, var(--matrix-color), transparent); opacity: 0.1; animation: scanLine 3s infinite linear; pointer-events: none; }
         @keyframes scanLine { 0% { left: -100%; } 100% { left: 200%; } }
-
-        .scan-warning { flex: 1; text-align: left; font-size: 0.8rem; color: #888; border-left: 3px solid var(--accent-color); padding-left: 15px; line-height: 1.4; }
+        .scan-warning { flex: 1; text-align: left; font-size: 0.8rem; color: #888; border-left: 3px solid var(--accent-color); padding-left: 15px; }
         .scan-action-area { flex: 1; text-align: center; }
-        #scan-result { font-family: monospace; color: var(--matrix-color); margin-bottom: 15px; min-height: 20px; }
-        
-        .btn-scan { background: var(--matrix-color); color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn-scan:hover { box-shadow: 0 0 15px var(--matrix-color); filter: brightness(1.2); }
+        .btn-scan { background: var(--matrix-color); color: #000; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
-        @media (max-width: 600px) {
-            #scanner-widget { flex-direction: column-reverse; text-align: center; }
-            .scan-warning { border-left: none; border-top: 1px solid #333; padding-top: 10px; margin-top: 10px; text-align: center; }
-        }
+        @media (max-width: 600px) { #scanner-widget { flex-direction: column-reverse; text-align: center; } .scan-warning { border-left: none; border-top: 1px solid #333; padding-top: 10px; text-align: center; } }
 
-        /* GRID */
         .container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 60vh; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: 0.3s; position: relative; display: flex; flex-direction: column; }
@@ -90,8 +108,8 @@
         .card-body { padding: 15px; }
         .card h2 { color: var(--text); font-size: 1.2rem; margin: 5px 0; }
         .card span { font-size: 0.8rem; color: var(--accent-color); display: block; margin-bottom: 5px; }
-        .btn-like { background: none; border: 1px solid var(--border); color: #888; cursor: pointer; padding: 5px 12px; border-radius: 20px; transition: 0.2s; }
-        .btn-like:hover, .btn-like.curtido { border-color: var(--accent-color); color: var(--accent-color); }
+        .btn-like { background: none; border: 1px solid var(--border); color: #888; cursor: pointer; padding: 5px 12px; border-radius: 20px; }
+        .btn-like:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         /* OVERLAYS */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); overflow-y: auto; z-index: 200; padding: 20px; box-sizing: border-box; }
@@ -99,17 +117,15 @@
         .overlay-content { max-width: 800px; margin: 0 auto; }
         .overlay-content img { max-width: 100%; border-radius: 5px; border: 1px solid var(--accent-color); }
         .overlay-content p { line-height: 1.6; margin-bottom: 15px; }
-        
         pre[class*="language-"] { border: 1px solid var(--matrix-color) !important; border-radius: 8px !important; background: #111 !important; margin-bottom: 20px !important; }
 
-        /* TERMINAL SECRETO */
-        #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 40vh; background: rgba(5,5,5,0.98); border-bottom: 2px solid var(--matrix-color); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; transform: translateY(-150%); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-size: 0.9rem; }
+        /* SECRET TERMINAL */
+        #secret-terminal { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 40vh; background: rgba(5,5,5,0.98); border-bottom: 2px solid var(--matrix-color); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; transform: translateY(-150%); transition: transform 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.8); font-size: 0.9rem; }
         #secret-terminal.open { transform: translateY(0); }
 
         /* HELP BOX */
         .help-box { border: 1px dashed var(--matrix-color); padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.3); font-family: monospace; }
         .help-cmd { color: var(--accent-color); font-weight: bold; }
-        .help-desc { color: #888; margin-left: 10px; }
 
         .btn-pix { position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: #fff; padding: 15px 25px; border-radius: 50px; font-weight: bold; box-shadow: 0 0 20px var(--accent-color); border: none; z-index: 50; animation: pulsando 2s infinite; }
         @keyframes pulsando { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
@@ -122,11 +138,17 @@
 
     <canvas id="matrix"></canvas>
 
+    <div id="cookie-banner">
+        <p style="color:var(--text); margin-bottom:15px;">
+            <strong style="color:var(--matrix-color)">[ SISTEMA ]</strong> Este site utiliza cookies para salvar suas preferências de tema e sessão.
+        </p>
+        <button class="btn-cookie btn-accept" onclick="aceitarCookies()">[ ACEITAR DADOS ]</button>
+        <button class="btn-cookie btn-reject" onclick="recusarCookies()">[ RECUSAR ]</button>
+    </div>
+
     <div id="secret-terminal">
         <div id="terminal-output" style="color:#aaa; margin-bottom:10px;">
-            LINUX LAB KERNEL [v11.1]<br>
-            Type <span style="color:var(--accent-color)">'help'</span> for command list.<br>
-            System ready.<br>
+            LINUX LAB KERNEL [v12.0]<br>Type <span style="color:var(--accent-color)">'help'</span> for command list.<br>System ready.<br>
         </div>
         <div style="display:flex;">
             <span style="color:var(--matrix-color); margin-right:10px;">root@linuxlab:~#</span>
@@ -155,7 +177,7 @@
             <div id="scanner-widget">
                 <div class="scan-warning">
                     <strong style="color:var(--accent-color)">[ ! ] SIMULATION MODE</strong><br>
-                    <span style="font-size:0.75rem;">Este é um ambiente seguro.<br>Seu IP não está sendo exposto publicamente por este script.</span>
+                    <span style="font-size:0.75rem;">Este é um ambiente seguro.<br>Seu IP não está sendo exposto publicamente.</span>
                 </div>
                 <div class="scan-action-area">
                     <div id="scan-result">[STATUS] Aguardando comando...</div>
@@ -180,13 +202,15 @@
         <button class="btn-voltar" onclick="history.back()">< VOLTAR</button>
         <div class="overlay-content">
             <div id="conteudo-post"></div>
-            <div id="comentarios-section">
-                <h3>// COMMS_LOG (Comentários)</h3>
-                <div class="comment-form">
-                    <input type="text" id="coment-nome" placeholder="Codename (Seu Nome)" style="width:100%; background:#111; border:1px solid #333; color:var(--matrix-color); padding:10px; margin-bottom:5px;">
-                    <textarea id="coment-texto" rows="3" placeholder="Digite sua mensagem aqui..."></textarea>
-                    <button class="btn-comment" onclick="window.enviarComentario()">[ ENVIAR DADOS ]</button>
+            <div id="comentarios-section" style="margin-top:40px; border-top:1px dashed var(--border); padding-top:20px;">
+                <h3 style="color:var(--accent-color)">// COMMS_LOG (Discussão)</h3>
+                
+                <div class="comment-form" style="background:#111; padding:15px; border-radius:5px; border:1px solid #333;">
+                    <input type="text" id="coment-nome" placeholder="Codename (Seu Nome)" style="width:100%; background:#000; border:1px solid #333; color:var(--matrix-color); padding:10px; margin-bottom:5px;">
+                    <textarea id="coment-texto" rows="3" placeholder="Digite sua mensagem aqui..." style="width:100%; background:#000; border:1px solid #333; color:#ccc; padding:10px;"></textarea>
+                    <button class="btn-comment" onclick="window.enviarComentario()" style="background:var(--matrix-color); color:#000; border:none; padding:8px 20px; font-weight:bold; cursor:pointer; margin-top:5px;">[ ENVIAR DADOS ]</button>
                 </div>
+                
                 <div id="lista-comentarios" style="margin-top: 20px;"></div>
             </div>
         </div>
@@ -200,7 +224,7 @@
                 <label>IDENTIDADE (Nome):</label> <input type="text" id="ct-nome">
                 <label>CONTATO (Email/Twitter):</label> <input type="text" id="ct-contato">
                 <label>PAYLOAD (Mensagem):</label> <textarea id="ct-msg" rows="5"></textarea>
-                <button class="btn-comment" onclick="window.enviarContato()" style="width:100%;">[ EXECUTAR ENVIO ]</button>
+                <button class="btn-comment" onclick="window.enviarContato()" style="width:100%; background:var(--matrix-color); color:#000; border:none; padding:10px;">[ EXECUTAR ENVIO ]</button>
             </div>
         </div>
     </div>
@@ -208,37 +232,24 @@
     <div id="sobre-overlay" class="overlay">
         <button class="btn-voltar" onclick="history.back()">< VOLTAR</button>
         <div class="overlay-content" style="max-width: 800px; margin: 0 auto;">
-            <h2 style="color:var(--matrix-color)">// SYSTEM_INFO: LINUX LAB</h2>
-            <p style="font-size: 1.1rem;">Bem-vindo ao <strong>Linux Lab</strong>. Este não é apenas um blog, é um nó de resistência na rede.</p>
-            <p>Aqui exploramos os limites do <strong>Open Source</strong>, segurança digital e a liberdade que o pinguim nos proporciona.</p>
-            <h3 style="color:var(--accent-color)">// MISSÃO</h3>
-            <p>Em um mundo onde seus dados são monitorados, o conhecimento é a única defesa. Nosso objetivo é descomplicar o Linux, provar que é possível jogar sem Windows e ensinar você a retomar o controle da sua máquina.</p>
-            <div style="margin-top: 30px; border-top: 1px dashed var(--matrix-color); padding-top: 20px;">
-                <p><em>"Talk is cheap. Show me the code."</em></p>
-                <p>Admin: <strong style="color:var(--accent-color)">Danilo Gardiano</strong></p>
-            </div>
+            <h2 style="color:var(--matrix-color)">// SYSTEM_INFO</h2>
+            <p>Bem-vindo ao <strong>Linux Lab</strong>.</p>
+            <p>Admin: <strong style="color:var(--accent-color)">Danilo Gardiano</strong></p>
         </div>
     </div>
 
     <div id="tutorial-overlay" class="overlay">
         <button class="btn-voltar" onclick="window.iniciarSessao()">< FECHAR</button>
         <div class="overlay-content">
-            <h2 style="color:var(--matrix-color)">// SYSTEM_ROOT_ACCESS_MANUAL_v3.0</h2>
-            <p><strong>ACCESS LEVEL:</strong> ADMINISTRATOR<br><strong>STATUS:</strong> ONLINE</p>
+            <h2 style="color:var(--matrix-color)">// SYSTEM_MANUAL_v3.0</h2>
+            <p><strong>ACCESS LEVEL:</strong> GUEST</p>
             <hr style="border-color:#333; margin: 20px 0;">
-            <p>Utilize o <strong>Terminal (>_)</strong> para execução de comandos diretos no kernel do site.</p>
             <div class="help-box">
-                <div style="margin-bottom:10px; border-bottom:1px solid #444; padding-bottom:5px;">AVAILABLE COMMANDS:</div>
-                <div><span class="help-cmd">set-theme [name]</span> <span class="help-desc">Muda o esquema de cores.</span></div>
-                <div style="margin-left:20px; color:#666; font-size:0.8rem;">PARAMS: default, cyber, frost, crimson, amethyst, solar</div>
-                <br>
-                <div><span class="help-cmd">date</span> <span class="help-desc">Exibe timestamp do servidor.</span></div>
-                <div><span class="help-cmd">whoami</span> <span class="help-desc">Exibe usuário atual.</span></div>
-                <div><span class="help-cmd">reboot</span> <span class="help-desc">Reinicia a interface gráfica.</span></div>
-                <div><span class="help-cmd">clear</span> <span class="help-desc">Limpa o buffer do terminal.</span></div>
-                <div><span class="help-cmd">exit</span> <span class="help-desc">Encerra sessão do terminal.</span></div>
+                <div><span class="help-cmd">set-theme</span> Muda as cores.</div>
+                <div><span class="help-cmd">matrix red/blue</span> Troca cor do terminal.</div>
             </div>
-            <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--matrix-color); color:black;">[ INICIAR SESSÃO ]</button>
+            <button class="btn-comment" onclick="window.iniciarSessao()" style="width:100%; background:var(--matrix-color); color:black; padding:15px; font-size:1.1rem; border:none; cursor:pointer;">[ INICIAR SESSÃO ]</button>
+            <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">*Clicar aqui salvará um cookie para não exibir esta tela novamente.</p>
         </div>
     </div>
 
@@ -253,7 +264,40 @@
         let listaArtigos = [];
         let currentPostId = null;
 
-        // --- THEMES ARRAY (TOTAL 6) ---
+        // --- COOKIES & TUTORIAL MEMORY ---
+        window.aceitarCookies = () => {
+            localStorage.setItem('cookies_accepted', 'true');
+            document.getElementById('cookie-banner').classList.remove('show');
+        };
+        window.recusarCookies = () => {
+            document.getElementById('cookie-banner').classList.remove('show');
+            // Não salvamos nada no localStorage se recusar (apenas fecha o aviso)
+        };
+
+        window.iniciarSessao = () => { 
+            // Salva que o usuário já viu o tutorial
+            localStorage.setItem('vistoTutorial', 'sim'); 
+            history.back();
+            document.getElementById('tutorial-overlay').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        };
+
+        // Verifica na inicialização
+        setTimeout(() => {
+            // Check Cookies
+            if(!localStorage.getItem('cookies_accepted')) {
+                document.getElementById('cookie-banner').classList.add('show');
+            }
+            // Check Tutorial
+            if (!localStorage.getItem('vistoTutorial')) { 
+                window.abrirTutorial(); 
+            } else {
+                // Se já viu tutorial, garante que home está visível
+                document.getElementById('home-view').style.display = 'block';
+            }
+        }, 1000);
+
+        // --- THEMES ---
         const themes = [
             { id: 'default', class: '', name: 'VERDE' },
             { id: 'cyber', class: 'theme-cyber', name: 'CYBER' },
@@ -264,12 +308,8 @@
         ];
         let currentThemeIndex = 0;
 
-        // --- SYSTEM FUNCTIONS (COM LOCALSTORAGE) ---
         window.ciclarTema = function() {
-            // Remove classes antigas
             document.body.classList.remove(...themes.map(t => t.class).filter(c => c));
-            
-            // Avança index
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             aplicarTema(currentThemeIndex);
         };
@@ -277,28 +317,19 @@
         function aplicarTema(index) {
             currentThemeIndex = index;
             const t = themes[index];
-            
-            // Aplica classe (se existir)
             if(t.class) document.body.classList.add(t.class);
-            
-            // Atualiza botão
             document.getElementById('btn-tema').innerText = `[ 🎨 COR: ${t.name} ]`;
-            
-            // SALVA NO NAVEGADOR
-            localStorage.setItem('linux_lab_theme_index', index);
-            
-            // Redraw Matrix
+            if(localStorage.getItem('cookies_accepted') === 'true') {
+                localStorage.setItem('linux_lab_theme_index', index);
+            }
             const c = document.getElementById('matrix').getContext('2d');
             c.clearRect(0,0,window.innerWidth, window.innerHeight);
         }
 
-        // CARREGA TEMA AO INICIAR
         const savedTheme = localStorage.getItem('linux_lab_theme_index');
-        if(savedTheme !== null) {
-            aplicarTema(parseInt(savedTheme));
-        }
+        if(savedTheme !== null) aplicarTema(parseInt(savedTheme));
 
-        // --- TERMINAL LOGIC ---
+        // --- TERMINAL ---
         window.toggleTerminal = () => { 
             const t = document.getElementById('secret-terminal'); 
             t.classList.toggle('open');
@@ -313,37 +344,22 @@
                 const args = rawCmd.split(' ');
                 const cmd = args[0];
                 this.value = ''; 
-                
                 const corAtual = getComputedStyle(document.body).getPropertyValue('--matrix-color');
                 const output = document.getElementById('terminal-output');
                 output.innerHTML += `<div style="color:${corAtual}">root@linuxlab:~# ${rawCmd}</div>`;
                 
-                // COMANDOS
-                if(cmd === 'reboot') { location.reload(); }
-                else if(cmd === 'date') { output.innerHTML += `<div style="color:#aaa">${new Date().toString()}</div>`; }
-                else if(cmd === 'exit') { window.toggleTerminal(); }
-                else if(cmd === 'whoami') { output.innerHTML += `<div style="color:#aaa">root (admin)</div>`; }
-                else if(cmd === 'clear') { output.innerHTML = ''; }
-                else if(cmd === 'help') { 
-                    output.innerHTML += `<div style="color:#aaa">
-                        COMMANDS:<br>
-                        set-theme [name] - Change UI color (default, cyber, frost, crimson, amethyst, solar)<br>
-                        reboot, date, clear, exit, whoami
-                    </div>`; 
-                }
+                if(cmd === 'reboot') location.reload();
+                else if(cmd === 'clear') output.innerHTML = '';
+                else if(cmd === 'exit') window.toggleTerminal();
                 else if(cmd === 'set-theme') {
                     const themeName = args[1];
                     const foundIndex = themes.findIndex(t => t.id === themeName);
                     if(foundIndex !== -1) {
                         document.body.classList.remove(...themes.map(t => t.class).filter(c => c));
                         aplicarTema(foundIndex);
-                        output.innerHTML += `<div style="color:var(--accent-color)">>> Theme set to ${themeName.toUpperCase()}</div>`;
-                    } else {
-                        output.innerHTML += `<div style="color:#ff0000">Error: Theme '${themeName}' not found. Try 'help'.</div>`;
+                        output.innerHTML += `<div>Theme set to ${themeName}</div>`;
                     }
                 }
-                else { output.innerHTML += `<div style="color:#ff0000">Command not found: ${cmd}</div>`; }
-                
                 output.scrollTop = output.scrollHeight;
             }
         });
@@ -353,37 +369,25 @@
             const res = document.getElementById('scan-result');
             res.innerHTML = "Iniciando scan...<br>";
             setTimeout(() => res.innerHTML += "Detectando User Agent...<br>", 500);
-            setTimeout(() => res.innerHTML += `UA: ${navigator.userAgent.substring(0,30)}...<br>`, 1000);
             setTimeout(() => {
                 fetch('https://api.ipify.org?format=json')
                 .then(r => r.json())
-                .then(data => res.innerHTML += `<br><strong style='color:#fff; font-size:1.2rem;'>IP PÚBLICO: ${data.ip}</strong><br>Status: EXPOSTO!`)
-                .catch(() => res.innerHTML += "Erro ao obter IP (Bloqueado?)");
-            }, 2000);
+                .then(data => res.innerHTML += `<br><strong style='color:#fff;'>IP PÚBLICO: ${data.ip}</strong>`)
+                .catch(() => res.innerHTML += "Erro.");
+            }, 1500);
         }
 
-        // --- NAV & OVERLAYS ---
+        // --- NAV & POSTS ---
         window.abrirSobre = () => abrirOverlay('sobre-overlay', '#sobre');
         window.abrirTutorial = () => abrirOverlay('tutorial-overlay', '#ajuda');
         window.abrirContato = () => abrirOverlay('contato-overlay', '#contato');
         
-        window.iniciarSessao = () => { 
-            localStorage.setItem('vistoTutorial', 'sim'); 
-            history.back();
-            document.getElementById('tutorial-overlay').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
-        };
-
         function abrirOverlay(id, hash) { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'none'; document.getElementById(id).style.display = 'block'; window.scrollTo(0,0); history.pushState({page: id}, null, hash); }
         window.addEventListener('popstate', () => { document.querySelectorAll('.overlay').forEach(el => el.style.display = 'none'); document.getElementById('home-view').style.display = 'block'; });
 
-        // Pix
-        window.fazerPix = function() {
-            navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }).catch(() => prompt("Copie:", "pixlinuxblog@gmail.com"));
-        };
+        window.fazerPix = () => { navigator.clipboard.writeText("pixlinuxblog@gmail.com").then(() => { confetti({particleCount:150}); alert("✅ PIX copiado!"); }); };
 
-        // Posts
-        window.filtrarPosts = function() {
+        window.filtrarPosts = () => {
             const termo = document.getElementById('busca-input').value.toLowerCase();
             renderizar(listaArtigos.filter(p => p.titulo.toLowerCase().includes(termo)));
         };
@@ -415,7 +419,17 @@
                     snapshot.forEach(doc => {
                         const c = doc.data();
                         const dataFormatada = new Date(c.data).toLocaleDateString();
-                        divComents.innerHTML += `<div class="comment-box"><span class="comment-user">${c.nome} <span class="comment-date">[${dataFormatada}]</span></span>${c.texto}</div>`;
+                        // GERA AVATAR COM A PRIMEIRA LETRA
+                        const inicial = c.nome ? c.nome.charAt(0).toUpperCase() : '?';
+                        
+                        divComents.innerHTML += `
+                            <div class="comment-box">
+                                <div class="avatar-circle">${inicial}</div>
+                                <div class="comment-content">
+                                    <span class="comment-user">${c.nome} <span class="comment-date">${dataFormatada}</span></span>
+                                    <div class="comment-text">${c.texto}</div>
+                                </div>
+                            </div>`;
                     });
                 });
                 abrirOverlay('leitura-overlay', '#leitura');
@@ -432,13 +446,11 @@
 
         window.enviarContato = async () => {
             const nome = document.getElementById('ct-nome').value;
-            const contato = document.getElementById('ct-contato').value;
             const msg = document.getElementById('ct-msg').value;
             if(!nome || !msg) return alert("Dados incompletos.");
-            await addDoc(collection(db, "inbox_contato"), { nome, contato, mensagem: msg, data: new Date().toISOString() });
+            await addDoc(collection(db, "inbox_contato"), { nome, mensagem: msg, data: new Date().toISOString() });
             alert("✅ MENSAGEM ENVIADA.");
             history.back();
-            document.getElementById('ct-msg').value = '';
         };
 
         function renderizar(lista) {
@@ -449,15 +461,15 @@
             });
         }
 
-        // --- INICIALIZAÇÃO ---
-        const mensagens = [ "Iniciando Kernel v5.1...", "Carregando módulos...", "Conectando ao Firebase...", "Bem-vindo ao Linux Lab." ];
+        // BOOT ANIMATION
+        const mensagens = [ "Iniciando Kernel v12.0...", "Carregando módulos...", "Verificando integridade...", "Sistema Online." ];
         async function digitarTerminal() {
             const elemento = document.getElementById('terminal-typing');
             for (let i = 0; i < mensagens.length; i++) {
                 const frase = mensagens[i];
                 elemento.innerText = "> "; 
-                for (let letra of frase) { elemento.innerText += letra; await new Promise(r => setTimeout(r, 50)); }
-                await new Promise(r => setTimeout(r, 1000));
+                for (let letra of frase) { elemento.innerText += letra; await new Promise(r => setTimeout(r, 40)); }
+                await new Promise(r => setTimeout(r, 800));
             }
             elemento.innerHTML = "> Sistema Online <span class='cursor-blink'>_</span>";
         }
@@ -474,10 +486,7 @@
         }, 50);
 
         setInterval(() => document.getElementById('relogio').innerText = new Date().toLocaleTimeString('pt-BR'), 1000);
-        
         onSnapshot(query(collection(db, "artigos")), (snapshot) => { listaArtigos = []; snapshot.forEach((doc) => { let d = doc.data(); d.id = doc.id; listaArtigos.push(d); }); renderizar(listaArtigos); document.getElementById('loading').style.display = 'none'; });
-
-        if (!localStorage.getItem('vistoTutorial')) { setTimeout(() => { window.abrirTutorial(); }, 1000); }
     </script>
 </body>
 </html>
